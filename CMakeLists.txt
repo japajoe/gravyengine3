@@ -22,6 +22,9 @@ include_directories(
     "${PROJECT_SOURCE_DIR}/include/External/glfw"
     "${PROJECT_SOURCE_DIR}/include/External/imgui"
     "${PROJECT_SOURCE_DIR}/include/External/miniaudioex"
+    "${PROJECT_SOURCE_DIR}/include/Rendering"
+    "${PROJECT_SOURCE_DIR}/include/Rendering/Materials"
+    "${PROJECT_SOURCE_DIR}/include/Rendering/Shaders"
     "${PROJECT_SOURCE_DIR}/include/System"
     "${PROJECT_SOURCE_DIR}/include/System/Numerics"
 )

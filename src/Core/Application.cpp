@@ -2,6 +2,7 @@
 #include "../External/glad/glad.h"
 #include "../External/glfw/glfw3.h"
 #include "../Audio/AudioContext.hpp"
+#include "../Rendering/Graphics.hpp"
 #include "GameBehaviourManager.hpp"
 #include "Input.hpp"
 #include "Screen.hpp"
@@ -66,7 +67,7 @@ namespace GravyEngine
 
         if(!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
         {
-            std::cerr << "Failed to initialize GL bindings" << std::endl;
+            std::cerr << "Failed to initialize OpenGL" << std::endl;
             Dispose();
             return;
         }
@@ -122,19 +123,19 @@ namespace GravyEngine
 
     void Application::OnInitialize()
     {
+        Graphics::Initialize();
         Screen::SetSize(width, height);
         Input::Initialize(pWindow);
         AudioContext::Initialize(48000, 2);
-        
         GameBehaviourManager::Initialize(pWindow);
-
     }
 
     void Application::OnDeinitialize()
     {
         GameBehaviourManager::OnApplicationQuit();
-        AudioContext::Deinitialize();
         GameBehaviourManager::Deinitialize();
+        AudioContext::Deinitialize();
+        Graphics::Deinitialize();
     }
 
     void Application::OnStartFrame()
@@ -156,9 +157,7 @@ namespace GravyEngine
 
     void Application::OnRender()
     {
-        glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
+        Graphics::OnRender();
         GameBehaviourManager::OnRender();
     }
 
@@ -184,6 +183,7 @@ namespace GravyEngine
 
     void Application::OnWindowResize(GLFWwindow *window, int32_t width, int32_t height)
     {
+        glViewport(0, 0, width, height);
         Screen::SetSize(width, height);
     }
 

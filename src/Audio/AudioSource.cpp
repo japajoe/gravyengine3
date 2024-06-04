@@ -65,8 +65,7 @@ namespace GravyEngine
                 result = ma_ex_audio_source_play_from_file(handle, clip->GetFilePath().c_str(), clip->GetStreamFromDisk() ? MA_TRUE : MA_FALSE);
 
             if(result != MA_SUCCESS)
-                printf("Failed to play audio: %zu\n", result);
-                
+                printf("Failed to play audio: %d\n", result);
         }
     }
 

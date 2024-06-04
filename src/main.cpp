@@ -32,7 +32,7 @@ void OnApplicationLoaded()
     AudioSource *source = gameObject->AddComponent<AudioSource>();
     source->SetIsLooping(true);
     
-    AudioClip clip("../res/Beats_by_Law_-_240217-01_96_Gm_Tangeray.mp3");
+    AudioClip clip("Beats_by_Law_-_240217-01_96_Gm_Tangeray.mp3");
 
     source->Play(&clip);
 }
