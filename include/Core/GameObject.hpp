@@ -26,6 +26,8 @@ namespace GravyEngine
         ~GameObject();
         Transform *GetTransform();
 
+        static std::shared_ptr<GameObject> CreatePrimitive(PrimitiveType type);
+
         template <typename T>
         T *GetComponent() const
         {

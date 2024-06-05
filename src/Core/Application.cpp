@@ -123,8 +123,8 @@ namespace GravyEngine
 
     void Application::OnInitialize()
     {
-        Graphics::Initialize();
         Screen::SetSize(width, height);
+        Graphics::Initialize();
         Input::Initialize(pWindow);
         AudioContext::Initialize(48000, 2);
         GameBehaviourManager::Initialize(pWindow);

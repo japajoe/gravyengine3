@@ -1,4 +1,5 @@
 #include "Mesh.hpp"
+#include "../Core/Debug.hpp"
 #include "../System/Mathf.hpp"
 #include "../External/glad/glad.h"
 
@@ -35,6 +36,21 @@ namespace GravyEngine
     std::vector<uint32_t> &Mesh::GetIndices()
     {
         return indices;
+    }
+
+    VertexArrayObject *Mesh::GetVAO()
+    {
+        return &VAO;
+    }
+
+    VertexBufferObject *Mesh::GetVBO()
+    {
+        return &VBO;
+    }
+
+    ElementBufferObject *Mesh::GetEBO()
+    {
+        return &EBO;
     }
 
     void Mesh::Generate()
@@ -157,13 +173,13 @@ namespace GravyEngine
     {
         if(meshes.count(name) > 0)
         {
-            printf("[MESH] can't add %s with ID: %llu because it already exists\n", name.c_str(), mesh.GetId());
+            Debug::WriteError("[MESH] can't add %s with ID: %llu because it already exists", name.c_str(), mesh.GetId());
             return nullptr;
         }
 
         meshes[name] = mesh;
 
-        printf("[MESH] %s added with ID: %llu\n", name.c_str(), mesh.GetId());
+        Debug::WriteLog("[MESH] %s added with ID: %llu", name.c_str(), mesh.GetId());
 
         auto pMesh = &meshes[name];
         pMesh->Generate();
@@ -176,7 +192,7 @@ namespace GravyEngine
 
         if(mesh)
         {
-            printf("[MESH] %s deleted with ID: %llu\n", name.c_str(), mesh->GetId());
+            Debug::WriteLog("[MESH] %s deleted with ID: %llu", name.c_str(), mesh->GetId());
             mesh->Delete();
             meshes.erase(name);
         }
@@ -796,7 +812,7 @@ namespace GravyEngine
         int32_t LOD = 0;
 
         int32_t meshSimplificationIncrement = (LOD == 0) ? 1 : LOD * 2;
-        uint32_t verticesPerLine = (uint)((width - 1) / meshSimplificationIncrement + 1);
+        uint32_t verticesPerLine = (uint32_t)((width - 1) / meshSimplificationIncrement + 1);
 
         float topLeftX = 0;
         float topLeftZ = 0;

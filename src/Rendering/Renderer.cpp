@@ -12,13 +12,8 @@ namespace GravyEngine
 
     }
 
-    void Renderer::SetMaterial(Material *material)
+    void Renderer::SetMaterial(const std::shared_ptr<Material> &material)
     {
         this->pMaterial = material;
-    }
-
-    Material *Renderer::GetMaterial() const
-    {
-        return pMaterial;
     }
 };

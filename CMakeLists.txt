@@ -10,7 +10,7 @@ add_subdirectory(libs/glfw)
 add_subdirectory(libs/imgui)
 add_subdirectory(libs/miniaudioex)
 
-file(GLOB_RECURSE SOURCES src/*.cpp)
+file(GLOB_RECURSE SOURCES src/*.cpp game/src/*.cpp)
 
 include_directories(
     "${PROJECT_SOURCE_DIR}/include/"
@@ -27,7 +27,9 @@ include_directories(
     "${PROJECT_SOURCE_DIR}/include/Rendering/Materials"
     "${PROJECT_SOURCE_DIR}/include/Rendering/Shaders"
     "${PROJECT_SOURCE_DIR}/include/System"
+    "${PROJECT_SOURCE_DIR}/include/System/Drawing"
     "${PROJECT_SOURCE_DIR}/include/System/Numerics"
+    "${PROJECT_SOURCE_DIR}/game/include"
 )
 
 add_executable(${PROJECT_NAME} ${SOURCES})

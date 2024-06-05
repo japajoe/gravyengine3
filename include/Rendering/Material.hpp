@@ -1,7 +1,9 @@
 #ifndef GRAVYENGINE_MATERIAL_HPP
 #define GRAVYENGINE_MATERIAL_HPP
 
+#include "../Core/Camera.hpp"
 #include "../Core/Object.hpp"
+#include "../Core/Transform.hpp"
 #include "Shader.hpp"
 
 namespace GravyEngine
@@ -10,11 +12,10 @@ namespace GravyEngine
     {
     public:
         Material();
-        virtual ~Material();
+        Material(Shader *shader);
         void SetShader(Shader *shader);
         Shader *GetShader() const;
-        void Use();
-        virtual void UpdateUniforms() = 0;
+        virtual void Use(Transform *transform, Camera *camera) = 0;
     protected:
         Shader *pShader;
     };

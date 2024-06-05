@@ -7,9 +7,9 @@ namespace GravyEngine
         pShader = nullptr;
     }
 
-    Material::~Material()
+    Material::Material(Shader *shader) : Object()
     {
-
+        pShader = shader;
     }
 
     void Material::SetShader(Shader *shader)
@@ -20,11 +20,5 @@ namespace GravyEngine
     Shader *Material::GetShader() const
     {
         return pShader;
-    }
-
-    void Material::Use()
-    {
-        if(pShader)
-            pShader->Use();
     }
 };

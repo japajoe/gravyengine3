@@ -24,6 +24,9 @@ namespace GravyEngine
         std::vector<uint32_t> &GetIndices();
         size_t GetVerticesCount() const;
         size_t GetIndicesCount() const;
+        VertexArrayObject *GetVAO();
+        VertexBufferObject *GetVBO();
+        ElementBufferObject *GetEBO();
         void Generate();
         void Delete();
         void RecalculateNormals();

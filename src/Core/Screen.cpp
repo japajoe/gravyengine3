@@ -2,6 +2,7 @@
 
 namespace GravyEngine
 {
+    EventHandler<ScreenResizeEvent> Screen::resize;
     Vector2 Screen::size = Vector2(0, 0);
     Vector2 Screen::position = Vector2(0, 0);
     
@@ -19,6 +20,7 @@ namespace GravyEngine
     {
         size.x = width;
         size.y = height;
+        resize(width, height);
     }
 
     void Screen::SetPosition(int x, int y)

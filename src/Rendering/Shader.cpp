@@ -1,4 +1,5 @@
 #include "Shader.hpp"
+#include "../Core/Debug.hpp"
 #include "../External/glad/glad.h"
 
 namespace GravyEngine
@@ -138,19 +139,19 @@ namespace GravyEngine
     {
         if(shaders.count(name) > 0)
         {
-            printf("[SHADER] can't add %s with ID: %d because it already exists\n", name.c_str(), shader.GetId());
+            Debug::WriteError("[SHADER] can't add %s with ID: %d because it already exists", name.c_str(), shader.GetId());
             return nullptr;
         }
 
         if(shader.GetId() == 0)
         {
-            printf("[SHADER] can't add %s because it's not initialized\n", name.c_str());
+            Debug::WriteError("[SHADER] can't add %s because it's not initialized", name.c_str());
             return nullptr;
         }
 
         shaders[name] = shader;
 
-        printf("[SHADER] %s created with ID: %d\n", name.c_str(), shader.GetId());
+        Debug::WriteLog("[SHADER] %s created with ID: %d", name.c_str(), shader.GetId());
         
         return &shaders[name];
     }
@@ -161,7 +162,7 @@ namespace GravyEngine
 
         if(shader)
         {
-            printf("[SHADER] %s deleted with ID: %d\n", name.c_str(), shader->GetId());
+            Debug::WriteLog("[SHADER] %s deleted with ID: %d", name.c_str(), shader->GetId());
             shader->Delete();
             shaders.erase(name);
         }
@@ -201,8 +202,8 @@ namespace GravyEngine
                         break;
                 }
                 
-                fprintf(stderr, "------------------------\n");
-                fprintf(stderr, "ERROR: SHADER_COMPILATION_ERROR of type: %s\n%s\n", shaderType.c_str(), infoLog);
+                Debug::WriteError("------------------------");
+                Debug::WriteError("ERROR: SHADER_COMPILATION_ERROR of type: %s%s", shaderType.c_str(), infoLog);
                 
                 return false;
             }
@@ -213,8 +214,8 @@ namespace GravyEngine
             if (!success)
             {
                 glGetProgramInfoLog(shader, 1024, NULL, infoLog);
-                fprintf(stderr, "------------------------\n");
-                fprintf(stderr, "ERROR: PROGRAM_LINKING_ERROR of type: PROGRAM\n%s\n", infoLog);
+                Debug::WriteError("------------------------");
+                Debug::WriteError("ERROR: PROGRAM_LINKING_ERROR of type: PROGRAM%s", infoLog);
                 return false;
             }
         }

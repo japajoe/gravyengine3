@@ -2,6 +2,7 @@
 #define DIFFUSEMATERIAL_HPP
 
 #include "../Material.hpp"
+#include "../Texture2D.hpp"
 
 namespace GravyEngine
 {
@@ -9,7 +10,9 @@ namespace GravyEngine
     {
     public:
         DiffuseMaterial();
-        void UpdateUniforms() override;
+        void Use(Transform *transform, Camera *camera) override;
+        void SetDiffuseTexture(Texture2D *texture);
+        Texture2D *GetDiffuseTexture() const;
     private:
         int uModel;
         int uModelInverted;
@@ -17,6 +20,7 @@ namespace GravyEngine
         int uDiffuseTexture;
         int uUVOffset;
         int uUVScale;
+        Texture2D *pDiffuseTexture;
     };
 };
 
