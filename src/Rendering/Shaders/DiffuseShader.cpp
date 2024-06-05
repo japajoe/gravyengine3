@@ -48,7 +48,7 @@ namespace GravyEngine
             return nullptr;
 
         Shader shader(vertex, fragment);
-        return Shader::Add(shader, name);
+        return Shader::Add(name, shader);
     }
 
     void DiffuseShader::Destroy()

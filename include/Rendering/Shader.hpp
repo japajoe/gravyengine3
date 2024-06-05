@@ -26,7 +26,7 @@ namespace GravyEngine
         uint32_t GetId() const;
         void Use();
         void Delete();
-        static Shader *Add(Shader &shader, const std::string &name);
+        static Shader *Add(const std::string &name, const Shader &shader);
         static void Remove(const std::string &name);
         static Shader *Find(const std::string &name);
         void SetMat2(const std::string &name, const float *value, bool transpose = false);

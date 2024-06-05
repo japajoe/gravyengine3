@@ -134,7 +134,7 @@ namespace GravyEngine
         }
     }
 
-    Shader *Shader::Add(Shader &shader, const std::string &name)
+    Shader *Shader::Add(const std::string &name, const Shader &shader)
     {
         if(shaders.count(name) > 0)
         {
