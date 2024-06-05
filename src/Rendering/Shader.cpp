@@ -1,10 +1,13 @@
 #include "Shader.hpp"
 #include "../Core/Debug.hpp"
+#include "../System/String.hpp"
+#include "../System/Environment.hpp"
 #include "../External/glad/glad.h"
 
 namespace GravyEngine
 {
     std::unordered_map<std::string,Shader> Shader::shaders;
+    std::unordered_map<std::string, std::string> Shader::includesMap;
 
     static uint32_t Compile(const std::string &source, GLenum type)
     {
@@ -25,7 +28,10 @@ namespace GravyEngine
     {
         id = 0;
 
-        uint32_t vertexShader = Compile(vertexSource, GL_VERTEX_SHADER);
+        std::string sVertexSource = AddIncludes(vertexSource);
+        std::string sFragmentSource = AddIncludes(fragmentSource);    
+
+        uint32_t vertexShader = Compile(sVertexSource, GL_VERTEX_SHADER);
         
         if(!CheckShader(vertexShader, ShaderType::Vertex))
         {
@@ -33,7 +39,7 @@ namespace GravyEngine
             return;
         }
 
-        uint32_t fragmentShader = Compile(fragmentSource, GL_FRAGMENT_SHADER);
+        uint32_t fragmentShader = Compile(sFragmentSource, GL_FRAGMENT_SHADER);
         
         if(!CheckShader(fragmentShader, ShaderType::Fragment))
         {
@@ -66,7 +72,11 @@ namespace GravyEngine
     {
         id = 0;
 
-        uint32_t vertexShader = Compile(vertexSource, GL_VERTEX_SHADER);
+        std::string sVertexSource = AddIncludes(vertexSource);
+        std::string sGeometrySource = AddIncludes(geometrySource);
+        std::string sFragmentSource = AddIncludes(fragmentSource);
+
+        uint32_t vertexShader = Compile(sVertexSource, GL_VERTEX_SHADER);
         
         if(!CheckShader(vertexShader, ShaderType::Vertex))
         {
@@ -74,7 +84,7 @@ namespace GravyEngine
             return;
         }
 
-        uint32_t geometryShader = Compile(geometrySource, GL_GEOMETRY_SHADER);
+        uint32_t geometryShader = Compile(sGeometrySource, GL_GEOMETRY_SHADER);
         
         if(!CheckShader(geometryShader, ShaderType::Geometry))
         {
@@ -83,7 +93,7 @@ namespace GravyEngine
             return;
         }
 
-        uint32_t fragmentShader = Compile(fragmentSource, GL_FRAGMENT_SHADER);
+        uint32_t fragmentShader = Compile(sFragmentSource, GL_FRAGMENT_SHADER);
         
         if(!CheckShader(fragmentShader, ShaderType::Fragment))
         {
@@ -311,5 +321,68 @@ namespace GravyEngine
     void Shader::SetBool(int32_t location, bool value)
     {
         glUniform1i(location, value ? 1 : 0);
+    }
+
+    void Shader::AddIncludeFile(const std::string &name, const std::string &code)
+    {
+        if(includesMap.count(name) > 0)
+            return;
+        includesMap[name] = code;
+    }
+
+    std::string Shader::AddIncludes(const std::string &shaderSource)
+    {
+        if(String::Contains(shaderSource, "#include <"))
+        {
+            auto lines = String::Split(shaderSource, '\n');
+
+            if(lines.size() == 0)
+                return shaderSource;
+
+            bool modified = false;
+
+            for(size_t i = 0; i < lines.size(); i++)
+            {
+                if(!String::Contains(lines[i], "#include <"))
+                {
+                    lines[i] += Environment::NewLine();
+                    continue;
+                }
+
+                if(!String::Contains(lines[i], ">"))
+                {
+                    lines[i] += Environment::NewLine();
+                    continue;
+                }
+
+                String::Replace(lines[i], "<", "");
+                String::Replace(lines[i], ">", "");
+                String::Replace(lines[i], "#include ", "");
+
+                if(includesMap.count(lines[i]) > 0)
+                {
+                    lines[i] = includesMap[lines[i]];
+                    modified = true;
+                }
+                else
+                {
+                    lines[i] += Environment::NewLine();
+                }
+            }
+
+            if(modified)
+            {
+                std::string newSource;
+
+                for(int i = 0; i < lines.size(); i++)
+                {
+                    newSource += lines[i];
+                }
+
+                return newSource;
+            }
+        }
+
+        return shaderSource;
     }
 };

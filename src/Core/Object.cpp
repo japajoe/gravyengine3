@@ -12,7 +12,7 @@ namespace GravyEngine
 
     }
 
-    uint64_t Object::GetId() const
+    uint64_t Object::GetInstanceId() const
     {
         return id;
     }

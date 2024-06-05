@@ -10,6 +10,8 @@ namespace GravyEngine
     DiffuseMaterial::DiffuseMaterial() : Material()
     {
         pDiffuseTexture = nullptr;
+        diffuseColor = Color::White();
+
         pShader = Shader::Find("Diffuse");
 
         if(pShader)
@@ -18,6 +20,7 @@ namespace GravyEngine
             uModelInverted = glGetUniformLocation(pShader->GetId(), "uModelInverted");
             uMVP = glGetUniformLocation(pShader->GetId(), "uMVP");
             uDiffuseTexture = glGetUniformLocation(pShader->GetId(), "uDiffuseTexture");
+            uDiffuseColor = glGetUniformLocation(pShader->GetId(), "uDiffuseColor");
             uUVOffset = glGetUniformLocation(pShader->GetId(), "uUVOffset");
             uUVScale = glGetUniformLocation(pShader->GetId(), "uUVScale");
         }
@@ -57,6 +60,8 @@ namespace GravyEngine
             pShader->SetInt(uDiffuseTexture, unit);
             unit++;
         }
+
+        pShader->SetFloat4(uDiffuseColor, &diffuseColor.r);
     }
 
     void DiffuseMaterial::SetDiffuseTexture(Texture2D *texture)
@@ -67,5 +72,15 @@ namespace GravyEngine
     Texture2D *DiffuseMaterial::GetDiffuseTexture() const
     {
         return pDiffuseTexture;
+    }
+
+    void DiffuseMaterial::SetDiffuseColor(const Color &color)
+    {
+        this->diffuseColor = color;
+    }
+
+    Color DiffuseMaterial::GetDiffuseColor() const
+    {
+        return diffuseColor;
     }
 };

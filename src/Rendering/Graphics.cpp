@@ -4,7 +4,9 @@
 #include "Mesh.hpp"
 #include "Texture.hpp"
 #include "Texture2D.hpp"
+#include "Shaders/ShaderCore.hpp"
 #include "Shaders/DiffuseShader.hpp"
+#include "Shaders/ProceduralSkyboxShader.hpp"
 #include "../System/Drawing/Image.hpp"
 #include "../Core/Camera.hpp"
 #include "../Core/GameObject.hpp"
@@ -22,7 +24,9 @@ namespace GravyEngine
         mainCamera = std::make_unique<GameObject>();
         mainCamera->AddComponent<Camera>();
 
+        Shader::AddIncludeFile("ShaderCore", ShaderCore::GetSource());
         DiffuseShader::Create();
+        ProceduralSkyboxShader::Create();
 
         Mesh::Add("Capsule", MeshGenerator::CreateCapsule(Vector3f::One()));
         Mesh::Add("Cube", MeshGenerator::CreateCube(Vector3f::One()));
@@ -38,11 +42,15 @@ namespace GravyEngine
             Texture2D texture(&defaultImage);
             Texture2D::Add("Default", texture);
         }
+
+        glEnable(GL_DEPTH_TEST);
+        glEnable(GL_CULL_FACE);
     }
 
     void Graphics::Deinitialize()
     {
         DiffuseShader::Destroy();
+        ProceduralSkyboxShader::Destroy();
 
         Mesh::Remove("Capsule");
         Mesh::Remove("Cube");
@@ -63,8 +71,6 @@ namespace GravyEngine
 
         glClearColor(color.r, color.g, color.b, color.a);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-        glEnable(GL_DEPTH_TEST);
 
         if(renderers.size() > 0)
         {

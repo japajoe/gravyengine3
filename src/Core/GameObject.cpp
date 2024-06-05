@@ -4,6 +4,7 @@
 #include "../Rendering/MeshRenderer.hpp"
 #include "../Rendering/Texture.hpp"
 #include "../Rendering/Materials/DiffuseMaterial.hpp"
+#include "../Rendering/Materials/ProceduralSkyboxMaterial.hpp"
 
 namespace GravyEngine
 {
@@ -28,31 +29,90 @@ namespace GravyEngine
     {
         Mesh *mesh = nullptr;
 
+        std::function<std::shared_ptr<Material>()> createMaterial;
+        Texture2D *pTexture = nullptr;
+
+        bool cullFace = true;
+        bool depthTest = true;
+
         switch(type)
         {
+            case PrimitiveType::Capsule:
+            {
+                mesh = Mesh::Find("Capsule");
+                createMaterial = [] () { return std::make_shared<DiffuseMaterial>(); };
+                pTexture = Texture2D::Find("Default");
+                break;
+            }
             case PrimitiveType::Cube:
+            {
                 mesh = Mesh::Find("Cube");
+                createMaterial = [] () { return std::make_shared<DiffuseMaterial>(); };
+                pTexture = Texture2D::Find("Default");
                 break;
+            }
+            case PrimitiveType::Hemisphere:
+            {
+                mesh = Mesh::Find("Hemisphere");
+                createMaterial = [] () { return std::make_shared<DiffuseMaterial>(); };
+                pTexture = Texture2D::Find("Default");
+                break;
+            }
             case PrimitiveType::Plane:
+            {
                 mesh = Mesh::Find("Plane");
+                createMaterial = [] () { return std::make_shared<DiffuseMaterial>(); };
+                pTexture = Texture2D::Find("Default");
                 break;
-            case PrimitiveType::Sphere:
+            }
+            case PrimitiveType::Quad:
+            {
+                mesh = Mesh::Find("Quad");
+                createMaterial = [] () { return std::make_shared<DiffuseMaterial>(); };
+                pTexture = Texture2D::Find("Default");
+                break;
+            }
+            case PrimitiveType::Skybox:
+            {
                 mesh = Mesh::Find("Sphere");
+                createMaterial = [] () { return std::make_shared<ProceduralSkyboxMaterial>(); };
+                cullFace = false;
+                depthTest = false;
                 break;
+            }
+            case PrimitiveType::Sphere:
+            {
+                mesh = Mesh::Find("Sphere");
+                createMaterial = [] () { return std::make_shared<DiffuseMaterial>(); };
+                pTexture = Texture2D::Find("Default");
+                break;
+            }
             default:
-                return nullptr;
+            {
+                mesh = nullptr;
+                break;
+            }
         }
+
+        if(mesh == nullptr)
+            return nullptr;
 
         auto object = std::make_unique<GameObject>();
         auto renderer = object->AddComponent<MeshRenderer>();
-        auto material = std::make_shared<DiffuseMaterial>();
-        auto texture = Texture2D::Find("Default");
+        auto material = createMaterial();
 
-        material->SetDiffuseTexture(texture);
+        if(pTexture)
+        {
+            DiffuseMaterial *pMaterial = dynamic_cast<DiffuseMaterial*>(material.get());
+            pMaterial->SetDiffuseTexture(pTexture);
+        }
+
+        renderer->Add(mesh, material);
         
-        renderer->SetMaterial(material);
-        renderer->SetMesh(mesh);
-        
+        auto settings = renderer->GetSettings(0);
+        settings->cullFace = cullFace;
+        settings->depthTest = depthTest;
+
         Graphics::AddRenderer(object.get());
         
         return object;

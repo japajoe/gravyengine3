@@ -11,9 +11,14 @@ namespace GravyEngine
 {
     enum class PrimitiveType
     {
+        Capsule,
         Cube,
+        Hemisphere,
         Plane,
-        Sphere
+        Quad,
+        Skybox,
+        Sphere,
+        Terrain
     };
 
     class GameObject : public Object

@@ -47,10 +47,13 @@ namespace GravyEngine
         void SetFloat4(int32_t location, const float *value);
         void SetInt(int32_t location, int32_t value);
         void SetBool(int32_t location, bool value);
+        static void AddIncludeFile(const std::string &name, const std::string &code);
     private:
         uint32_t id;
         static std::unordered_map<std::string,Shader> shaders;
+        static std::unordered_map<std::string, std::string> includesMap;
         static bool CheckShader(uint32_t shader, ShaderType type);
+        static std::string AddIncludes(const std::string &shaderSource);
     };
 };
 

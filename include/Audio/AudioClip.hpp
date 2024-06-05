@@ -9,11 +9,6 @@ namespace GravyEngine
 {
     class AudioClip
     {
-    private:
-        std::string filePath;
-        std::vector<uint8_t> data;
-        void *handle;
-        bool streamFromDisk;
     public:
         AudioClip(const std::string &filepath, bool streamFromDisk = true);
         AudioClip(const std::vector<uint8_t> &data);
@@ -21,6 +16,11 @@ namespace GravyEngine
         void *GetHandle() const;
         size_t GetDataSize() const;
         bool GetStreamFromDisk() const;
+    private:
+        std::string filePath;
+        std::vector<uint8_t> data;
+        void *handle;
+        bool streamFromDisk;
     };
 };
 

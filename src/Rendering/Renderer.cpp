@@ -2,18 +2,22 @@
 
 namespace GravyEngine
 {
+    RenderSettings::RenderSettings()
+    {
+        this->wireframe = false;
+        this->depthTest = true;
+        this->cullFace = true;
+        this->alphaBlend = false;
+        this->depthFunc = GL_LESS;
+    }
+
     Renderer::Renderer() : Component()
     {
-        this->pMaterial = nullptr;
+
     }
 
     Renderer::~Renderer()
     {
 
-    }
-
-    void Renderer::SetMaterial(const std::shared_ptr<Material> &material)
-    {
-        this->pMaterial = material;
     }
 };

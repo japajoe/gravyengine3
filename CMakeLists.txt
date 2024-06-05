@@ -28,6 +28,7 @@ include_directories(
     "${PROJECT_SOURCE_DIR}/include/Rendering/Shaders"
     "${PROJECT_SOURCE_DIR}/include/System"
     "${PROJECT_SOURCE_DIR}/include/System/Drawing"
+    "${PROJECT_SOURCE_DIR}/include/System/IO"
     "${PROJECT_SOURCE_DIR}/include/System/Numerics"
     "${PROJECT_SOURCE_DIR}/game/include"
 )
@@ -35,9 +36,9 @@ include_directories(
 add_executable(${PROJECT_NAME} ${SOURCES})
 
 if(BUILD_PLATFORM STREQUAL "windows")
-    target_link_libraries(${PROJECT_NAME} glad glm glfw imgui miniaudioex -lopengl32 -lgdi32 -static -static-libgcc -static-libstdc++)
+    target_link_libraries(${PROJECT_NAME} glad glm glfw imgui miniaudioex -lstdc++fs -lopengl32 -lgdi32 -static -static-libgcc -static-libstdc++)
 elseif(BUILD_PLATFORM STREQUAL "linux")
-    target_link_libraries(${PROJECT_NAME} glad glm glfw imgui miniaudioex -lGL -ldl -lm -pthread)
+    target_link_libraries(${PROJECT_NAME} glad glm glfw imgui miniaudioex -lstdc++fs -lGL -ldl -lm -pthread)
 elseif(BUILD_PLATFORM STREQUAL "mac")
-    target_link_libraries(${PROJECT_NAME} glad glm glfw imgui miniaudioex -lopengl)
+    target_link_libraries(${PROJECT_NAME} glad glm glfw imgui miniaudioex -lstdc++fs -lopengl)
 endif()

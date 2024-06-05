@@ -14,7 +14,7 @@ namespace GravyEngine
     public:
         Object();
         virtual ~Object();
-        uint64_t GetId() const;
+        uint64_t GetInstanceId() const;
         void SetName(const std::string name);
         std::string GetName() const;
     };

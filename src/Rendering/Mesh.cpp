@@ -173,13 +173,13 @@ namespace GravyEngine
     {
         if(meshes.count(name) > 0)
         {
-            Debug::WriteError("[MESH] can't add %s with ID: %llu because it already exists", name.c_str(), mesh.GetId());
+            Debug::WriteError("[MESH] can't add %s with ID: %llu because it already exists", name.c_str(), mesh.GetInstanceId());
             return nullptr;
         }
 
         meshes[name] = mesh;
 
-        Debug::WriteLog("[MESH] %s added with ID: %llu", name.c_str(), mesh.GetId());
+        Debug::WriteLog("[MESH] %s added with ID: %llu", name.c_str(), mesh.GetInstanceId());
 
         auto pMesh = &meshes[name];
         pMesh->Generate();
@@ -192,7 +192,7 @@ namespace GravyEngine
 
         if(mesh)
         {
-            Debug::WriteLog("[MESH] %s deleted with ID: %llu", name.c_str(), mesh->GetId());
+            Debug::WriteLog("[MESH] %s deleted with ID: %llu", name.c_str(), mesh->GetInstanceId());
             mesh->Delete();
             meshes.erase(name);
         }
