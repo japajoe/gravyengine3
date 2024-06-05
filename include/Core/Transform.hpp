@@ -10,6 +10,13 @@
 
 namespace GravyEngine
 {
+    struct TransformData
+    {
+        Vector3 position;
+        Quaternion rotation;
+        Vector3 scale;
+    };
+
     class Transform : public Component
     {     
     public:

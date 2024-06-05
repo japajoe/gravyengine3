@@ -12,7 +12,7 @@ void GameManager::OnInitialize()
         ground->GetTransform()->SetScale(Vector3(1000, 1, 1000));
         auto renderer = ground->GetComponent<MeshRenderer>();
         auto material = renderer->GetMaterial<DiffuseMaterial>(0);
-        material->SetDiffuseColor(Color(26, 176, 46, 255));
+        material->SetDiffuseColor(Color(42, 107, 14, 255));
     }
 
     for(size_t i = 0; i < 3; i++)

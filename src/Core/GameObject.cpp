@@ -11,6 +11,7 @@ namespace GravyEngine
     GameObject::GameObject() : Object()
     {
         transform.gameObject = this;
+        isActive = true;
     }
 
     GameObject::~GameObject()
@@ -23,6 +24,16 @@ namespace GravyEngine
     Transform *GameObject::GetTransform()
     {
         return &transform;
+    }
+
+    void GameObject::SetIsActive(bool isActive)
+    {
+        this->isActive = isActive;
+    }
+
+    bool GameObject::GetIsActive() const
+    {
+        return isActive;
     }
 
     std::shared_ptr<GameObject> GameObject::CreatePrimitive(PrimitiveType type)

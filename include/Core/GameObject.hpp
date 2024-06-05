@@ -25,11 +25,14 @@ namespace GravyEngine
     {
     private:
         Transform transform;
+        bool isActive;
         std::vector<std::unique_ptr<Component>> components;
     public:
         GameObject();
         ~GameObject();
         Transform *GetTransform();
+        void SetIsActive(bool isActive);
+        bool GetIsActive() const;
 
         static std::shared_ptr<GameObject> CreatePrimitive(PrimitiveType type);
 
