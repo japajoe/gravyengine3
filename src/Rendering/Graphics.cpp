@@ -108,7 +108,45 @@ namespace GravyEngine
 
         if(renderer)
         {
+            for(size_t i = 0; i < renderers.size(); i++)
+            {
+                if(renderers[i] == renderer)
+                {
+                    Debug::WriteError("[RENDERER] can't add with ID: %llu because it already exists", renderer->GetInstanceId());
+                    return;
+                }
+            }
+
+            Debug::WriteLog("[RENDERER] added with ID: %llu", renderer->GetInstanceId());
+
             renderers.push_back(renderer);
+        }
+    }
+
+    void Graphics::RemoveRenderer(GameObject *obj)
+    {
+        Renderer *renderer = obj->GetComponent<Renderer>();
+
+        if(renderer)
+        {
+            size_t index = 0;
+            bool found = false;
+
+            for(size_t i = 0; i < renderers.size(); i++)
+            {
+                if(renderers[i] == renderer)
+                {
+                    index = i;
+                    found = true;
+                    break;
+                }
+            }
+
+            if(found)
+            {
+                Debug::WriteLog("[RENDERER] removed with ID: %llu", renderer->GetInstanceId());
+                renderers.erase(renderers.begin() + index);
+            }
         }
     }
 

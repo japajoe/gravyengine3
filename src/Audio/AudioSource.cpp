@@ -9,6 +9,11 @@ namespace GravyEngine
         handle = nullptr;
     }
 
+    AudioSource::~AudioSource()
+    {
+        AudioContext::Remove(this);
+    }
+
     void AudioSource::OnInitialize()
     {
         handle = ma_ex_audio_source_init(AudioContext::GetContext());

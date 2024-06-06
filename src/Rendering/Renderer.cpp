@@ -1,4 +1,5 @@
 #include "Renderer.hpp"
+#include "Graphics.hpp"
 
 namespace GravyEngine
 {
@@ -16,9 +17,9 @@ namespace GravyEngine
         castShadows = true;
     }
 
-    Renderer::~Renderer()
+    void Renderer::OnDestroy()
     {
-
+        Graphics::RemoveRenderer(GetGameObject());
     }
 
     void Renderer::SetCastShadows(bool castShadows)

@@ -40,6 +40,7 @@ namespace GravyEngine
         EventHandler<AudioProcessCallback> process;
         EventHandler<AudioReadCallback> read;
         AudioSource();
+        ~AudioSource();
         void Update();
         void Stop();
         void Play();

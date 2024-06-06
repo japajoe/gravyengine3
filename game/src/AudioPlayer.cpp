@@ -35,25 +35,24 @@ void AudioPlayer::OnInitialize()
 void AudioPlayer::OnGUI()
 {
     ImGui::Begin("Audio Settings");
+    
     float masterVolume = AudioContext::GetMasterVolume();
     float musicVolume = audioSource->GetVolume();
+    
     if(ImGuiEx::Knob("Master Volume", &masterVolume, 0.0f, 1.0f, 64))
-    {
         AudioContext::SetMasterVolume(masterVolume);
-    }
+    
     if(ImGuiEx::Knob("Music Volume", &musicVolume, 0.0f, 1.0f, 64))
-    {
         audioSource->SetVolume(musicVolume);
-    }
+    
     if(ImGui::Button("<"))
-    {
         PreviousTrack();
-    }
+    
     ImGui::SameLine();
+    
     if(ImGui::Button(">"))
-    {
         NextTrack();
-    }
+    
     ImGui::End();
 }
 

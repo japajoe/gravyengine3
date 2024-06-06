@@ -6,6 +6,7 @@ namespace GravyEngine
     {
         this->filePath = filepath;
         this->handle = nullptr;
+        this->dataSize = 0;
         this->streamFromDisk = streamFromDisk;
     }
 
@@ -13,6 +14,14 @@ namespace GravyEngine
     {
         this->data = data;
         this->handle = reinterpret_cast<void*>(const_cast<uint8_t*>(this->data.data()));
+        this->dataSize = this->data.size();
+        this->streamFromDisk = false;
+    }
+
+    AudioClip::AudioClip(void *data, size_t size)
+    {
+        this->handle = data;
+        this->dataSize = size;
         this->streamFromDisk = false;
     }
 
@@ -28,7 +37,7 @@ namespace GravyEngine
 
     size_t AudioClip::GetDataSize() const
     {
-        return data.size();
+        return dataSize;
     }
 
     bool AudioClip::GetStreamFromDisk() const

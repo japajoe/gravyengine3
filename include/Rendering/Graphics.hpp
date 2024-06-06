@@ -21,6 +21,7 @@ namespace GravyEngine
     friend class Application;
     public:
         static void AddRenderer(GameObject *obj);
+        static void RemoveRenderer(GameObject *obj);
         static UniformBufferObject *FindUniformBuffer(const std::string &name);
     private:
         static std::vector<Renderer*> renderers;

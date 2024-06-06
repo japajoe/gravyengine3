@@ -11,7 +11,8 @@ namespace GravyEngine
     {
     friend class AudioContext;
     public:
-        AudioListener();    
+        AudioListener();
+        ~AudioListener();
         void SetIsEnabled(bool enabled);
         bool GetIsEnabled() const;
         void SetWorldUp(const Vector3 &worldUp);

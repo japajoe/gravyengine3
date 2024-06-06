@@ -24,7 +24,6 @@ namespace GravyEngine
     {
     public:
         Renderer();
-        virtual ~Renderer();
         virtual void OnRender() = 0;
         virtual void OnRender(Material *material, Camera *camera) = 0;
         void SetCastShadows(bool castShadows);
@@ -34,6 +33,7 @@ namespace GravyEngine
     protected:
         bool castShadows;
         bool receiveShadows;
+        void OnDestroy() override;
     };
 };
 
