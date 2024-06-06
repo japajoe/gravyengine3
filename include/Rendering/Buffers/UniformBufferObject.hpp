@@ -20,9 +20,9 @@ namespace GravyEngine
         void BindBufferBase(GLuint index);
         void BufferData(GLsizeiptr size, const void *data, GLenum usage);
         void BufferSubData(GLintptr offset, GLsizeiptr size, const void *data);
-        void UniformBlockBinding(GLuint program, GLuint uniformBlockIndex, GLuint uniformBlockBinding);
-        void BindToShader(GLuint program, GLuint uniformBlockBinding, const std::string &uniformBlockName);
-        GLuint GetUniformBlockIndex(GLuint program, const std::string &uniformBlockName);
+        //void UniformBlockBinding(GLuint program, GLuint uniformBlockIndex, GLuint uniformBlockBinding);
+        //void BindToShader(GLuint program, GLuint uniformBlockBinding, const std::string &uniformBlockName);
+        //GLuint GetUniformBlockIndex(GLuint program, const std::string &uniformBlockName);
         GLuint GetId() const;
     };
 };

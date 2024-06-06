@@ -23,6 +23,7 @@ namespace GravyEngine
         void SetMesh(Mesh *mesh);
         Mesh *GetMesh() const;
         void OnRender() override;
+        void OnRender(Material *material, Camera *camera) override;
         void Add(Mesh *mesh, const std::shared_ptr<Material> &material);
         void Remove(size_t index);
         void SetMesh(Mesh *mesh, size_t index);

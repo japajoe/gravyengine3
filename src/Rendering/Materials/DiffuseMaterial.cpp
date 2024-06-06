@@ -11,6 +11,10 @@ namespace GravyEngine
     {
         pDiffuseTexture = nullptr;
         diffuseColor = Color::White();
+        ambientStrength = 0.5f;
+        shininess = 16.0f;
+        uvOffset = Vector2(0, 0);
+        uvScale = Vector2(1, 1);
 
         pShader = Shader::Find("Diffuse");
 
@@ -23,6 +27,8 @@ namespace GravyEngine
             uDiffuseColor = glGetUniformLocation(pShader->GetId(), "uDiffuseColor");
             uUVOffset = glGetUniformLocation(pShader->GetId(), "uUVOffset");
             uUVScale = glGetUniformLocation(pShader->GetId(), "uUVScale");
+            uAmbientStrength = glGetUniformLocation(pShader->GetId(), "uAmbientStrength");
+            uShininess = glGetUniformLocation(pShader->GetId(), "uShininess");
         }
 
         SetName("DiffuseMaterial");
@@ -42,14 +48,15 @@ namespace GravyEngine
         Matrix4 model = transform->GetModelMatrix();
         Matrix4 MVP = projection * view * model;
         Matrix3 modelInverted = glm::inverse(glm::transpose(glm::mat3(model)));
-        Vector2 uvOffset(0, 0);
-        Vector2 uvScale(1, 1);
 
         pShader->Use();
 
         pShader->SetMat4(uModel, glm::value_ptr(model));
         pShader->SetMat4(uModelInverted, glm::value_ptr(modelInverted));
         pShader->SetMat4(uMVP, glm::value_ptr(MVP));
+        pShader->SetFloat4(uDiffuseColor, &diffuseColor.r);
+        pShader->SetFloat(uAmbientStrength, ambientStrength);
+        pShader->SetFloat(uShininess, shininess);
         pShader->SetFloat2(uUVOffset, glm::value_ptr(uvOffset));
         pShader->SetFloat2(uUVScale, glm::value_ptr(uvScale));
 
@@ -60,8 +67,6 @@ namespace GravyEngine
             pShader->SetInt(uDiffuseTexture, unit);
             unit++;
         }
-
-        pShader->SetFloat4(uDiffuseColor, &diffuseColor.r);
     }
 
     void DiffuseMaterial::SetDiffuseTexture(Texture2D *texture)
@@ -82,5 +87,45 @@ namespace GravyEngine
     Color DiffuseMaterial::GetDiffuseColor() const
     {
         return diffuseColor;
+    }
+
+    void DiffuseMaterial::SetAmbientStrength(float ambientStrength)
+    {
+        this->ambientStrength = ambientStrength;
+    }
+
+    float DiffuseMaterial::GetAmbientStrength() const
+    {
+        return ambientStrength;
+    }
+
+    void DiffuseMaterial::SetShininess(float shininess)
+    {
+        this->shininess = shininess;
+    }
+
+    float DiffuseMaterial::GetShininess() const
+    {
+        return shininess;
+    }
+
+    void DiffuseMaterial::SetUVOffset(const Vector2 &uvOffset)
+    {
+        this->uvOffset = uvOffset;
+    }
+
+    Vector2 DiffuseMaterial::GetUVOffset() const
+    {
+        return uvOffset;
+    }
+
+    void DiffuseMaterial::SetUVScale(const Vector2 &uvScale)
+    {
+        this->uvScale = uvScale;
+    }
+
+    Vector2 DiffuseMaterial::GetUVScale() const
+    {
+        return uvScale;
     }
 };

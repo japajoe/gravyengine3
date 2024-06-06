@@ -38,11 +38,13 @@ namespace GravyEngine
         float GetLinear() const;
         void SetQuadratic(float quadratic);
         float GetQuadratic() const;
+        static Light *GetMain();
         static void UpdateUniformBuffer();
     protected:
         void OnInitialize() override;
         void OnDestroy() override;
     private:
+        static Light *pMainLight;
         LightType type;
         Color color;
         Color ambient;

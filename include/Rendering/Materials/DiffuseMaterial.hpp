@@ -4,6 +4,7 @@
 #include "../Material.hpp"
 #include "../Texture2D.hpp"
 #include "../../System/Drawing/Color.hpp"
+#include "../../System/Numerics/Vector2.hpp"
 
 namespace GravyEngine
 {
@@ -16,16 +17,30 @@ namespace GravyEngine
         Texture2D *GetDiffuseTexture() const;
         void SetDiffuseColor(const Color &color);
         Color GetDiffuseColor() const;
+        void SetAmbientStrength(float ambientStrength);
+        float GetAmbientStrength() const;
+        void SetShininess(float shininess);
+        float GetShininess() const;
+        void SetUVOffset(const Vector2 &uvOffset);
+        Vector2 GetUVOffset() const;
+        void SetUVScale(const Vector2 &uvScale);
+        Vector2 GetUVScale() const;
     private:
         int uModel;
         int uModelInverted;
         int uMVP;
         int uDiffuseTexture;
         int uDiffuseColor;
+        int uAmbientStrength;
+        int uShininess;
         int uUVOffset;
         int uUVScale;
         Texture2D *pDiffuseTexture;
         Color diffuseColor;
+        float ambientStrength;
+        float shininess;
+        Vector2 uvOffset;
+        Vector2 uvScale;
     };
 };
 

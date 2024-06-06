@@ -4,9 +4,15 @@
 #include "Mesh.hpp"
 #include "Texture.hpp"
 #include "Texture2D.hpp"
+#include "Texture2DArray.hpp"
 #include "Shaders/ShaderCore.hpp"
+#include "Shaders/UniformLight.hpp"
+#include "Shaders/UniformCamera.hpp"
+#include "Shaders/UniformShadow.hpp"
 #include "Shaders/DiffuseShader.hpp"
 #include "Shaders/ProceduralSkyboxShader.hpp"
+#include "Shaders/DepthShader.hpp"
+#include "Materials/DepthMaterial.hpp"
 #include "../System/Drawing/Image.hpp"
 #include "../Core/Camera.hpp"
 #include "../Core/Light.hpp"
@@ -19,18 +25,27 @@
 namespace GravyEngine
 {
     static std::unique_ptr<GameObject> mainCamera;
+    static std::unique_ptr<GameObject> mainLight;
     std::vector<Renderer*> Graphics::renderers;
-    std::vector<UniformBufferObject> Graphics::uniformBuffers;
+    std::vector<std::unique_ptr<UniformBufferObject>> Graphics::uniformBuffers;
+    CascadedShadowMap Graphics::cascadedShadowMap;
+    std::unique_ptr<DepthMaterial> Graphics::depthMaterial;
 
     void Graphics::Initialize()
     {
         mainCamera = std::make_unique<GameObject>();
         mainCamera->AddComponent<Camera>();
 
+        mainLight = std::make_unique<GameObject>();
+        auto light = mainLight->AddComponent<Light>();
+        light->SetType(LightType::Directional);
+        light->GetTransform()->SetPosition(Vector3(0, 100, 0));
+
         CreateTextures();
         CreateShaders();
         CreateMeshes();
         CreateUniformBuffers();
+        CreateShadowMap();
 
         glEnable(GL_DEPTH_TEST);
         glEnable(GL_CULL_FACE);
@@ -42,17 +57,41 @@ namespace GravyEngine
         DestroyShaders();
         DestroyMeshes();
         DestroyUniformBuffers();
+        DestroyShadowMap();
     }
 
     void Graphics::OnRender()
     {
+        Camera::UpdateUniformBuffer();
+        Light::UpdateUniformBuffer();
+        RenderShadowMap();
+        RenderScene();
+    }
+
+    void Graphics::RenderShadowMap()
+    {
+        if(renderers.size() > 0)
+        {
+            Camera *camera = Camera::GetMain();
+            DepthMaterial *material = depthMaterial.get();
+
+            cascadedShadowMap.Bind();
+            for(size_t i = 0; i < renderers.size(); i++)
+            {
+                if(!renderers[i]->GetCastShadows())
+                    continue;
+                renderers[i]->OnRender(material, camera);
+            }
+            cascadedShadowMap.Unbind();
+        }
+    }
+
+    void Graphics::RenderScene()
+    {
         Camera *pCamera = Camera::GetMain();
         auto color = pCamera->GetClearColor();
-
         glClearColor(color.r, color.g, color.b, color.a);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-        Light::UpdateUniformBuffer();
 
         if(renderers.size() > 0)
         {
@@ -77,9 +116,9 @@ namespace GravyEngine
     {
         for(size_t i = 0; i < uniformBuffers.size(); i++)
         {
-            if(uniformBuffers[i].GetName() == name)
+            if(uniformBuffers[i]->GetName() == name)
             {
-                return &uniformBuffers[i];
+                return uniformBuffers[i].get();
             }
         }
 
@@ -94,13 +133,21 @@ namespace GravyEngine
             Texture2D texture(&defaultImage);
             Texture2D::Add("Default", texture);
         }
+
+        Texture2DArray depthTexture(2048, 2048, 5);
+        Texture2DArray::Add("DepthMap", depthTexture);
     }
 
     void Graphics::CreateShaders()
     {
         Shader::AddIncludeFile("ShaderCore", ShaderCore::GetSource());
+        Shader::AddIncludeFile("UniformLight", UniformLight::GetSource());
+        Shader::AddIncludeFile("UniformCamera", UniformCamera::GetSource());
+        Shader::AddIncludeFile("UniformShadow", UniformShadow::GetSource());
+
         DiffuseShader::Create();
         ProceduralSkyboxShader::Create();
+        DepthShader::Create();
     }
 
     void Graphics::CreateMeshes()
@@ -116,18 +163,42 @@ namespace GravyEngine
 
     void Graphics::CreateUniformBuffers()
     {
-        CreateUniformBuffer("uLights", 3, Light::MaxLights * sizeof(UniformLightInfo));
+        auto diffuseShader = Shader::Find("Diffuse");
+
+        if(diffuseShader == nullptr)
+        {
+            Debug::WriteError("Can't create uniform buffer because Diffuse shader is null");
+            return;
+        }
+
+        CreateUniformBuffer("Camera", 0, sizeof(UniformCameraInfo), {diffuseShader});
+        CreateUniformBuffer("Lights", 1, Light::MaxLights * sizeof(UniformLightInfo), {diffuseShader});
+        CreateUniformBuffer("Shadow", 2, sizeof(UniformShadowInfo), {diffuseShader});
+    }
+
+    void Graphics::CreateShadowMap()
+    {
+        Texture2DArray *depthMap = Texture2DArray::Find("DepthMap");
+        UniformBufferObject *shadowData = FindUniformBuffer("Shadow");
+        Camera *camera = mainCamera->GetComponent<Camera>();
+        Light *light = mainLight->GetComponent<Light>();
+
+        cascadedShadowMap = CascadedShadowMap(depthMap, shadowData, camera, light);
+        
+        depthMaterial = std::make_unique<DepthMaterial>();
     }
 
     void Graphics::DestroyTextures()
     {
         Texture2D::Remove("Default");
+        Texture2DArray::Remove("DepthMap");
     }
 
     void Graphics::DestroyShaders()
     {
         DiffuseShader::Destroy();
         ProceduralSkyboxShader::Destroy();
+        DepthShader::Destroy();
     }
 
     void Graphics::DestroyMeshes()
@@ -146,24 +217,34 @@ namespace GravyEngine
         for(size_t i = 0; i < uniformBuffers.size(); i++)
         {
             auto &buffer = uniformBuffers[i];
-            Debug::WriteLog("[UNIFORM_BUFFER] %s deleted with ID: %llu", buffer.GetName().c_str(), buffer.GetId());
-            buffer.Delete();
+            Debug::WriteLog("[UNIFORM_BUFFER] %s deleted with ID: %llu", buffer->GetName().c_str(), buffer->GetId());
+            buffer->Delete();
         }
 
         uniformBuffers.clear();
     }
 
-    UniformBufferObject *Graphics::CreateUniformBuffer(const std::string &name, uint32_t bindingIndex, size_t bufferSize)
+    void Graphics::DestroyShadowMap()
     {
-        UniformBufferObject buffer;
-        buffer.SetName(name);
-        buffer.Generate();
-        buffer.Bind();
-        buffer.BufferData(bufferSize, nullptr, GL_DYNAMIC_DRAW);
-        buffer.BindBufferBase(bindingIndex);
-        buffer.Unbind();
-        Debug::WriteLog("[UNIFORM_BUFFER] %s added with ID: %llu", name.c_str(), buffer.GetId());
-        uniformBuffers.push_back(buffer);
-        return &uniformBuffers.back();
+        cascadedShadowMap.Delete();
+    }
+
+    UniformBufferObject *Graphics::CreateUniformBuffer(const std::string &name, uint32_t bindingIndex, size_t bufferSize, const std::vector<Shader*> &shaders)
+    {
+        uniformBuffers.push_back(std::make_unique<UniformBufferObject>());
+        size_t last = uniformBuffers.size() -1;
+        auto pBuffer = uniformBuffers[last].get();
+
+        // for(size_t i = 0; i < shaders.size(); i++)
+        //     pBuffer->BindToShader(shaders[i]->GetId(), bindingIndex, name);
+
+        pBuffer->SetName(name);
+        pBuffer->Generate();
+        pBuffer->Bind();
+        pBuffer->BufferData(bufferSize, nullptr, GL_DYNAMIC_DRAW);
+        pBuffer->BindBufferBase(bindingIndex);
+        pBuffer->Unbind();
+        Debug::WriteLog("[UNIFORM_BUFFER] %s added with ID: %llu", name.c_str(), pBuffer->GetId());
+        return pBuffer;
     }
 };

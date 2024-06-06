@@ -13,11 +13,31 @@ namespace GravyEngine
 
     Renderer::Renderer() : Component()
     {
-
+        castShadows = true;
     }
 
     Renderer::~Renderer()
     {
 
+    }
+
+    void Renderer::SetCastShadows(bool castShadows)
+    {
+        this->castShadows = castShadows;
+    }
+
+    bool Renderer::GetCastShadows() const
+    {
+        return castShadows;
+    }
+
+    void Renderer::SetReceiveShadows(bool receiveShadows)
+    {
+        this->receiveShadows = receiveShadows;
+    }
+
+    bool Renderer::GetReceiveShadows() const
+    {
+        return receiveShadows;
     }
 };

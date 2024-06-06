@@ -2,6 +2,7 @@
 #define RENDERER_HPP
 
 #include "../Core/Component.hpp"
+#include "../Core/Camera.hpp"
 #include "../External/glad/glad.h"
 #include "Material.hpp"
 #include <memory>
@@ -25,6 +26,14 @@ namespace GravyEngine
         Renderer();
         virtual ~Renderer();
         virtual void OnRender() = 0;
+        virtual void OnRender(Material *material, Camera *camera) = 0;
+        void SetCastShadows(bool castShadows);
+        bool GetCastShadows() const;
+        void SetReceiveShadows(bool receiveShadows);
+        bool GetReceiveShadows() const;
+    protected:
+        bool castShadows;
+        bool receiveShadows;
     };
 };
 

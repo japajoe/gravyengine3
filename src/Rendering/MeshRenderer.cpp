@@ -118,4 +118,56 @@ namespace GravyEngine
             pMesh->GetVAO()->Unbind();
         }
     }
+
+    void MeshRenderer::OnRender(Material *material, Camera *camera)
+    {
+        if(data.size() == 0)
+            return;
+
+        for(size_t i = 0; i < data.size(); i++)
+        {
+            Mesh *pMesh = data[i].pMesh;
+
+            if(!pMesh)
+                return;
+
+            Material *pMaterial = material;
+
+            if(!pMaterial)
+                return;
+
+            if(!pMaterial->GetShader())
+                return;
+
+            auto &settings = data[i].settings;
+
+            if(settings.depthTest)
+                GL::EnableDepthTest();
+            else
+                GL::DisableDepthTest();
+            
+            if(settings.cullFace)
+                GL::EnableCullFace();
+            else
+                GL::DisableCullFace();
+            
+            if(settings.alphaBlend)
+                GL::EnableBlendMode();
+            else
+                GL::DisableBlendMode();
+
+            GL::SetDepthFunc(settings.depthFunc);
+
+            pMaterial->Use(GetTransform(), camera);
+
+            pMesh->GetVAO()->Bind();
+
+            if(pMesh->GetEBO()->GetId() > 0)
+                glDrawElements(GL_TRIANGLES, pMesh->GetIndicesCount(), GL_UNSIGNED_INT, 0);
+            else
+                glDrawArrays(GL_TRIANGLES, 0, pMesh->GetVerticesCount());
+
+            pMesh->GetVAO()->Unbind();
+        }
+    }
 };

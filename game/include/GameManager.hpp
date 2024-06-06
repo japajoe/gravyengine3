@@ -12,13 +12,11 @@ protected:
     void OnUpdate() override;
     void OnGUI() override;
 private:
-    std::vector<std::shared_ptr<GameObject>> cubes;
     std::shared_ptr<GameObject> skybox;
     std::shared_ptr<GameObject> ground;
-    AudioSource *audioSource;
-    std::vector<AudioClip> audioClips;
-    size_t clipIndex;
-    void OnAudioEnded(AudioSource *source);
+    std::shared_ptr<GameObject> light;
+    std::shared_ptr<GameObject> cube;
+    AudioSource *audioSourceCube;
 };
 
 #endif

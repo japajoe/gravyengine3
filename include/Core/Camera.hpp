@@ -2,7 +2,9 @@
 #define CAMERA_HPP
 
 #include "Component.hpp"
+#include "Transform.hpp"
 #include "../System/Numerics/Matrix4.hpp"
+#include "../System/Numerics/Vector4.hpp"
 #include "../System/Drawing/Color.hpp"
 
 namespace GravyEngine
@@ -11,6 +13,14 @@ namespace GravyEngine
     {
         Orthographic,
         Perspective
+    };
+
+    struct UniformCameraInfo
+    {
+        Matrix4 view;
+        Matrix4 projection;
+        Matrix4 viewProjection;
+        Vector4 position;
     };
 
     class Camera : public Component
@@ -30,6 +40,7 @@ namespace GravyEngine
         void SetClearColor(const Color &clearColor);
         Color GetClearColor() const;
         static Camera *GetMain();
+        static void UpdateUniformBuffer();
     protected:
         void OnInitialize() override;
     private:
@@ -40,6 +51,10 @@ namespace GravyEngine
         float fieldOfView;
         float nearClippingPlane;
         float farClippingPlane;
+        TransformData transformData;
+        bool isDirty;
+        void SetDirty(bool isDirty);
+        bool IsDirty() const;
         void Initialize();
         static void OnScreenResize(int width, int height);
     };

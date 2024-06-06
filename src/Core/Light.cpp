@@ -7,6 +7,7 @@
 namespace GravyEngine
 {
     std::vector<Light*> Light::lights;
+    Light *Light::pMainLight = nullptr;
 
     Light::Light() : Component()
     {
@@ -35,9 +36,13 @@ namespace GravyEngine
 
     void Light::OnInitialize()
     {
+        if(pMainLight == nullptr)
+            pMainLight = this;
+
         transformData.position = GetTransform()->GetPosition();
         transformData.rotation = GetTransform()->GetRotation();
         transformData.scale = GetTransform()->GetScale();
+        SetDirty(true);
         Add(this);
     }
 
@@ -59,6 +64,7 @@ namespace GravyEngine
     void Light::SetType(LightType type)
     {
         this->type = type;
+        SetDirty(true);
     }
     
     LightType Light::GetType() const
@@ -69,6 +75,7 @@ namespace GravyEngine
     void Light::SetColor(const Color &color)
     {
         this->color = color;
+        SetDirty(true);
     }
 
     Color Light::GetColor() const
@@ -79,6 +86,7 @@ namespace GravyEngine
     void Light::SetAmbient(const Color &ambient)
     {
         this->ambient = ambient;
+        SetDirty(true);
     }
 
     Color Light::GetAmbient() const
@@ -89,6 +97,7 @@ namespace GravyEngine
     void Light::SetDiffuse(const Color &diffuse)
     {
         this->diffuse = diffuse;
+        SetDirty(true);
     }
 
     Color Light::GetDiffuse() const
@@ -99,6 +108,7 @@ namespace GravyEngine
     void Light::SetSpecular(const Color &specular)
     {
         this->specular = specular;
+        SetDirty(true);
     }
 
     Color Light::GetSpecular() const
@@ -109,6 +119,7 @@ namespace GravyEngine
     void Light::SetStrength(float strength)
     {
         this->strength = strength;
+        SetDirty(true);
     }
 
     float Light::GetStrength() const
@@ -119,6 +130,7 @@ namespace GravyEngine
     void Light::SetConstant(float constant)
     {
         this->constant = constant;
+        SetDirty(true);
     }
 
     float Light::GetConstant() const
@@ -129,6 +141,7 @@ namespace GravyEngine
     void Light::SetLinear(float linear)
     {
         this->linear = linear;
+        SetDirty(true);
     }
 
     float Light::GetLinear() const
@@ -139,6 +152,7 @@ namespace GravyEngine
     void Light::SetQuadratic(float quadratic)
     {
         this->quadratic = quadratic;
+        SetDirty(true);
     }
 
     float Light::GetQuadratic() const
@@ -170,13 +184,18 @@ namespace GravyEngine
         }
     }
 
+    Light *Light::GetMain()
+    {
+        return pMainLight;
+    }
+
     static UniformBufferObject *uniformBuffer = nullptr;
 
     void Light::UpdateUniformBuffer()
     {
         if(uniformBuffer == nullptr)
         {
-            uniformBuffer = Graphics::FindUniformBuffer("uLights");
+            uniformBuffer = Graphics::FindUniformBuffer("Lights");
 
             if(uniformBuffer == nullptr)
                 return;
@@ -238,7 +257,7 @@ namespace GravyEngine
                 lightInfo.isActive = -1;
             }
 
-            uniformBuffer->BufferSubData(i * sizeof(UniformLightInfo), sizeof(UniformLightInfo), &lights);
+            uniformBuffer->BufferSubData(i * sizeof(UniformLightInfo), sizeof(UniformLightInfo), &lightInfo);
         }
         
         uniformBuffer->Unbind();

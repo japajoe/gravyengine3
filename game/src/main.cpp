@@ -1,4 +1,5 @@
 #include "GameManager.hpp"
+#include "AudioPlayer.hpp"
 #include <memory>
 
 static void OnApplicationLoaded();
@@ -16,4 +17,5 @@ void OnApplicationLoaded()
 {
     gameObject = std::make_unique<GameObject>();
     gameObject->AddComponent<GameManager>();
+    gameObject->AddComponent<AudioPlayer>();
 }

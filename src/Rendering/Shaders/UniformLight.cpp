@@ -2,8 +2,7 @@
 
 namespace GravyEngine
 {
-    static std::string source = R"(#define MAX_NUM_LIGHTS 32
-struct LightInfo
+    static std::string source = R"(struct LightInfo
 {
     int isActive;       //4
     int type;           //4
@@ -21,7 +20,9 @@ struct LightInfo
     vec4 specular;
 };
 
-layout(std140) uniform uLights
+#define MAX_NUM_LIGHTS 32
+
+layout(std140, binding = 1) uniform uLights
 {
     LightInfo lights[MAX_NUM_LIGHTS];
 } Lights;)";

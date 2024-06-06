@@ -1,0 +1,32 @@
+#include "DepthMaterial.hpp"
+#include "../../System/Numerics/Matrix4.hpp"
+#include "../../External/glad/glad.h"
+
+namespace GravyEngine
+{
+    DepthMaterial::DepthMaterial() : Material()
+    {
+        pShader = Shader::Find("Depth");
+
+        if(pShader)
+        {
+            uModel = glGetUniformLocation(pShader->GetId(), "uModel");
+        }
+
+        SetName("DepthMaterial");
+    }
+
+    void DepthMaterial::Use(Transform *transform, Camera *camera)
+    {
+        if(!pShader)
+            return;
+        if(!camera)
+            return;
+        if(!transform)
+            return;
+
+        Matrix4 model = transform->GetModelMatrix();
+        pShader->Use();
+        pShader->SetMat4(uModel, glm::value_ptr(model));
+    }
+};

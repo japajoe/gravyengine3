@@ -1,6 +1,8 @@
 #include "Camera.hpp"
 #include "Screen.hpp"
 #include "Transform.hpp"
+#include "../Rendering/Buffers/UniformBufferObject.hpp"
+#include "../Rendering/Graphics.hpp"
 
 namespace GravyEngine
 {
@@ -39,6 +41,8 @@ namespace GravyEngine
             projection = Matrix4f::Orthographic(0.0f, screenSize.x, 0.0f, screenSize.y, nearClippingPlane, farClippingPlane);
         else
             projection = Matrix4f::Perspective(fieldOfView, aspectRatio, nearClippingPlane, farClippingPlane);
+
+        SetDirty(true);
     }
 
     Matrix4 Camera::GetProjectionMatrix() const
@@ -105,9 +109,68 @@ namespace GravyEngine
         return clearColor;
     }
 
+    void Camera::SetDirty(bool isDirty)
+    {
+        this->isDirty = isDirty;
+    }
+
+    bool Camera::IsDirty() const
+    {
+        return isDirty;
+    }
+
     Camera *Camera::GetMain()
     {
         return pMainCamera;
+    }
+
+    static UniformBufferObject *uniformBuffer = nullptr;
+    static int updateCounter = 0;
+
+    void Camera::UpdateUniformBuffer()
+    {
+        if(uniformBuffer == nullptr)
+        {
+            uniformBuffer = Graphics::FindUniformBuffer("Camera");
+
+            if(uniformBuffer == nullptr)
+                return;
+        }
+
+        Camera *camera = Camera::GetMain();
+
+        if(camera == nullptr)
+            return;
+        
+        bool isDirty = false;
+        
+        Transform *transform = camera->GetTransform();
+        
+        if( transform->GetPosition() != camera->transformData.position || 
+            transform->GetRotation() != camera->transformData.rotation || 
+            transform->GetScale() != camera->transformData.scale || 
+            camera->IsDirty())
+        {
+            camera->transformData.position = transform->GetPosition();
+            camera->transformData.rotation = transform->GetRotation();
+            camera->transformData.scale = transform->GetScale();
+            camera->SetDirty(false);
+            isDirty = true;
+        }
+
+        if(!isDirty)
+            return;
+
+        UniformCameraInfo cameraData;
+
+        cameraData.view = camera->GetViewMatrix();
+        cameraData.projection = camera->GetProjectionMatrix();
+        cameraData.viewProjection = cameraData.projection * cameraData.view;
+        cameraData.position = Vector4(camera->GetTransform()->GetPosition(), 1.0f);
+
+        uniformBuffer->Bind();
+        uniformBuffer->BufferSubData(0, sizeof(UniformCameraInfo), &cameraData);
+        uniformBuffer->Unbind(); 
     }
 
     void Camera::OnScreenResize(int width, int height)

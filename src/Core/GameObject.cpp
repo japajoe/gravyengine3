@@ -45,6 +45,7 @@ namespace GravyEngine
 
         bool cullFace = true;
         bool depthTest = true;
+        bool castShadows = true;
 
         switch(type)
         {
@@ -89,6 +90,7 @@ namespace GravyEngine
                 createMaterial = [] () { return std::make_shared<ProceduralSkyboxMaterial>(); };
                 cullFace = false;
                 depthTest = false;
+                castShadows = false;
                 break;
             }
             case PrimitiveType::Sphere:
@@ -118,7 +120,9 @@ namespace GravyEngine
             pMaterial->SetDiffuseTexture(pTexture);
         }
 
+
         renderer->Add(mesh, material);
+        renderer->SetCastShadows(castShadows);
         
         auto settings = renderer->GetSettings(0);
         settings->cullFace = cullFace;
