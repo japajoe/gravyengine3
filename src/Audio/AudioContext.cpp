@@ -8,7 +8,6 @@ namespace GravyEngine
     std::vector<AudioListener*> AudioContext::listeners;
     int32_t AudioContext::sampleRate = 44100;
     int32_t AudioContext::channels = 2;
-    FrameTimer AudioContext::frameTimer;
 
     void AudioContext::Initialize(uint32_t sampleRate, uint32_t channels)
     {
@@ -42,8 +41,6 @@ namespace GravyEngine
     {
         if(context == nullptr)
             return;
-
-        frameTimer.Update();
 
         for(size_t i = 0; i < listeners.size(); i++)
         {
@@ -155,11 +152,6 @@ namespace GravyEngine
     int32_t AudioContext::GetChannels()
     {
         return channels;
-    }
-
-    float AudioContext::GetDeltaTime()
-    {
-        return frameTimer.deltaTime;
     }
 
     void AudioContext::SetMasterVolume(float volume)

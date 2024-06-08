@@ -5,7 +5,7 @@
 
 namespace GravyEngine
 {
-    typedef std::chrono::time_point<std::chrono::_V2::system_clock, std::chrono::nanoseconds> Timer;
+    typedef std::chrono::time_point<std::chrono::system_clock, std::chrono::nanoseconds> Timer;
 
     class Time
     {

@@ -7,7 +7,7 @@
 
 namespace GravyEngine
 {
-    typedef std::chrono::_V2::system_clock::time_point TimeStamp;
+    typedef std::chrono::system_clock::time_point TimeStamp;
 
     class DateTime
     {

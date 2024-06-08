@@ -1,7 +1,10 @@
 #include "UniformBufferObject.hpp"
+#include "../../Core/Debug.hpp"
 
 namespace GravyEngine
 {
+    std::unordered_map<std::string,UniformBufferObject> UniformBufferObject::buffers;
+
     UniformBufferObject::UniformBufferObject(): Object()
     {
         this->id = 0;
@@ -49,6 +52,43 @@ namespace GravyEngine
     {
         return id;
     }
+
+    UniformBufferObject *UniformBufferObject::Add(const std::string &name, const UniformBufferObject &buffer)
+    {
+        if(buffers.count(name) > 0)
+        {
+            Debug::WriteError("[UNIFORMBUFFER] can't add %s with ID: %llu because it already exists", name.c_str(), buffer.GetId());
+            return nullptr;
+        }
+
+        buffers[name] = buffer;
+
+        Debug::WriteLog("[UNIFORMBUFFER] %s added with ID: %llu", name.c_str(), buffer.GetId());
+
+        auto pMesh = &buffers[name];
+        pMesh->Generate();
+        return pMesh;
+    }
+
+    void UniformBufferObject::Remove(const std::string &name)
+    {
+        auto buffer = Find(name);
+
+        if(buffer)
+        {
+            Debug::WriteLog("[UNIFORMBUFFER] %s deleted with ID: %llu", name.c_str(), buffer->GetId());
+            buffer->Delete();
+            buffers.erase(name);
+        }
+    }
+
+    UniformBufferObject *UniformBufferObject::Find(const std::string &name)
+    {
+        if(buffers.count(name) == 0)
+            return nullptr;
+        
+        return &buffers[name];
+    }   
 
     // UniformBufferObject::UniformBufferObject() : Object()
     // {

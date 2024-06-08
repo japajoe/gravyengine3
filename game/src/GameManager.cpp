@@ -88,6 +88,13 @@ void GameManager::OnUpdate()
         cube->GetTransform()->SetPosition(Vector3(x, 2, z));
         cube->GetTransform()->Rotate(Vector3(1, 0, 1));
     }
+
+    for(size_t i = 0; i < lights.size(); i++)
+    {
+        float x = Mathf::Cos((Time::GetTimeAsDouble() + i * 360) * 1.0f) * 50;
+        float z = Mathf::Sin((Time::GetTimeAsDouble() + i * 360) * 1.0f) * 50;
+        lights[i].gameObject->GetTransform()->SetPosition(Vector3(x, 2, z));
+    }
 }
 
 void GameManager::OnGUI()

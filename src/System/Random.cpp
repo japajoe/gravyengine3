@@ -6,7 +6,7 @@ namespace GravyEngine
 {
     std::random_device rdev;
     std::mt19937 rgen(rdev());
-    std::uniform_int_distribution<uint8_t> dist_byte(0, 255);
+    std::uniform_int_distribution<int> dist_byte(0, 255);
     std::uniform_real_distribution<double> dist_double(0.0, 1.0);
 
     void Random::Seed(uint32_t seed)
@@ -21,7 +21,7 @@ namespace GravyEngine
 
     uint8_t Random::GetNextByte()
     {
-        return dist_byte(rgen);
+        return static_cast<uint8_t>(dist_byte(rgen));
     }
 
     double Random::Range(double min, double max)

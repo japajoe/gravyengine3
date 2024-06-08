@@ -17,10 +17,10 @@ int main()
 
 void OnApplicationLoaded()
 {
-    //Resources::LoadAll();
+    Resources::LoadAll();
     
     gameObject = std::make_unique<GameObject>();
-    //gameObject->AddComponent<GameManager>();
-    gameObject->AddComponent<TestManager>();
+    gameObject->AddComponent<GameManager>();
+    //gameObject->AddComponent<TestManager>();
     //gameObject->AddComponent<AudioPlayer>();
 }

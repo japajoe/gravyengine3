@@ -3,6 +3,7 @@
 #include "../System/Numerics/Vector4.hpp"
 #include "../Rendering/Buffers/UniformBufferObject.hpp"
 #include "../Rendering/Graphics.hpp"
+#include <cstring>
 
 namespace GravyEngine
 {
@@ -235,9 +236,10 @@ namespace GravyEngine
 
         uniformBuffer->Bind();
 
+        UniformLightInfo lightInfo;
+
         for(size_t i = 0; i < lights.size(); i++)
         {
-            UniformLightInfo lightInfo;
             Light *light = lights[i];
             
             if(light != nullptr)

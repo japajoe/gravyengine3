@@ -4,13 +4,12 @@
 #include "../../External/glad/glad.h"
 #include "../../Core/Object.hpp"
 #include <string>
+#include <unordered_map>
 
 namespace GravyEngine
 {
     class UniformBufferObject : public Object
     {
-    private:
-        GLuint id;
     public:
         UniformBufferObject();
         void Generate();
@@ -24,6 +23,12 @@ namespace GravyEngine
         //void BindToShader(GLuint program, GLuint uniformBlockBinding, const std::string &uniformBlockName);
         //GLuint GetUniformBlockIndex(GLuint program, const std::string &uniformBlockName);
         GLuint GetId() const;
+        static UniformBufferObject *Add(const std::string &name, const UniformBufferObject &buffer);
+        static void Remove(const std::string &name);
+        static UniformBufferObject *Find(const std::string &name);
+    private:
+        GLuint id;
+        static std::unordered_map<std::string,UniformBufferObject> buffers;
     };
 };
 
