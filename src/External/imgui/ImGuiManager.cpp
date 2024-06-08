@@ -72,8 +72,3 @@ void ImGuiManager::EndFrame()
         glfwMakeContextCurrent(backup_current_context);
     }
 }
-
-void ImGuiManager::RenderFrame()
-{
-
-}

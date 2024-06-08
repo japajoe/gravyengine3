@@ -33,6 +33,12 @@ include_directories(
     "${PROJECT_SOURCE_DIR}/game/include"
 )
 
+if(CMAKE_BUILD_TYPE MATCHES Debug)
+    add_compile_definitions(GRAVY_DEBUG_LOGGING)
+else()
+    add_definitions(-DNDEBUG)
+endif()
+
 add_executable(${PROJECT_NAME} ${SOURCES})
 
 if(BUILD_PLATFORM STREQUAL "windows")

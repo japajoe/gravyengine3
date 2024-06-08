@@ -34,6 +34,11 @@ namespace GravyEngine
         SetName("Light");
     }
 
+    Light::~Light()
+    {
+        Remove(this);
+    }
+
     void Light::OnInitialize()
     {
         if(pMainLight == nullptr)
@@ -207,21 +212,21 @@ namespace GravyEngine
         {
             Light *light = lights[i];
             
-            if(light == nullptr)
-                continue;
-            
-            Transform *transform = light->GetTransform();
-            
-            if( transform->GetPosition() != light->transformData.position || 
-                transform->GetRotation() != light->transformData.rotation || 
-                transform->GetScale() != light->transformData.scale || 
-                light->IsDirty())
-            {
-                light->transformData.position = transform->GetPosition();
-                light->transformData.rotation = transform->GetRotation();
-                light->transformData.scale = transform->GetScale();
-                light->SetDirty(false);
-                isDirty = true;
+            if(light != nullptr)
+            {            
+                Transform *transform = light->GetTransform();
+                
+                if( transform->GetPosition() != light->transformData.position || 
+                    transform->GetRotation() != light->transformData.rotation || 
+                    transform->GetScale() != light->transformData.scale || 
+                    light->IsDirty())
+                {
+                    light->transformData.position = transform->GetPosition();
+                    light->transformData.rotation = transform->GetRotation();
+                    light->transformData.scale = transform->GetScale();
+                    light->SetDirty(false);
+                    isDirty = true;
+                }
             }
         }
         

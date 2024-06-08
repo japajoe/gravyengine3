@@ -21,8 +21,9 @@ namespace GravyEngine
         float shadowBias;
         float farPlane;
         float padding;
-        glm::mat4 lightSpaceMatrices[16];
-        float cascadePlaneDistances[16];
+        Matrix4 lightSpaceMatrices[16];
+        //float cascadePlaneDistances[16];
+        Vector4 cascadePlaneDistances[16];
     };
 
     class CascadedShadowMap

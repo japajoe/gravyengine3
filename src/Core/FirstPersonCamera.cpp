@@ -62,6 +62,9 @@ namespace GravyEngine
 
     void FirstPersonCamera::Rotate()
     {
+        if(!Input::GetButton(ButtonCode::Right))
+            return;
+
         Transform *transform = GetTransform();
 
         Vector2 mouseDelta = Input::GetMouseDelta();

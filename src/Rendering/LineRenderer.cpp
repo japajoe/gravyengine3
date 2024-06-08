@@ -1,0 +1,278 @@
+#include "LineRenderer.hpp"
+#include "Shader.hpp"
+#include "GL.hpp"
+#include "../System/Mathf.hpp"
+#include "../System/Numerics/Quaternion.hpp"
+#include "../Core/Camera.hpp"
+
+namespace GravyEngine
+{
+    LineVertex::LineVertex()
+    {
+        this->position = Vector3(0.0f, 0.0f, 0.0f);
+        this->color = Color(255, 255, 255, 255);
+    }
+
+    LineVertex::LineVertex(const Vector3 &position, const Color &color)
+    {
+        this->position = position;
+        this->color = color;
+    }
+
+    std::vector<LineVertex> LineRenderer::lines;
+    size_t LineRenderer::numLines = 0;
+    size_t LineRenderer::pointIndex = 0;
+    size_t LineRenderer::maxLines = 4096;
+    GLuint LineRenderer::VAO = 0;
+    GLuint LineRenderer::VBO = 0;
+    Shader *LineRenderer::shader = nullptr;
+    Camera *LineRenderer::camera = nullptr;
+    float LineRenderer::lineWidth = 1.0f;
+
+    void LineRenderer::Initialize()
+    {
+        shader = Shader::Find("Line");
+        camera = Camera::GetMain();
+
+        size_t maxVertices = maxLines * 2;
+
+        lines.resize(maxVertices);
+
+        glCreateVertexArrays(1, &VAO);
+        glBindVertexArray(VAO);
+
+        glGenBuffers(1, &VBO);
+        glBindBuffer(GL_ARRAY_BUFFER, VBO);
+
+        glBufferData(GL_ARRAY_BUFFER, lines.size() * sizeof(LineVertex), lines.data(), GL_DYNAMIC_DRAW);
+
+        glEnableVertexAttribArray(0);
+        glVertexAttribPointer(0, 3, GL_FLOAT, false, sizeof(LineVertex), (const GLvoid*)offsetof(LineVertex, position));
+
+        glEnableVertexAttribArray(1);
+        glVertexAttribPointer(1, 4, GL_FLOAT, false, sizeof(LineVertex), (const GLvoid*)offsetof(LineVertex, color));
+
+        glBindVertexArray(0);
+    }
+
+    void LineRenderer::Deinitialize()
+    {
+        if(VAO > 0)
+        {
+            glDeleteVertexArrays(1, &VAO);
+            VAO = 0;
+        }
+
+        if(VBO > 0)
+        {
+            glDeleteBuffers(1, &VBO);
+            VBO = 0;
+        }
+    }
+
+    void LineRenderer::AddToDrawList(const Vector3 &p1, const Vector3 &p2, const Color &color)
+    {
+        if(lines.size() == 0)
+        {
+            Initialize();
+        }
+
+        if(numLines >= maxLines)
+        {
+            //Double the capacity if we run out of space
+            maxLines = maxLines * 2;
+            size_t maxVertices = maxLines * 2;
+            std::vector<LineVertex> newLines;
+            newLines.resize(maxVertices);
+            for(size_t i = 0; i < lines.size(); i++)
+            {
+                newLines[i] = lines[i];
+            }
+
+            lines = newLines;
+        }
+
+        LineVertex lp1(p1, color);
+        LineVertex lp2(p2, color);
+
+        lines[pointIndex+0] = lp1;
+        lines[pointIndex+1] = lp2;
+        
+        pointIndex += 2;
+        numLines++;
+    }
+
+    void LineRenderer::DrawLine(const Vector3 &p1, const Vector3 &p2)
+    {
+        AddToDrawList(p1, p2, Color::White());
+    }
+
+    void LineRenderer::DrawLine(const Vector3 &p1, const Vector3 &p2, const Color &color)
+    {
+        AddToDrawList(p1, p2, color);
+    }
+
+    void LineRenderer::DrawWireArc(const Vector3 &center, const Vector3 &normal, const Vector3 &from, float angle, float radius, const Color &color)
+    {
+        angle *= Mathf::Deg2Rad;
+        const int numSegments = 36;
+        float t = angle / numSegments;
+        Quaternion rotation = Quaternionf::FromToRotation(Vector3f::UnitY(), normal);
+
+        auto transformation = Matrix4f::CreateRotation(rotation.x, rotation.y, rotation.z, rotation.w);
+
+        //Vector3 origin = center + (Vector3f::Normalize(from) * radius);
+        Vector3 origin = center;
+
+        for(int i = 0; i < numSegments; i++)
+        {
+            float x1 = Mathf::Sin(t * i) * radius;
+            float y1 = Mathf::Cos(t * i) * radius;
+            float x2 = Mathf::Sin(t * (i+1)) * radius;
+            float y2 = Mathf::Cos(t * (i+1)) * radius;
+            Vector3 p1 = (Vector3(x1, y1, 0) + origin);
+            Vector3 p2 = (Vector3(x2, y2, 0) + origin);
+
+            Vector4 pp1 = transformation * Vector4(p1.x, p1.y, p1.z, 1.0f);
+            Vector4 pp2 = transformation * Vector4(p2.x, p2.y, p2.z, 1.0f);
+
+            p1 = pp1;
+            p2 = pp2;
+
+            AddToDrawList(p1, p2, color);
+        }
+    }
+
+    void LineRenderer::DrawSphere(const Vector3 &center, float radius)
+    {
+        size_t subdivisions = 16;
+
+        //-- Generate the vertices of the sphere
+        for(size_t i = 0; i < subdivisions; i++)
+        {
+            float theta1 = (i / subdivisions) * Mathf::PI * 2;
+            float theta2 = ((i + 1) / subdivisions) * Mathf::PI * 2;
+
+            for(size_t j = 0; j < subdivisions; j++)
+            {
+                float phi1 = (j / subdivisions) * Mathf::PI;
+                float phi2 = ((j + 1) / subdivisions) * Mathf::PI;
+
+                Vector3 v1(
+                    center.x + radius * Mathf::Sin(phi1) * Mathf::Cos(theta1),
+                    center.y + radius * Mathf::Sin(phi1) * Mathf::Sin(theta1),
+                    center.z + radius * Mathf::Cos(phi1)
+                );
+
+                Vector3 v2(
+                    center.x + radius * Mathf::Sin(phi1) * Mathf::Cos(theta2),
+                    center.y + radius * Mathf::Sin(phi1) * Mathf::Sin(theta2),
+                    center.z + radius * Mathf::Cos(phi1)
+                );
+
+                Vector3 v3(
+                    center.x + radius * Mathf::Sin(phi2) * Mathf::Cos(theta1),
+                    center.y + radius * Mathf::Sin(phi2) * Mathf::Sin(theta1),
+                    center.z + radius * Mathf::Cos(phi2)
+                );
+
+                Vector3 v4(
+                    center.x + radius * Mathf::Sin(phi2) * Mathf::Cos(theta2),
+                    center.y + radius * Mathf::Sin(phi2) * Mathf::Sin(theta2),
+                    center.z + radius * Mathf::Cos(phi2)
+                );
+
+                LineRenderer::DrawLine(v1, v2);
+                LineRenderer::DrawLine(v2, v3);
+                LineRenderer::DrawLine(v3, v1);
+
+                LineRenderer::DrawLine(v2, v3);
+                LineRenderer::DrawLine(v3, v4);
+                LineRenderer::DrawLine(v4, v2);
+            }
+        }
+    }
+
+    void LineRenderer::DrawWireDisc(const Vector3 &center, const Vector3 &normal, float radius, const Color &color)
+    {
+        const int numSegments = 36; // Adjust this for smoother or rougher circle
+        float t = (2.0 * Mathf::PI) / numSegments;
+        Quaternion rotation = Quaternionf::FromToRotation(Vector3f::UnitY(), normal);
+
+        auto transformation = Matrix4f::CreateRotation(rotation.x, rotation.y, rotation.z, rotation.w);
+
+        for(int i = 0; i < numSegments; i++)
+        {
+            float x1 = Mathf::Sin(t * i) * radius;
+            float y1 = Mathf::Cos(t * i) * radius;
+            float x2 = Mathf::Sin(t * (i+1)) * radius;
+            float y2 = Mathf::Cos(t * (i+1)) * radius;
+            Vector3 p1 = Vector3(x1, y1, 0) + center;
+            Vector3 p2 = Vector3(x2, y2, 0) + center;
+
+            Vector4 pp1 = transformation * Vector4(p1.x, p1.y, p1.z, 1.0f);
+            Vector4 pp2 = transformation * Vector4(p2.x, p2.y, p2.z, 1.0f);
+
+            p1 = pp1;
+            p2 = pp2;
+
+            AddToDrawList(p1, p2, color);
+        }
+    }
+
+    void LineRenderer::OnRender()
+    {
+        if(numLines == 0)
+            return;
+
+        GLsizei numVertices = numLines * 2;
+
+        glBindBuffer(GL_ARRAY_BUFFER, VBO);
+        glBufferSubData(GL_ARRAY_BUFFER, 0, lines.size() * sizeof(LineVertex), lines.data());
+        glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+        Matrix4 model = Matrix4(1.0);
+        Matrix4 view = camera->GetViewMatrix();
+        Matrix4 projection = camera->GetProjectionMatrix();
+        Matrix4 mvp = projection * view * model;
+
+        GL::EnableDepthTest();
+        GL::EnableBlendMode();
+
+        shader->Use();
+
+        shader->SetMat4("uModel", glm::value_ptr(model));
+        shader->SetMat4("uView", glm::value_ptr(view));
+        shader->SetMat4("uProjection", glm::value_ptr(projection));
+        shader->SetMat4("uMVP", glm::value_ptr(mvp));
+
+        glBindVertexArray(VAO);
+        glDrawArrays(GL_LINES, 0, numVertices);
+        glBindVertexArray(0);
+        glUseProgram(0);
+        glActiveTexture(GL_TEXTURE0);
+        glBindTexture(GL_TEXTURE_2D, 0);
+        
+        GL::DisableBlendMode();
+        GL::DisableDepthTest();
+
+        Clear();
+    }
+
+    void LineRenderer::Clear()
+    {
+        pointIndex = 0;
+        numLines = 0;
+    }
+
+    void LineRenderer::SetLineWidth(float width)
+    {
+        lineWidth = width;
+        glLineWidth(width);
+    }
+
+    float LineRenderer::GetLineWidth()
+    {
+        return lineWidth;
+    }
+};

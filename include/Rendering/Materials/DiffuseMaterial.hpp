@@ -3,6 +3,7 @@
 
 #include "../Material.hpp"
 #include "../Texture2D.hpp"
+#include "../Texture2DArray.hpp"
 #include "../../System/Drawing/Color.hpp"
 #include "../../System/Numerics/Vector2.hpp"
 
@@ -25,6 +26,8 @@ namespace GravyEngine
         Vector2 GetUVOffset() const;
         void SetUVScale(const Vector2 &uvScale);
         Vector2 GetUVScale() const;
+        void SetReceiveShadows(bool receiveShadows);
+        bool GetReceiveShadows() const;
     private:
         int uModel;
         int uModelInverted;
@@ -35,12 +38,16 @@ namespace GravyEngine
         int uShininess;
         int uUVOffset;
         int uUVScale;
+        int uDepthMap;
+        int uReceiveShadows;
         Texture2D *pDiffuseTexture;
         Color diffuseColor;
         float ambientStrength;
         float shininess;
         Vector2 uvOffset;
         Vector2 uvScale;
+        Texture2DArray *pDepthMap;
+        bool receiveShadows;
     };
 };
 

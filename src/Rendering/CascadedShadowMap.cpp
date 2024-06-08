@@ -79,11 +79,12 @@ namespace GravyEngine
         size_t index = 0;
         for(size_t i = 0; i < shadowCascadeLevels.size(); i++)
         {
-            shadowData.cascadePlaneDistances[index+0] = shadowCascadeLevels[i];
-            shadowData.cascadePlaneDistances[index+1] = shadowCascadeLevels[i];
-            shadowData.cascadePlaneDistances[index+2] = shadowCascadeLevels[i];
-            shadowData.cascadePlaneDistances[index+3] = shadowCascadeLevels[i];
-            index+=4;
+            shadowData.cascadePlaneDistances[i].x = shadowCascadeLevels[i];
+            // shadowData.cascadePlaneDistances[index+0] = shadowCascadeLevels[i];
+            // shadowData.cascadePlaneDistances[index+1] = shadowCascadeLevels[i];
+            // shadowData.cascadePlaneDistances[index+2] = shadowCascadeLevels[i];
+            // shadowData.cascadePlaneDistances[index+3] = shadowCascadeLevels[i];
+            // index+=4;
         }
         
         shadowData.farPlane = camera->GetFarClippingPlane();

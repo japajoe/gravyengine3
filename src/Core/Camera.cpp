@@ -1,8 +1,10 @@
 #include "Camera.hpp"
 #include "Screen.hpp"
 #include "Transform.hpp"
+#include "GameObject.hpp"
 #include "../Rendering/Buffers/UniformBufferObject.hpp"
 #include "../Rendering/Graphics.hpp"
+#include "../System/Mathf.hpp"
 
 namespace GravyEngine
 {
@@ -109,6 +111,31 @@ namespace GravyEngine
         return clearColor;
     }
 
+    Vector3 Camera::WorldToScreenPoint(const Vector3 &worldPoint)
+    {
+        Vector4 v(worldPoint.x, worldPoint.y, worldPoint.z, 1);
+        Vector4 pointInNdc = GetProjectionMatrix() * GetViewMatrix() * v;
+        pointInNdc /= pointInNdc.w;
+        Vector4 viewportRect = Screen::GetViewportRect();
+        float screenX = (pointInNdc.x + 1.0f) / 2.0f * viewportRect.z;
+        float screenY = (1 - pointInNdc.y) / 2.0f * viewportRect.w;
+        return Vector3(screenX, screenY, Mathf::Abs(Vector3f::Distance(worldPoint, GetGameObject()->GetTransform()->GetPosition())));
+    }
+
+    Vector3 Camera::ScreenToWorldPoint(const Vector2 &screenPoint)
+    {
+        Vector4 viewportRect = Screen::GetViewportRect();
+        float ndcX = (2.0f * screenPoint.x) / viewportRect.z - 1.0f;
+        float ndcY = 1.0f - (2.0f * screenPoint.y) / viewportRect.w;
+        float z = GetNearClippingPlane();
+        Vector4 pointInNdc(ndcX, ndcY, z, 1);
+        Matrix4 inverseProjection = Matrix4f::Invert(GetProjectionMatrix());
+        Matrix4 inverseView = Matrix4f::Invert(GetViewMatrix());
+        Vector4 pointInWorld = inverseView * inverseProjection * pointInNdc;
+        pointInWorld /= pointInWorld.w;
+        return Vector3(pointInWorld.x, pointInWorld.y, pointInWorld.z);
+    }
+
     void Camera::SetDirty(bool isDirty)
     {
         this->isDirty = isDirty;
@@ -167,6 +194,7 @@ namespace GravyEngine
         cameraData.projection = camera->GetProjectionMatrix();
         cameraData.viewProjection = cameraData.projection * cameraData.view;
         cameraData.position = Vector4(camera->GetTransform()->GetPosition(), 1.0f);
+
 
         uniformBuffer->Bind();
         uniformBuffer->BufferSubData(0, sizeof(UniformCameraInfo), &cameraData);

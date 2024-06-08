@@ -16,7 +16,6 @@ namespace GravyEngine
         virtual void OnUpdate();
         virtual void OnLateUpdate();
         virtual void OnFixedUpdate();
-        virtual void OnRender();
         virtual void OnGUI();
     };
 };

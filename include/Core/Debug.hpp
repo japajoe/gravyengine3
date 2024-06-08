@@ -1,12 +1,14 @@
 #ifndef GRAVYENGINE_DEBUG_HPP
 #define GRAVYENGINE_DEBUG_HPP
 
+#include "../System/Numerics/Vector3.hpp"
+#include "../System/Drawing/Color.hpp"
 #include <string>
 #include <functional>
 #include <iostream>
 #include <sstream>
 
-#define GRAVY_DEBUG_LOGGING
+//#define GRAVY_DEBUG_LOGGING
 
 namespace GravyEngine
 {
@@ -32,9 +34,9 @@ namespace GravyEngine
 
     class Debug
     {
-    private:
-        static DebugLogCallback callback;
     public:
+        static void DrawLine(const Vector3 &p1, const Vector3 &p2);
+        static void DrawLine(const Vector3 &p1, const Vector3 &p2, const Color &color);
         static void WriteLine(const std::string &text, ConsoleColor color = ConsoleColor::White);
         static void Write(const std::string &text, ConsoleColor color = ConsoleColor::White);
         static void WriteLog(const std::string &text);
@@ -96,6 +98,8 @@ namespace GravyEngine
             std::snprintf(&buffer[0], buffer.size(), format.c_str(), args...);
             return true;
         }
+    private:
+        static DebugLogCallback callback;
     };
 };
 

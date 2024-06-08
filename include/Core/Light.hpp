@@ -20,6 +20,7 @@ namespace GravyEngine
     public:
         static constexpr size_t MaxLights = 32;
         Light();
+        ~Light();
         void SetType(LightType type);
         LightType GetType() const;
         void SetColor(const Color &color);

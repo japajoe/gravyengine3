@@ -15,6 +15,8 @@ namespace GravyEngine
         shininess = 16.0f;
         uvOffset = Vector2(0, 0);
         uvScale = Vector2(1, 1);
+        pDepthMap = nullptr;
+        receiveShadows = true;
 
         pShader = Shader::Find("Diffuse");
 
@@ -29,6 +31,8 @@ namespace GravyEngine
             uUVScale = glGetUniformLocation(pShader->GetId(), "uUVScale");
             uAmbientStrength = glGetUniformLocation(pShader->GetId(), "uAmbientStrength");
             uShininess = glGetUniformLocation(pShader->GetId(), "uShininess");
+            uDepthMap = glGetUniformLocation(pShader->GetId(), "uDepthMap");
+            uReceiveShadows = glGetUniformLocation(pShader->GetId(), "uReceiveShadows");
         }
 
         SetName("DiffuseMaterial");
@@ -51,6 +55,25 @@ namespace GravyEngine
 
         pShader->Use();
 
+        uint32_t unit = 0;
+        if(pDiffuseTexture != nullptr)
+        {
+            pDiffuseTexture->Bind(unit);
+            pShader->SetInt(uDiffuseTexture, unit);
+            unit++;
+        }
+
+        if(pDepthMap == nullptr)
+        {
+            pDepthMap = Texture2DArray::Find("DepthMap");
+        }
+
+        if(pDepthMap != nullptr)
+        {
+            pDepthMap->Bind(unit);
+            pShader->SetInt(uDepthMap, unit);
+        }
+
         pShader->SetMat4(uModel, glm::value_ptr(model));
         pShader->SetMat4(uModelInverted, glm::value_ptr(modelInverted));
         pShader->SetMat4(uMVP, glm::value_ptr(MVP));
@@ -59,14 +82,7 @@ namespace GravyEngine
         pShader->SetFloat(uShininess, shininess);
         pShader->SetFloat2(uUVOffset, glm::value_ptr(uvOffset));
         pShader->SetFloat2(uUVScale, glm::value_ptr(uvScale));
-
-        if(pDiffuseTexture != nullptr)
-        {
-            uint32_t unit = 0;
-            pDiffuseTexture->Bind(unit);
-            pShader->SetInt(uDiffuseTexture, unit);
-            unit++;
-        }
+        pShader->SetInt(uReceiveShadows, receiveShadows ? 1 : -1);
     }
 
     void DiffuseMaterial::SetDiffuseTexture(Texture2D *texture)
@@ -127,5 +143,15 @@ namespace GravyEngine
     Vector2 DiffuseMaterial::GetUVScale() const
     {
         return uvScale;
+    }
+
+    void DiffuseMaterial::SetReceiveShadows(bool receiveShadows)
+    {
+        this->receiveShadows = true;
+    }
+
+    bool DiffuseMaterial::GetReceiveShadows() const
+    {
+        return receiveShadows;
     }
 };

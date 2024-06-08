@@ -2,7 +2,6 @@
 #define GRAPHICS_HPP
 
 #include "Buffers/UniformBufferObject.hpp"
-#include "CascadedShadowMap.hpp"
 #include <vector>
 #include <string>
 #include <cstdint>
@@ -11,6 +10,7 @@
 
 namespace GravyEngine
 {
+    class CascadedShadowMap;
     class GameObject;
     class Renderer;
     class Shader;
@@ -26,7 +26,7 @@ namespace GravyEngine
     private:
         static std::vector<Renderer*> renderers;
         static std::vector<std::unique_ptr<UniformBufferObject>> uniformBuffers;
-        static CascadedShadowMap cascadedShadowMap;
+        static std::unique_ptr<CascadedShadowMap> cascadedShadowMap;
         static std::unique_ptr<DepthMaterial> depthMaterial;
         static void Initialize();
         static void Deinitialize();

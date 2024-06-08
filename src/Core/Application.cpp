@@ -72,11 +72,9 @@ namespace GravyEngine
             return;
         }
 
-        // Check and print OpenGL version
-        const GLubyte* version = glGetString(GL_VERSION);
-        if (version != nullptr) {
-            std::cout << "OpenGL Version: " << version << std::endl;
-        }
+        // const GLubyte* version = glGetString(GL_VERSION);
+        // if (version != nullptr) 
+        //     std::cout << "OpenGL Version: " << version << std::endl;
 
         glfwSwapInterval(vsync ? 1 : 0);
 
@@ -164,7 +162,6 @@ namespace GravyEngine
     void Application::OnRender()
     {
         Graphics::OnRender();
-        GameBehaviourManager::OnRender();
     }
 
     void Application::OnGUI()

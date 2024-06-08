@@ -1,4 +1,6 @@
 #include "Graphics.hpp"
+#include "LineRenderer.hpp"
+#include "CascadedShadowMap.hpp"
 #include "Renderer.hpp"
 #include "MeshRenderer.hpp"
 #include "Mesh.hpp"
@@ -12,7 +14,9 @@
 #include "Shaders/DiffuseShader.hpp"
 #include "Shaders/ProceduralSkyboxShader.hpp"
 #include "Shaders/DepthShader.hpp"
+#include "Shaders/LineShader.hpp"
 #include "Materials/DepthMaterial.hpp"
+#include "../System/Mathf.hpp"
 #include "../System/Drawing/Image.hpp"
 #include "../Core/Camera.hpp"
 #include "../Core/Light.hpp"
@@ -28,7 +32,7 @@ namespace GravyEngine
     static std::unique_ptr<GameObject> mainLight;
     std::vector<Renderer*> Graphics::renderers;
     std::vector<std::unique_ptr<UniformBufferObject>> Graphics::uniformBuffers;
-    CascadedShadowMap Graphics::cascadedShadowMap;
+    std::unique_ptr<CascadedShadowMap> Graphics::cascadedShadowMap;
     std::unique_ptr<DepthMaterial> Graphics::depthMaterial;
 
     void Graphics::Initialize()
@@ -39,13 +43,16 @@ namespace GravyEngine
         mainLight = std::make_unique<GameObject>();
         auto light = mainLight->AddComponent<Light>();
         light->SetType(LightType::Directional);
-        light->GetTransform()->SetPosition(Vector3(0, 100, 0));
+        light->GetTransform()->SetPosition(Vector3(0, 10, 0));
+        light->GetTransform()->SetRotation(Quaternionf::Euler(45 * Mathf::Deg2Rad, 0, 0));
 
         CreateTextures();
         CreateShaders();
         CreateMeshes();
         CreateUniformBuffers();
         CreateShadowMap();
+
+        LineRenderer::Initialize();
 
         glEnable(GL_DEPTH_TEST);
         glEnable(GL_CULL_FACE);
@@ -58,14 +65,19 @@ namespace GravyEngine
         DestroyMeshes();
         DestroyUniformBuffers();
         DestroyShadowMap();
+
+        LineRenderer::Deinitialize();
     }
 
     void Graphics::OnRender()
     {
         Camera::UpdateUniformBuffer();
         Light::UpdateUniformBuffer();
+        
         RenderShadowMap();
         RenderScene();
+        
+        LineRenderer::OnRender();
     }
 
     void Graphics::RenderShadowMap()
@@ -75,14 +87,14 @@ namespace GravyEngine
             Camera *camera = Camera::GetMain();
             DepthMaterial *material = depthMaterial.get();
 
-            cascadedShadowMap.Bind();
+            cascadedShadowMap->Bind();
             for(size_t i = 0; i < renderers.size(); i++)
             {
                 if(!renderers[i]->GetCastShadows())
                     continue;
                 renderers[i]->OnRender(material, camera);
             }
-            cascadedShadowMap.Unbind();
+            cascadedShadowMap->Unbind();
         }
     }
 
@@ -186,6 +198,7 @@ namespace GravyEngine
         DiffuseShader::Create();
         ProceduralSkyboxShader::Create();
         DepthShader::Create();
+        LineShader::Create();
     }
 
     void Graphics::CreateMeshes()
@@ -221,7 +234,7 @@ namespace GravyEngine
         Camera *camera = mainCamera->GetComponent<Camera>();
         Light *light = mainLight->GetComponent<Light>();
 
-        cascadedShadowMap = CascadedShadowMap(depthMap, shadowData, camera, light);
+        cascadedShadowMap = std::make_unique<CascadedShadowMap>(depthMap, shadowData, camera, light);
         
         depthMaterial = std::make_unique<DepthMaterial>();
     }
@@ -237,6 +250,7 @@ namespace GravyEngine
         DiffuseShader::Destroy();
         ProceduralSkyboxShader::Destroy();
         DepthShader::Destroy();
+        LineShader::Destroy();
     }
 
     void Graphics::DestroyMeshes()
@@ -264,7 +278,7 @@ namespace GravyEngine
 
     void Graphics::DestroyShadowMap()
     {
-        cascadedShadowMap.Delete();
+        cascadedShadowMap->Delete();
     }
 
     UniformBufferObject *Graphics::CreateUniformBuffer(const std::string &name, uint32_t bindingIndex, size_t bufferSize, const std::vector<Shader*> &shaders)

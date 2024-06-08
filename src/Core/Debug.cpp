@@ -1,6 +1,7 @@
 #include "Debug.hpp"
 #include "../System/DateTime.hpp"
 #include "../System/Environment.hpp"
+#include "../Rendering/LineRenderer.hpp"
 #include <map>
 #include <cstdlib> // for system()
 
@@ -18,6 +19,16 @@ namespace GravyEngine
         { ConsoleColor::White, "\x1B[37m" },
         { ConsoleColor::Reset, "\x1B[0m" }
     };
+
+    void Debug::DrawLine(const Vector3 &p1, const Vector3 &p2)
+    {
+        LineRenderer::DrawLine(p1, p2, Color::White());
+    }
+
+    void Debug::DrawLine(const Vector3 &p1, const Vector3 &p2, const Color &color)
+    {
+        LineRenderer::DrawLine(p1, p2, color);
+    }
 
     void Debug::WriteLine(const std::string &text, ConsoleColor color)
     {

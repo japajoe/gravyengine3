@@ -4,6 +4,8 @@
 #include "Component.hpp"
 #include "Transform.hpp"
 #include "../System/Numerics/Matrix4.hpp"
+#include "../System/Numerics/Vector2.hpp"
+#include "../System/Numerics/Vector3.hpp"
 #include "../System/Numerics/Vector4.hpp"
 #include "../System/Drawing/Color.hpp"
 
@@ -39,6 +41,8 @@ namespace GravyEngine
         float GetFarClippingPlane() const;
         void SetClearColor(const Color &clearColor);
         Color GetClearColor() const;
+        Vector3 WorldToScreenPoint(const Vector3 &worldPoint);
+        Vector3 ScreenToWorldPoint(const Vector2 &screenPoint);
         static Camera *GetMain();
         static void UpdateUniformBuffer();
     protected:

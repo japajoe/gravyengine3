@@ -84,14 +84,6 @@ namespace GravyEngine
         }
     }
 
-    void GameBehaviourManager::OnRender()
-    {
-        for(size_t i = 0; i < behaviours.size(); i++)
-        {
-            behaviours[i]->OnRender();
-        }
-    }
-
     void GameBehaviourManager::OnGUI()
     {
         imgui->BeginFrame();

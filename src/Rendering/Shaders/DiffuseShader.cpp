@@ -22,30 +22,8 @@ void main() {
     gl_Position = uMVP * vec4(aPosition, 1.0);
 })";
 
-    static std::string fragmentTest = R"(#version 330 core
-#include <UniformCamera>
-#include <UniformLight>
-
-uniform sampler2D uDiffuseTexture;
-uniform vec4 uDiffuseColor;
-uniform float uAmbientStrength;
-uniform float uShininess;
-uniform vec2 uUVOffset;
-uniform vec2 uUVScale;
-
-in vec3 oNormal;
-in vec3 oFragPosition;
-in vec2 oUV;
-
-out vec4 FragColor;
-
-void main() {
-    vec3 position = Camera.position.rgb;
-    vec4 color = Lights.lights[0].color;
-    FragColor = vec4(sin(position * color.rgb), 1.0);
-})";
-
     static std::string fragment = R"(#version 420 core
+
 #include <ShaderCore>
 #include <UniformCamera>
 #include <UniformLight>
@@ -57,6 +35,7 @@ uniform float uAmbientStrength;
 uniform float uShininess;
 uniform vec2 uUVOffset;
 uniform vec2 uUVScale;
+uniform int uReceiveShadows;
 
 in vec3 oNormal;
 in vec3 oFragPosition;
@@ -68,9 +47,9 @@ void main() {
     vec4 texColor = texture(uDiffuseTexture, (oUV + uUVOffset) * uUVScale);
     vec3 normal = normalize(oNormal);
 
-    vec3 ambient = vec3(0.0);
-    vec3 diffuse = vec3(0.0);
-    vec3 specular = vec3(0.0);
+    vec3 ambient = vec3(0.1);
+    vec3 diffuse = vec3(0.1);
+    vec3 specular = vec3(0.1);
 
     for(int i = 0; i < MAX_NUM_LIGHTS; i++)
     {
@@ -117,12 +96,13 @@ void main() {
     vec3 lightDirection = normalize(Lights.lights[0].direction.xyz);
     //vec3 lightDirection = normalize(Lights.lights[0].position.xyz - oFragPosition);
 
-    //float shadow = ShadowCalculation(oFragPosition, Camera.view, normal, lightDirection);
-    //vec3 lighting = (ambient + (1.0 - shadow) * (diffuse + specular)) * texColor.rgb * uDiffuseColor.rgb;
+    float shadow  = 0.0;
+    if(uReceiveShadows > 0)
+        shadow = ShadowCalculation(oFragPosition, Camera.view, normal, lightDirection);
 
-    vec3 lighting = (ambient + (diffuse + specular)) * texColor.rgb * uDiffuseColor.rgb;
+    vec3 lighting = (ambient + (1.0 - shadow) * (diffuse + specular)) * texColor.rgb * uDiffuseColor.rgb;
 
-    lighting = GammaCorrection(lighting).rgb;
+    //lighting = GammaCorrection(lighting).rgb;
 
     float alpha = uDiffuseColor.a * texColor.a;
     

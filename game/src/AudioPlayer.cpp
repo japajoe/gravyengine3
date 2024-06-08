@@ -1,4 +1,5 @@
 #include "AudioPlayer.hpp"
+#include "Resources.hpp"
 
 void AudioPlayer::OnInitialize()
 {
@@ -14,22 +15,21 @@ void AudioPlayer::OnInitialize()
         "Audio/law_-_240201-01_130_Ebm.mp3"
     };
 
-    ResourcePack pack;
-    pack.LoadPack("../res/assets.dat", "assets.dat");
-
-    if(pack.Loaded())
+    for(size_t i = 0; i < audioFiles.size(); i++)
     {
-        for(size_t i = 0; i < audioFiles.size(); i++)
+        size_t size = 0;
+        auto pData = Resources::GetData(audioFiles[i], size);
+        if(pData && size > 0)
         {
-            audioClips.push_back(AudioClip(pack.GetFileData(audioFiles[i])));
+            audioClips.push_back(AudioClip(pData, size));
         }
-
-        audioSource = GetGameObject()->AddComponent<AudioSource>();
-        audioSource->end += [this] (AudioSource *source) { OnAudioEnded(source); };
-        
-        clipIndex = 0;
-        audioSource->Play(&audioClips[clipIndex]);
     }
+
+    audioSource = GetGameObject()->AddComponent<AudioSource>();
+    audioSource->end += [this] (AudioSource *source) { OnAudioEnded(source); };
+    
+    clipIndex = 0;
+    audioSource->Play(&audioClips[clipIndex]);
 }
 
 void AudioPlayer::OnGUI()

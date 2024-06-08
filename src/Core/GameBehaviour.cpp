@@ -33,11 +33,6 @@ namespace GravyEngine
 
     }
 
-    void GameBehaviour::OnRender()
-    {
-
-    }
-
     void GameBehaviour::OnGUI()
     {
 

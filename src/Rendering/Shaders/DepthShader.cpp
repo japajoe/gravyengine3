@@ -2,7 +2,8 @@
 
 namespace GravyEngine
 {
-    static std::string vertex = R"(#version 420 core
+    static std::string vertex = 
+R"(#version 420 core
 layout (location = 0) in vec3 aPosition;
 
 uniform mat4 uModel;
@@ -12,7 +13,8 @@ void main()
     gl_Position = uModel * vec4(aPosition, 1.0);
 })";
 
-    static std::string geometry = R"(#version 420 core
+    static std::string geometry = 
+R"(#version 420 core
 layout(triangles, invocations = 5) in;
 layout(triangle_strip, max_vertices = 3) out;
 
@@ -29,7 +31,8 @@ void main()
 	EndPrimitive();
 })";
 
-    static std::string fragment = R"(#version 410 core
+    static std::string fragment = 
+R"(#version 420 core
 void main()
 {             
 })";
