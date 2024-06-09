@@ -8,9 +8,6 @@
 #include "Texture2D.hpp"
 #include "Texture2DArray.hpp"
 #include "Shaders/ShaderCore.hpp"
-#include "Shaders/UniformLight.hpp"
-#include "Shaders/UniformCamera.hpp"
-#include "Shaders/UniformShadow.hpp"
 #include "Shaders/DiffuseShader.hpp"
 #include "Shaders/ProceduralSkyboxShader.hpp"
 #include "Shaders/DepthShader.hpp"
@@ -22,6 +19,7 @@
 #include "../Core/Light.hpp"
 #include "../Core/GameObject.hpp"
 #include "../Core/Debug.hpp"
+#include "../Core/WorldSettings.hpp"
 #include "../External/glad/glad.h"
 #include <iostream>
 #include <memory>
@@ -73,6 +71,7 @@ namespace GravyEngine
     {
         Camera::UpdateUniformBuffer();
         Light::UpdateUniformBuffer();
+        WorldSettings::UpdateUniformBuffer();
         
         RenderShadowMap();
         RenderScene();
@@ -191,9 +190,6 @@ namespace GravyEngine
     void Graphics::CreateShaders()
     {
         Shader::AddIncludeFile("ShaderCore", ShaderCore::GetSource());
-        Shader::AddIncludeFile("UniformLight", UniformLight::GetSource());
-        Shader::AddIncludeFile("UniformCamera", UniformCamera::GetSource());
-        Shader::AddIncludeFile("UniformShadow", UniformShadow::GetSource());
 
         DiffuseShader::Create();
         ProceduralSkyboxShader::Create();
@@ -214,17 +210,10 @@ namespace GravyEngine
 
     void Graphics::CreateUniformBuffers()
     {
-        auto diffuseShader = Shader::Find("Diffuse");
-
-        if(diffuseShader == nullptr)
-        {
-            Debug::WriteError("Can't create uniform buffer because Diffuse shader is null");
-            return;
-        }
-
-        CreateUniformBuffer("Camera", 0, sizeof(UniformCameraInfo), {diffuseShader});
-        CreateUniformBuffer("Lights", 1, Light::MaxLights * sizeof(UniformLightInfo), {diffuseShader});
-        CreateUniformBuffer("Shadow", 2, sizeof(UniformShadowInfo), {diffuseShader});
+        CreateUniformBuffer("Camera", 0, sizeof(UniformCameraInfo));
+        CreateUniformBuffer("Lights", 1, Light::MaxLights * sizeof(UniformLightInfo));
+        CreateUniformBuffer("Shadow", 2, sizeof(UniformShadowInfo));
+        CreateUniformBuffer("World", 3, sizeof(UniformWorldInfo));
     }
 
     void Graphics::CreateShadowMap()
@@ -281,15 +270,11 @@ namespace GravyEngine
         cascadedShadowMap->Delete();
     }
 
-    UniformBufferObject *Graphics::CreateUniformBuffer(const std::string &name, uint32_t bindingIndex, size_t bufferSize, const std::vector<Shader*> &shaders)
+    UniformBufferObject *Graphics::CreateUniformBuffer(const std::string &name, uint32_t bindingIndex, size_t bufferSize)
     {
         uniformBuffers.push_back(std::make_unique<UniformBufferObject>());
         size_t last = uniformBuffers.size() -1;
         auto pBuffer = uniformBuffers[last].get();
-
-        // for(size_t i = 0; i < shaders.size(); i++)
-        //     pBuffer->BindToShader(shaders[i]->GetId(), bindingIndex, name);
-
         pBuffer->SetName(name);
         pBuffer->Generate();
         pBuffer->Bind();

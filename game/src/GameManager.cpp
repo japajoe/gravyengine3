@@ -7,26 +7,15 @@ void GameManager::OnInitialize()
 {
     //Light::GetMain()->GetGameObject()->SetIsActive(false);
 
+    Light::GetMain()->SetStrength(0.1f);
+
     Light::GetMain()->GetTransform()->SetRotation(Quaternionf::Euler(45 * Mathf::Deg2Rad, 0, 0));
 
     Camera *camera = Camera::GetMain();
     camera->GetGameObject()->AddComponent<FirstPersonCamera>();
     camera->GetGameObject()->AddComponent<AudioListener>();
 
-    for(size_t i = 0; i < 3; i++)
-    {
-        auto lightObject = std::make_shared<GameObject>();
-        lightObject->GetTransform()->SetPosition(Vector3(i * 15, 3, i * 15));
-        auto light = lightObject->AddComponent<Light>();
-        light->SetType(LightType::Point);
-        light->SetColor(Color::Red());
-        light->SetStrength(1);
 
-        LightObject obj;
-        obj.gameObject = lightObject;
-        obj.light = light;
-        lights.push_back(obj);
-    }
 
     skybox = GameObject::CreatePrimitive(PrimitiveType::Skybox);
     
@@ -62,6 +51,28 @@ void GameManager::OnInitialize()
     material = renderer->GetMaterial<DiffuseMaterial>(0);
     material->SetDiffuseColor(Color(237, 160, 5, 255));
 
+    Color lightColors[3] = {
+        Color::Red(),
+        Color::Green(),
+        Color::Blue()
+    };
+
+    for(size_t i = 0; i < 3; i++)
+    {
+        auto lightObject = GameObject::CreatePrimitive(PrimitiveType::Cube);
+        lightObject->GetTransform()->SetPosition(Vector3(i * 15, 3, i * 15));
+        auto light = lightObject->AddComponent<Light>();
+        light->SetType(LightType::Point);
+        light->SetColor(lightColors[i]);
+        light->SetStrength(1);
+
+        LightObject obj;
+        obj.gameObject = lightObject;
+        obj.light = light;
+        lights.push_back(obj);
+    }
+
+
     audioSourceCube = cube->AddComponent<AudioSource>();
     audioSourceCube->SetAttenuationModel(AttenuationModel::Exponential);
     audioSourceCube->SetDopplerFactor(0.1f);
@@ -84,15 +95,15 @@ void GameManager::OnUpdate()
     if(cube)
     {
         float x = 0;
-        float z = Mathf::Sin(Time::GetTimeAsDouble() * 1.0f) * 100;
+        float z = Mathf::Sin(Time::GetTimeAsDouble() * 1.0f) * 50;
         cube->GetTransform()->SetPosition(Vector3(x, 2, z));
         cube->GetTransform()->Rotate(Vector3(1, 0, 1));
     }
 
     for(size_t i = 0; i < lights.size(); i++)
     {
-        float x = Mathf::Cos((Time::GetTimeAsDouble() + i * 360) * 1.0f) * 50;
-        float z = Mathf::Sin((Time::GetTimeAsDouble() + i * 360) * 1.0f) * 50;
+        float x = Mathf::Cos((Time::GetTimeAsDouble() * 1.0f) + i * 360) * 50;
+        float z = Mathf::Sin((Time::GetTimeAsDouble() * 1.0f) + i * 360) * 50;
         lights[i].gameObject->GetTransform()->SetPosition(Vector3(x, 2, z));
     }
 }
@@ -101,27 +112,48 @@ void GameManager::OnGUI()
 {
     ImGui::Begin("Light Settings");
 
-    for(size_t i = 0; i < lights.size(); i++)
-    {
-        auto light = lights[i].light;
-        auto obj = lights[i].gameObject.get();
+    auto light = lights[0].light;
 
-        auto color = light->GetColor();
-        auto strength = light->GetStrength();
-        auto position = obj->GetTransform()->GetPosition();
 
-        std::string labelColor = "Color Light " + std::to_string(i+1);
-        std::string labelStrength = "Strength Light " + std::to_string(i+1);
-        std::string labelPosition = "Position Light " + std::to_string(i+1);
+    auto color = light->GetColor();
+    auto ambient = light->GetAmbient();
+    auto diffuse = light->GetDiffuse();
+    auto specular = light->GetSpecular();
+    auto strength = light->GetStrength();
+    auto constant = light->GetConstant();
+    auto linear = light->GetLinear();
+    auto quadratic = light->GetQuadratic();
 
-        if(ImGui::ColorEdit3(labelColor.c_str(), &color.r))
-            light->SetColor(color);
-        if(ImGui::DragFloat(labelStrength.c_str(), &strength))
-            light->SetStrength(strength);
-        if(ImGui::DragFloat3(labelPosition.c_str(), &position.x))
-            obj->GetTransform()->SetPosition(position);
-    }
+    if(ImGui::ColorEdit3("Color", &color.r))
+        light->SetColor(color);
+    if(ImGui::ColorEdit3("Ambient", &ambient.r))
+        light->SetAmbient(ambient);
+    if(ImGui::ColorEdit3("Diffuse", &diffuse.r))
+        light->SetDiffuse(diffuse);
+    if(ImGui::ColorEdit3("Specular", &specular.r))
+        light->SetSpecular(specular);
+    if(ImGui::DragFloat("Strength", &strength))
+        light->SetStrength(strength);
+    if(ImGui::DragFloat("Constant", &constant))
+        light->SetConstant(constant);
+    if(ImGui::DragFloat("Linear", &linear))
+        light->SetLinear(linear);
+    if(ImGui::DragFloat("Quadratic", &quadratic))
+        light->SetQuadratic(quadratic);
 
+    ImGui::End();
+
+    ImGui::Begin("Fog Settings");
+    
+    Color fogColor = WorldSettings::GetFogColor();
+    float fogDensity = WorldSettings::GetFogDensity();
+    
+    if(ImGui::ColorEdit3("Fog Color", &fogColor.r))
+        WorldSettings::SetFogColor(fogColor);
+    
+    if(ImGui::DragFloat("Fog Density", &fogDensity))
+        WorldSettings::SetFogDensity(fogDensity);
+    
     ImGui::End();
 }
 

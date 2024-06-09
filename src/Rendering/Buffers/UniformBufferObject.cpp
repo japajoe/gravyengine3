@@ -48,6 +48,12 @@ namespace GravyEngine
         glBufferSubData(GL_UNIFORM_BUFFER, offset, size, data);
     }
 
+    void UniformBufferObject::BindToShader(GLuint program, GLuint uniformBlockBinding, const std::string &uniformBlockName)
+    {
+        unsigned int uniformBlockIndex = glGetUniformBlockIndex(program, uniformBlockName.c_str());
+        glUniformBlockBinding(program, uniformBlockIndex, uniformBlockBinding);
+    }
+
     GLuint UniformBufferObject::GetId() const
     {
         return id;

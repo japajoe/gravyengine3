@@ -21,6 +21,6 @@ void OnApplicationLoaded()
     
     gameObject = std::make_unique<GameObject>();
     gameObject->AddComponent<GameManager>();
+    gameObject->AddComponent<AudioPlayer>();
     //gameObject->AddComponent<TestManager>();
-    //gameObject->AddComponent<AudioPlayer>();
 }

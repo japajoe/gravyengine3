@@ -2,7 +2,8 @@
 
 namespace GravyEngine
 {
-    static std::string vertex = R"(#version 330 core
+    static std::string vertex = 
+R"(#version 330 core
 layout (location = 0) in vec3 aPosition;
 layout (location = 1) in vec3 aNormal;
 layout (location = 2) in vec2 aUV;
@@ -38,7 +39,8 @@ void main()
 	gl_Position = uProjection * mat4(mat3(uView)) * vec4(aPosition, 1.0);
 })";
 
-    static std::string fragment = R"(#version 330 core
+    static std::string fragment = 
+R"(#version 420 core
 #include <ShaderCore>
 uniform float uTime = 0.0;
 uniform float uCloudSpeed = 1.0;
@@ -133,7 +135,8 @@ void CreateSky()
 	vec3 extinction = mix(day_extinction, night_extinction, -uSunPosition.y * 0.2 + 0.5);	
 	color.rgb = rayleigh * mie * extinction;
 
-	float time = uTime * uCloudSpeed;
+	//float time = uTime * uCloudSpeed;
+	float time = World.time * uCloudSpeed;
 
 	// Cirrus Clouds
 	float density = smoothstep(1.0 - uCirrus, 1.0, fbm(pos.xyz / pos.y * 2.0 + time * 0.05)) * 0.3;

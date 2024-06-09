@@ -5,22 +5,17 @@
 
 namespace GravyEngine
 {
-    struct FogSettingsData
+    struct UniformWorldInfo
     {
-        float color[4];
-        float density;
-        float gradient;
-        int enabled;
+        Color fogColor;
+        float fogDensity;
+        float fogGradient;
+        int fogEnabled;
+        float time;
     };
 
     class WorldSettings
     {
-    private:
-        static Color fogColor;
-        static float fogDensity;
-        static float fogGradient;
-        static bool fogEnabled;
-        static float shadowBias;
     public:
         static void SetFogEnabled(bool enabled);
         static bool GetFogEnabled();
@@ -32,6 +27,13 @@ namespace GravyEngine
         static float GetFogDensity();
         static void SetShadowBias(float bias);
         static float GetShadowBias();
+        static void UpdateUniformBuffer();
+    private:
+        static Color fogColor;
+        static float fogDensity;
+        static float fogGradient;
+        static bool fogEnabled;
+        static float shadowBias;
     };
 };
 

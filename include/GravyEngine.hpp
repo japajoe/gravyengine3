@@ -29,13 +29,11 @@
 #include "Rendering/Graphics.hpp"
 #include "Rendering/Vertex.hpp"
 #include "Rendering/MeshRenderer.hpp"
-#include "Rendering/Shaders/UniformCamera.hpp"
 #include "Rendering/Shaders/DepthShader.hpp"
 #include "Rendering/Shaders/ShaderCore.hpp"
-#include "Rendering/Shaders/UniformShadow.hpp"
+#include "Rendering/Shaders/LineShader.hpp"
 #include "Rendering/Shaders/DiffuseShader.hpp"
 #include "Rendering/Shaders/ProceduralSkyboxShader.hpp"
-#include "Rendering/Shaders/UniformLight.hpp"
 #include "Rendering/Texture2DArray.hpp"
 #include "Rendering/Texture2D.hpp"
 #include "Rendering/Texture.hpp"
@@ -44,6 +42,7 @@
 #include "Rendering/Buffers/VertexBufferObject.hpp"
 #include "Rendering/Buffers/ElementBufferObject.hpp"
 #include "Rendering/Buffers/VertexArrayObject.hpp"
+#include "Rendering/LineRenderer.hpp"
 #include "Audio/AudioBuffer.hpp"
 #include "Audio/AudioContext.hpp"
 #include "Audio/DSP/Oscillator.hpp"
@@ -76,7 +75,7 @@
 #include "Core/FirstPersonCamera.hpp"
 
 #include "External/imgui/imgui.h"
-#include "External/imgui/imgui-ex.h"
+#include "External/imgui/imgui_ex.h"
 
 using namespace GravyEngine;
 

@@ -1,4 +1,7 @@
 #include "WorldSettings.hpp"
+#include "Time.hpp"
+#include "../Rendering/Graphics.hpp"
+#include "../Rendering/Buffers/UniformBufferObject.hpp"
 
 namespace GravyEngine
 {
@@ -56,5 +59,29 @@ namespace GravyEngine
     float WorldSettings::GetShadowBias()
     {
         return shadowBias;
+    }
+
+    static UniformBufferObject *uniformBuffer = nullptr;
+
+    void WorldSettings::UpdateUniformBuffer()
+    {
+        if(uniformBuffer == nullptr)
+        {
+            uniformBuffer = Graphics::FindUniformBuffer("World");
+
+            if(uniformBuffer == nullptr)
+                return;
+        }
+        
+        UniformWorldInfo worldInfo;
+        worldInfo.fogColor = fogColor;
+        worldInfo.fogDensity = fogDensity;
+        worldInfo.fogGradient = fogGradient;
+        worldInfo.fogEnabled = fogEnabled ? 1 : -1;
+        worldInfo.time = Time::GetTime();
+
+        uniformBuffer->Bind();
+        uniformBuffer->BufferSubData(0, sizeof(UniformWorldInfo), &worldInfo);
+        uniformBuffer->Unbind();
     }
 };

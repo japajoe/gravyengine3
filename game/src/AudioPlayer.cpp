@@ -41,6 +41,8 @@ void AudioPlayer::OnGUI()
     
     if(ImGuiEx::Knob("Master Volume", &masterVolume, 0.0f, 1.0f, 64))
         AudioContext::SetMasterVolume(masterVolume);
+
+    ImGui::SameLine();
     
     if(ImGuiEx::Knob("Music Volume", &musicVolume, 0.0f, 1.0f, 64))
         audioSource->SetVolume(musicVolume);

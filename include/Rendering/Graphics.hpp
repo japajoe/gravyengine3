@@ -43,7 +43,7 @@ namespace GravyEngine
         static void DestroyMeshes();
         static void DestroyUniformBuffers();
         static void DestroyShadowMap();
-        static UniformBufferObject *CreateUniformBuffer(const std::string &name, uint32_t bindingIndex, size_t bufferSize, const std::vector<Shader*> &shaders);
+        static UniformBufferObject *CreateUniformBuffer(const std::string &name, uint32_t bindingIndex, size_t bufferSize);
     };
 };
 

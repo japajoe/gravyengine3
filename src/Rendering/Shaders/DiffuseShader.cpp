@@ -16,18 +16,18 @@ out vec3 oFragPosition;
 out vec2 oUV;
 
 void main() {
+    gl_Position = uMVP * vec4(aPosition, 1.0);
     oNormal = uModelInverted * aNormal;
     oFragPosition = vec3(uModel * vec4(aPosition, 1.0));
     oUV = aUV;
-    gl_Position = uMVP * vec4(aPosition, 1.0);
 })";
 
     static std::string fragment = R"(#version 420 core
 
 #include <ShaderCore>
-#include <UniformCamera>
-#include <UniformLight>
-#include <UniformShadow>
+//#include <UniformCamera>
+//#include <UniformLight>
+//#include <UniformShadow>
 
 uniform sampler2D uDiffuseTexture;
 uniform vec4 uDiffuseColor;
@@ -47,9 +47,9 @@ void main() {
     vec4 texColor = texture(uDiffuseTexture, (oUV + uUVOffset) * uUVScale);
     vec3 normal = normalize(oNormal);
 
-    vec3 ambient = vec3(0.1);
-    vec3 diffuse = vec3(0.1);
-    vec3 specular = vec3(0.1);
+    vec3 ambient = vec3(0.0);
+    vec3 diffuse = vec3(0.0);
+    vec3 specular = vec3(0.0);
 
     for(int i = 0; i < MAX_NUM_LIGHTS; i++)
     {
@@ -82,7 +82,8 @@ void main() {
             ambient += light.ambient.rgb * uAmbientStrength * texColor.rgb * attenuation;
 
             // diffuse
-            float diff = max(dot(lightDir, normal), 0.0);
+            float diff = max(dot(lightDir, normal), 1.0);
+            //float diff = 1.0;
             diffuse += light.diffuse.rgb * diff * lightColor * lightStrength * attenuation;
 
             // specular
@@ -102,7 +103,13 @@ void main() {
 
     vec3 lighting = (ambient + (1.0 - shadow) * (diffuse + specular)) * texColor.rgb * uDiffuseColor.rgb;
 
-    //lighting = GammaCorrection(lighting).rgb;
+    if(World.fogEnabled > 0)
+    {
+        float visibility = GetFogVisibility(World.fogDensity, World.fogGradient, Camera.position.xyz, oFragPosition);
+        lighting = mix(World.fogColor.rgb, lighting, visibility);
+    }
+
+    lighting = GammaCorrection(lighting).rgb;
 
     float alpha = uDiffuseColor.a * texColor.a;
     

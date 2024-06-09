@@ -1,4 +1,4 @@
-#include "imgui-ex.h"
+#include "imgui_ex.h"
 #include <cmath>
 #include <string>
 
@@ -24,7 +24,7 @@ namespace ImGuiEx
         ImGui::InvisibleButton(label, ImVec2(radiusOuter * 2, radiusOuter * 2 + lineHeight + style.ItemInnerSpacing.y));
         bool valueChanged = false;
         bool isActive = ImGui::IsItemActive();
-        bool isHovered = ImGui::IsItemActive();
+        bool isHovered = ImGui::IsItemHovered();
 
         float t = (*value - min) / (max - min);
 
@@ -57,14 +57,13 @@ namespace ImGuiEx
         drawList->AddCircleFilled(center, radiusOuter, ImGui::GetColorU32(ImGuiCol_FrameBg), 16);
         drawList->AddLine(ImVec2(center.x + angleCos * radiusInner, center.y + angle_sin * radiusInner), ImVec2(center.x + angleCos * (radiusOuter - 2), center.y + angle_sin * (radiusOuter - 2)), ImGui::GetColorU32(ImGuiCol_SliderGrabActive), 2.0f);
         drawList->AddCircleFilled(center, radiusInner, ImGui::GetColorU32(isActive ? ImGuiCol_FrameBgActive : isHovered ? ImGuiCol_FrameBgHovered : ImGuiCol_FrameBg), 16);
-        drawList->AddText(ImVec2(cursorPosition.x, cursorPosition.y + radiusOuter * 2 + style.ItemInnerSpacing.y), ImGui::GetColorU32(ImGuiCol_Text), label);
+        //drawList->AddText(ImVec2(cursorPosition.x, cursorPosition.y + radiusOuter * 2 + style.ItemInnerSpacing.y), ImGui::GetColorU32(ImGuiCol_Text), label);
 
         if (isActive || isHovered)
         {
             ImGui::SetNextWindowPos(ImVec2(cursorPosition.x - style.WindowPadding.x, cursorPosition.y - lineHeight - style.ItemInnerSpacing.y - style.WindowPadding.y));
             ImGui::BeginTooltip();
-            //ImGui::Text(text.c_str());
-            ImGui::Text("%.3f", *value);
+            ImGui::Text("%s %.3f", label, *value);
             ImGui::EndTooltip();
         }
 
