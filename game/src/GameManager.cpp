@@ -59,7 +59,7 @@ void GameManager::OnInitialize()
 
     for(size_t i = 0; i < 3; i++)
     {
-        auto lightObject = GameObject::CreatePrimitive(PrimitiveType::Cube);
+        auto lightObject = GameObject::CreatePrimitive(PrimitiveType::Sphere);
         lightObject->GetTransform()->SetPosition(Vector3(i * 15, 3, i * 15));
         auto light = lightObject->AddComponent<Light>();
         light->SetType(LightType::Point);
@@ -110,6 +110,8 @@ void GameManager::OnUpdate()
 
 void GameManager::OnGUI()
 {
+    return;
+    
     ImGui::Begin("Light Settings");
 
     auto light = lights[0].light;

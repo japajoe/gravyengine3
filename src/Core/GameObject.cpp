@@ -86,7 +86,7 @@ namespace GravyEngine
             }
             case PrimitiveType::Skybox:
             {
-                mesh = Mesh::Find("Sphere");
+                mesh = Mesh::Find("Hemisphere");
                 createMaterial = [] () { return std::make_shared<ProceduralSkyboxMaterial>(); };
                 cullFace = false;
                 depthTest = false;
@@ -110,16 +110,15 @@ namespace GravyEngine
         if(mesh == nullptr)
             return nullptr;
 
-        auto object = std::make_unique<GameObject>();
+        auto object = std::make_shared<GameObject>();
         auto renderer = object->AddComponent<MeshRenderer>();
         auto material = createMaterial();
 
         if(pTexture)
         {
-            DiffuseMaterial *pMaterial = dynamic_cast<DiffuseMaterial*>(material.get());
+            DiffuseMaterial *pMaterial = static_cast<DiffuseMaterial*>(material.get());
             pMaterial->SetDiffuseTexture(pTexture);
         }
-
 
         renderer->Add(mesh, material);
         renderer->SetCastShadows(castShadows);

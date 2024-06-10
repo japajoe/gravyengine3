@@ -42,15 +42,12 @@ void main()
     static std::string fragment = 
 R"(#version 420 core
 #include <ShaderCore>
-uniform float uTime = 0.0;
 uniform float uCloudSpeed = 1.0;
 uniform float uCirrus = 0.4;
 uniform float uCumulus = 0.8;
 uniform vec3 uSunPosition;
-uniform float uRenderFog;
 uniform float uFogStart;
 uniform float uFogEnd;
-uniform vec3 uFogColor;
 
 in vec2 oUV;
 in vec3 oFragPosition;
@@ -96,12 +93,12 @@ void CreateGround()
 {
 	vec4 color = vec4(0.0, 0.0, 0.0, 1.0);
 
-    if(uRenderFog > 0.0)
+    if(World.fogEnabled > 0)
     {
         float factor = (oUV.y - uFogStart) / (uFogEnd - uFogStart);
         factor = clamp(factor, 0.0, 1.0);
         factor = smoothstep(0.0, 1.0, factor);
-        color.rgb = mix(uFogColor, color.xyz, factor);
+        color.rgb = mix(World.fogColor.rgb, color.xyz, factor);
     }
 	else
 	{
@@ -135,7 +132,6 @@ void CreateSky()
 	vec3 extinction = mix(day_extinction, night_extinction, -uSunPosition.y * 0.2 + 0.5);	
 	color.rgb = rayleigh * mie * extinction;
 
-	//float time = uTime * uCloudSpeed;
 	float time = World.time * uCloudSpeed;
 
 	// Cirrus Clouds
@@ -162,12 +158,10 @@ void main()
 
 	if (pos.y < 0)
 	{
-		//CreateGround();
-		
-		
 		//vec3 color = GammaCorrection(uFogColor.rgb).rgb;
 		//FragColor = vec4(color, 1.0);
 		CreateSky();
+		//CreateGround();
 	}
 	else
 	{

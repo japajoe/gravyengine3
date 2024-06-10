@@ -18,15 +18,12 @@ namespace GravyEngine
         int uRayleighCoefficient;
         int uMieCoefficient;
         int uScatteringDirection;
-        int uTime;
         int uCloudSpeed;
         int uCirrus;
         int uCumulus;
         int uSunPosition;
-        int uRenderFog;
         int uFogStart;
         int uFogEnd;
-        int uFogColor;
 
         float cloudSpeed;
         float cirrus;

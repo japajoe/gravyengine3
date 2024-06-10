@@ -72,6 +72,12 @@ namespace GravyEngine
         if(data.size() == 0)
             return;
 
+        Camera *camera = Camera::GetMain();
+        Transform *transform = GetTransform();
+
+        if(!camera || !transform)
+            return;
+
         for(size_t i = 0; i < data.size(); i++)
         {
             Mesh *pMesh = data[i].pMesh;
@@ -106,7 +112,7 @@ namespace GravyEngine
 
             GL::SetDepthFunc(settings.depthFunc);
 
-            pMaterial->Use(GetTransform(), Camera::GetMain());
+            pMaterial->Use(transform, camera);
 
             pMesh->GetVAO()->Bind();
 
@@ -124,19 +130,19 @@ namespace GravyEngine
         if(data.size() == 0)
             return;
 
+        Transform *transform = GetTransform();
+
+        if(!material || !camera || !transform)
+            return;
+
+        if(!material->GetShader())
+            return;
+
         for(size_t i = 0; i < data.size(); i++)
         {
             Mesh *pMesh = data[i].pMesh;
 
             if(!pMesh)
-                return;
-
-            Material *pMaterial = material;
-
-            if(!pMaterial)
-                return;
-
-            if(!pMaterial->GetShader())
                 return;
 
             auto &settings = data[i].settings;
@@ -158,7 +164,7 @@ namespace GravyEngine
 
             GL::SetDepthFunc(settings.depthFunc);
 
-            pMaterial->Use(GetTransform(), camera);
+            material->Use(transform, camera);
 
             pMesh->GetVAO()->Bind();
 

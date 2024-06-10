@@ -1,6 +1,4 @@
 #include "ProceduralSkyboxMaterial.hpp"
-#include "../../Core/Time.hpp"
-#include "../../Core/WorldSettings.hpp"
 #include "../../System/Numerics/Matrix3.hpp"
 #include "../../System/Numerics/Matrix4.hpp"
 #include "../../System/Numerics/Vector2.hpp"
@@ -20,15 +18,12 @@ namespace GravyEngine
             uRayleighCoefficient = glGetUniformLocation(pShader->GetId(), "uRayleighCoefficient");
             uMieCoefficient = glGetUniformLocation(pShader->GetId(), "uMieCoefficient");
             uScatteringDirection = glGetUniformLocation(pShader->GetId(), "uScatteringDirection");
-            uTime = glGetUniformLocation(pShader->GetId(), "uTime");
             uCloudSpeed = glGetUniformLocation(pShader->GetId(), "uCloudSpeed");
             uCirrus = glGetUniformLocation(pShader->GetId(), "uCirrus");
             uCumulus = glGetUniformLocation(pShader->GetId(), "uCumulus");
             uSunPosition = glGetUniformLocation(pShader->GetId(), "uSunPosition");
-            uRenderFog = glGetUniformLocation(pShader->GetId(), "uRenderFog");
             uFogStart = glGetUniformLocation(pShader->GetId(), "uFogStart");
             uFogEnd = glGetUniformLocation(pShader->GetId(), "uFogEnd");
-            uFogColor = glGetUniformLocation(pShader->GetId(), "uFogColor");
         }
 
         cloudSpeed = 0.1f;
@@ -56,7 +51,6 @@ namespace GravyEngine
         Matrix4 projection = camera->GetProjectionMatrix();
         Matrix4 view = camera->GetViewMatrix();
         Matrix4 model = transform->GetModelMatrix();
-        Color fogColor = WorldSettings::GetFogColor();
 
         pShader->Use();
 
@@ -64,7 +58,6 @@ namespace GravyEngine
         pShader->SetMat4(uView, glm::value_ptr(view));
         pShader->SetMat4(uProjection, glm::value_ptr(projection));
 
-        pShader->SetFloat(uTime, Time::GetTime());
         pShader->SetFloat(uCloudSpeed, cloudSpeed);
         pShader->SetFloat(uCirrus, cirrus);
         pShader->SetFloat(uCumulus, cumulus);
@@ -72,10 +65,8 @@ namespace GravyEngine
         pShader->SetFloat(uMieCoefficient, mieCoefficient);
         pShader->SetFloat(uScatteringDirection, scatteringDirection);
         pShader->SetFloat3(uSunPosition, &sunPosition.x);
-        pShader->SetFloat(uRenderFog, WorldSettings::GetFogEnabled() ? 1.0f : -1.0f);
         pShader->SetFloat(uFogStart, fogStart);
         pShader->SetFloat(uFogEnd, fogEnd);
-        pShader->SetFloat3(uFogColor, &fogColor.r);
     }
 
     void ProceduralSkyboxMaterial::SetCloudSpeed(float speed)
