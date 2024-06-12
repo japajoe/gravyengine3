@@ -15,11 +15,15 @@ namespace GravyEngine
     Renderer::Renderer() : Component()
     {
         castShadows = true;
+        renderOrder = 1000;
+
+        //Maybe move this to OnInitialize?
+        Graphics::AddRenderer(this);
     }
 
     void Renderer::OnDestroy()
     {
-        Graphics::RemoveRenderer(GetGameObject());
+        Graphics::RemoveRenderer(this);
     }
 
     void Renderer::SetCastShadows(bool castShadows)
@@ -40,5 +44,15 @@ namespace GravyEngine
     bool Renderer::GetReceiveShadows() const
     {
         return receiveShadows;
+    }
+
+    void Renderer::SetRenderOrder(uint32_t order)
+    {
+        this->renderOrder = order;
+    }
+
+    uint32_t Renderer::GetRenderOrder() const
+    {
+        return renderOrder;
     }
 };

@@ -1,12 +1,12 @@
 #ifndef GRAPHICS_HPP
 #define GRAPHICS_HPP
 
-#include "Buffers/UniformBufferObject.hpp"
 #include <vector>
 #include <string>
 #include <cstdint>
 #include <cstdlib>
 #include <memory>
+#include <queue>
 
 namespace GravyEngine
 {
@@ -16,16 +16,26 @@ namespace GravyEngine
     class Shader;
     class DepthMaterial;
 
+    struct RendererInfo
+    {
+        GameObject *root;
+        std::vector<Renderer*> renderers;
+    };
+
+    struct CompareRendererOrder 
+    {
+        bool operator()(const Renderer *lhs, const Renderer *rhs) const;
+    };
+
     class Graphics
     {
     friend class Application;
     public:
-        static void AddRenderer(GameObject *obj);
-        static void RemoveRenderer(GameObject *obj);
-        static UniformBufferObject *FindUniformBuffer(const std::string &name);
+        static void AddRenderer(Renderer *renderer);
+        static void RemoveRenderer(Renderer *renderer);
     private:
+        static std::priority_queue<Renderer*, std::vector<Renderer*>, CompareRendererOrder> renderQueue;
         static std::vector<Renderer*> renderers;
-        static std::vector<std::unique_ptr<UniformBufferObject>> uniformBuffers;
         static std::unique_ptr<CascadedShadowMap> cascadedShadowMap;
         static std::unique_ptr<DepthMaterial> depthMaterial;
         static void Initialize();
@@ -43,7 +53,8 @@ namespace GravyEngine
         static void DestroyMeshes();
         static void DestroyUniformBuffers();
         static void DestroyShadowMap();
-        static UniformBufferObject *CreateUniformBuffer(const std::string &name, uint32_t bindingIndex, size_t bufferSize);
+        static void DestroyRenderers();
+        static void AddRendererRecursively(GameObject *object, RendererInfo &info);
     };
 };
 

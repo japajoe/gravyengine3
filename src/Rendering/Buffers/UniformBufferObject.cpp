@@ -10,6 +10,16 @@ namespace GravyEngine
         this->id = 0;
     }
 
+    UniformBufferObject::UniformBufferObject(uint32_t bindingIndex, size_t bufferSize)
+    {
+        this->id = 0;
+        Generate();
+        Bind();
+        BufferData(bufferSize, nullptr, GL_DYNAMIC_DRAW);
+        BindBufferBase(bindingIndex);
+        Unbind();
+    }
+
     void UniformBufferObject::Generate()
     {
         glGenBuffers(1, &id);
@@ -71,9 +81,8 @@ namespace GravyEngine
 
         Debug::WriteLog("[UNIFORMBUFFER] %s added with ID: %llu", name.c_str(), buffer.GetId());
 
-        auto pMesh = &buffers[name];
-        pMesh->Generate();
-        return pMesh;
+        auto pBuffer = &buffers[name];
+        return pBuffer;
     }
 
     void UniformBufferObject::Remove(const std::string &name)

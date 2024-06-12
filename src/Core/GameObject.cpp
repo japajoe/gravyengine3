@@ -46,6 +46,7 @@ namespace GravyEngine
         bool cullFace = true;
         bool depthTest = true;
         bool castShadows = true;
+        std::string name = "GameObject";
 
         switch(type)
         {
@@ -54,6 +55,7 @@ namespace GravyEngine
                 mesh = Mesh::Find("Capsule");
                 createMaterial = [] () { return std::make_shared<DiffuseMaterial>(); };
                 pTexture = Texture2D::Find("Default");
+                name = "Capsule";
                 break;
             }
             case PrimitiveType::Cube:
@@ -61,6 +63,7 @@ namespace GravyEngine
                 mesh = Mesh::Find("Cube");
                 createMaterial = [] () { return std::make_shared<DiffuseMaterial>(); };
                 pTexture = Texture2D::Find("Default");
+                name = "Cube";
                 break;
             }
             case PrimitiveType::Hemisphere:
@@ -68,6 +71,7 @@ namespace GravyEngine
                 mesh = Mesh::Find("Hemisphere");
                 createMaterial = [] () { return std::make_shared<DiffuseMaterial>(); };
                 pTexture = Texture2D::Find("Default");
+                name = "Hemisphere";
                 break;
             }
             case PrimitiveType::Plane:
@@ -75,6 +79,7 @@ namespace GravyEngine
                 mesh = Mesh::Find("Plane");
                 createMaterial = [] () { return std::make_shared<DiffuseMaterial>(); };
                 pTexture = Texture2D::Find("Default");
+                name = "Plane";
                 break;
             }
             case PrimitiveType::Quad:
@@ -82,6 +87,7 @@ namespace GravyEngine
                 mesh = Mesh::Find("Quad");
                 createMaterial = [] () { return std::make_shared<DiffuseMaterial>(); };
                 pTexture = Texture2D::Find("Default");
+                name = "Quad";
                 break;
             }
             case PrimitiveType::Skybox:
@@ -91,6 +97,7 @@ namespace GravyEngine
                 cullFace = false;
                 depthTest = false;
                 castShadows = false;
+                name = "Skybox";
                 break;
             }
             case PrimitiveType::Sphere:
@@ -98,6 +105,7 @@ namespace GravyEngine
                 mesh = Mesh::Find("Sphere");
                 createMaterial = [] () { return std::make_shared<DiffuseMaterial>(); };
                 pTexture = Texture2D::Find("Default");
+                name = "Sphere";
                 break;
             }
             default:
@@ -111,6 +119,7 @@ namespace GravyEngine
             return nullptr;
 
         auto object = std::make_shared<GameObject>();
+        object->SetName(name);
         auto renderer = object->AddComponent<MeshRenderer>();
         auto material = createMaterial();
 
@@ -126,8 +135,6 @@ namespace GravyEngine
         auto settings = renderer->GetSettings(0);
         settings->cullFace = cullFace;
         settings->depthTest = depthTest;
-
-        Graphics::AddRenderer(object.get());
         
         return object;
     }

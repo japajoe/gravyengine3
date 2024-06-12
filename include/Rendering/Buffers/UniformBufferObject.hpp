@@ -5,6 +5,8 @@
 #include "../../Core/Object.hpp"
 #include <string>
 #include <unordered_map>
+#include <cstdlib>
+#include <cstdint>
 
 namespace GravyEngine
 {
@@ -12,6 +14,7 @@ namespace GravyEngine
     {
     public:
         UniformBufferObject();
+        UniformBufferObject(uint32_t bindingIndex, size_t bufferSize);
         void Generate();
         void Delete();
         void Bind();

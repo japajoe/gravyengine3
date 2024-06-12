@@ -85,13 +85,16 @@ namespace GravyEngine
             if(!pMesh)
                 return;
 
+            if(pMesh->GetVAO()->GetId() == 0)
+                return;
+
             Material *pMaterial = data[i].pMaterial.get();
 
             if(!pMaterial)
-                return;
+                continue;
 
             if(!pMaterial->GetShader())
-                return;
+                continue;
 
             auto &settings = data[i].settings;
 
@@ -143,7 +146,10 @@ namespace GravyEngine
             Mesh *pMesh = data[i].pMesh;
 
             if(!pMesh)
-                return;
+                continue;
+
+            if(pMesh->GetVAO()->GetId() == 0)
+                continue;
 
             auto &settings = data[i].settings;
 

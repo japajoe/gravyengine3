@@ -15,8 +15,6 @@ void GameManager::OnInitialize()
     camera->GetGameObject()->AddComponent<FirstPersonCamera>();
     camera->GetGameObject()->AddComponent<AudioListener>();
 
-
-
     skybox = GameObject::CreatePrimitive(PrimitiveType::Skybox);
     
     ground = GameObject::CreatePrimitive(PrimitiveType::Plane);

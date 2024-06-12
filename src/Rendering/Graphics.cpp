@@ -7,12 +7,13 @@
 #include "Texture.hpp"
 #include "Texture2D.hpp"
 #include "Texture2DArray.hpp"
+#include "Buffers/UniformBufferObject.hpp"
+#include "Materials/DepthMaterial.hpp"
 #include "Shaders/ShaderCore.hpp"
 #include "Shaders/DiffuseShader.hpp"
 #include "Shaders/ProceduralSkyboxShader.hpp"
 #include "Shaders/DepthShader.hpp"
 #include "Shaders/LineShader.hpp"
-#include "Materials/DepthMaterial.hpp"
 #include "../System/Mathf.hpp"
 #include "../System/Drawing/Image.hpp"
 #include "../Core/Camera.hpp"
@@ -28,10 +29,17 @@ namespace GravyEngine
 {
     static std::unique_ptr<GameObject> mainCamera;
     static std::unique_ptr<GameObject> mainLight;
+    
+    std::priority_queue<Renderer*, std::vector<Renderer*>, CompareRendererOrder> Graphics::renderQueue;
     std::vector<Renderer*> Graphics::renderers;
-    std::vector<std::unique_ptr<UniformBufferObject>> Graphics::uniformBuffers;
     std::unique_ptr<CascadedShadowMap> Graphics::cascadedShadowMap;
     std::unique_ptr<DepthMaterial> Graphics::depthMaterial;
+
+    bool CompareRendererOrder::operator()(const Renderer *lhs, const Renderer *rhs) const 
+    {
+        // Lower rendering order gets priority
+        return lhs->GetRenderOrder() > rhs->GetRenderOrder();
+    }
 
     void Graphics::Initialize()
     {
@@ -63,7 +71,7 @@ namespace GravyEngine
         DestroyMeshes();
         DestroyUniformBuffers();
         DestroyShadowMap();
-
+        DestroyRenderers();
         LineRenderer::Deinitialize();
     }
 
@@ -81,18 +89,22 @@ namespace GravyEngine
 
     void Graphics::RenderShadowMap()
     {
-        if(renderers.size() > 0)
+        if(renderQueue.size() > 0)
         {
             Camera *camera = Camera::GetMain();
             DepthMaterial *material = depthMaterial.get();
 
             cascadedShadowMap->Bind();
-            for(size_t i = 0; i < renderers.size(); i++)
+
+            std::priority_queue<Renderer*, std::vector<Renderer*>, CompareRendererOrder> queue = renderQueue;
+            while (!queue.empty()) 
             {
-                if(!renderers[i]->GetCastShadows())
-                    continue;
-                renderers[i]->OnRender(material, camera);
+                Renderer* currentRenderer = queue.top();
+                if(currentRenderer->GetCastShadows())
+                    currentRenderer->OnRender(material, camera);
+                queue.pop();
             }
+
             cascadedShadowMap->Unbind();
         }
     }
@@ -104,19 +116,21 @@ namespace GravyEngine
         glClearColor(color.r, color.g, color.b, color.a);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        if(renderers.size() > 0)
+        if(renderQueue.size() > 0)
         {
-            for(size_t i = 0; i < renderers.size(); i++)
+            std::priority_queue<Renderer*, std::vector<Renderer*>, CompareRendererOrder> queue = renderQueue;
+
+            while (!queue.empty()) 
             {
-                renderers[i]->OnRender();
+                Renderer* currentRenderer = queue.top();
+                currentRenderer->OnRender();
+                queue.pop();
             }
         }
     }
 
-    void Graphics::AddRenderer(GameObject *obj)
+    void Graphics::AddRenderer(Renderer *renderer)
     {
-        Renderer *renderer = obj->GetComponent<Renderer>();
-
         if(renderer)
         {
             for(size_t i = 0; i < renderers.size(); i++)
@@ -131,13 +145,32 @@ namespace GravyEngine
             Debug::WriteLog("[RENDERER] added with ID: %llu", renderer->GetInstanceId());
 
             renderers.push_back(renderer);
+
+            renderQueue.push(renderer);
         }
     }
 
-    void Graphics::RemoveRenderer(GameObject *obj)
+    void Graphics::AddRendererRecursively(GameObject *object, RendererInfo &info)
     {
-        Renderer *renderer = obj->GetComponent<Renderer>();
+        Renderer *renderer = object->GetComponent<Renderer>();
 
+        if(renderer)
+        {
+            info.renderers.push_back(renderer);
+        }
+
+        Transform *transform = object->GetTransform();
+        Transform *child = nullptr;
+        size_t index = 0;
+
+        while((child = transform->GetChild(index++)) != nullptr)
+        {
+            AddRendererRecursively(child->GetGameObject(), info);
+        }
+    }
+
+    void Graphics::RemoveRenderer(Renderer *renderer)
+    {
         if(renderer)
         {
             size_t index = 0;
@@ -157,21 +190,19 @@ namespace GravyEngine
             {
                 Debug::WriteLog("[RENDERER] removed with ID: %llu", renderer->GetInstanceId());
                 renderers.erase(renderers.begin() + index);
+
+                //Clear render queue and recreate
+                while(!renderQueue.empty())
+                {
+                    renderQueue.pop();
+                }
+
+                for(size_t i = 0; i < renderers.size(); i++)
+                {
+                    renderQueue.push(renderers[i]);
+                }
             }
         }
-    }
-
-    UniformBufferObject *Graphics::FindUniformBuffer(const std::string &name)
-    {
-        for(size_t i = 0; i < uniformBuffers.size(); i++)
-        {
-            if(uniformBuffers[i]->GetName() == name)
-            {
-                return uniformBuffers[i].get();
-            }
-        }
-
-        return nullptr;
     }
 
     void Graphics::CreateTextures()
@@ -210,16 +241,16 @@ namespace GravyEngine
 
     void Graphics::CreateUniformBuffers()
     {
-        CreateUniformBuffer("Camera", 0, sizeof(UniformCameraInfo));
-        CreateUniformBuffer("Lights", 1, Light::MaxLights * sizeof(UniformLightInfo));
-        CreateUniformBuffer("Shadow", 2, sizeof(UniformShadowInfo));
-        CreateUniformBuffer("World", 3, sizeof(UniformWorldInfo));
+        UniformBufferObject::Add("Camera", UniformBufferObject(0, sizeof(UniformCameraInfo)));
+        UniformBufferObject::Add("Lights", UniformBufferObject(1, Light::MaxLights * sizeof(UniformLightInfo)));
+        UniformBufferObject::Add("Shadow", UniformBufferObject(2, sizeof(UniformShadowInfo)));
+        UniformBufferObject::Add("World", UniformBufferObject(3, sizeof(UniformWorldInfo)));
     }
 
     void Graphics::CreateShadowMap()
     {
         Texture2DArray *depthMap = Texture2DArray::Find("DepthMap");
-        UniformBufferObject *shadowData = FindUniformBuffer("Shadow");
+        UniformBufferObject *shadowData = UniformBufferObject::Find("Shadow");
         Camera *camera = mainCamera->GetComponent<Camera>();
         Light *light = mainLight->GetComponent<Light>();
 
@@ -255,14 +286,10 @@ namespace GravyEngine
 
     void Graphics::DestroyUniformBuffers()
     {
-        for(size_t i = 0; i < uniformBuffers.size(); i++)
-        {
-            auto &buffer = uniformBuffers[i];
-            Debug::WriteLog("[UNIFORM_BUFFER] %s deleted with ID: %llu", buffer->GetName().c_str(), buffer->GetId());
-            buffer->Delete();
-        }
-
-        uniformBuffers.clear();
+        UniformBufferObject::Remove("Camera");
+        UniformBufferObject::Remove("Lights");
+        UniformBufferObject::Remove("Shadow");
+        UniformBufferObject::Remove("World");
     }
 
     void Graphics::DestroyShadowMap()
@@ -270,18 +297,13 @@ namespace GravyEngine
         cascadedShadowMap->Delete();
     }
 
-    UniformBufferObject *Graphics::CreateUniformBuffer(const std::string &name, uint32_t bindingIndex, size_t bufferSize)
+    void Graphics::DestroyRenderers()
     {
-        uniformBuffers.push_back(std::make_unique<UniformBufferObject>());
-        size_t last = uniformBuffers.size() -1;
-        auto pBuffer = uniformBuffers[last].get();
-        pBuffer->SetName(name);
-        pBuffer->Generate();
-        pBuffer->Bind();
-        pBuffer->BufferData(bufferSize, nullptr, GL_DYNAMIC_DRAW);
-        pBuffer->BindBufferBase(bindingIndex);
-        pBuffer->Unbind();
-        Debug::WriteLog("[UNIFORM_BUFFER] %s added with ID: %llu", name.c_str(), pBuffer->GetId());
-        return pBuffer;
+        renderers.clear();
+
+        while(!renderQueue.empty())
+        {
+            renderQueue.pop();
+        }
     }
 };

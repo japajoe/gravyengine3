@@ -7,6 +7,7 @@
 #include "Material.hpp"
 #include <memory>
 #include <type_traits>
+#include <cstdint>
 
 namespace GravyEngine
 {
@@ -30,9 +31,12 @@ namespace GravyEngine
         bool GetCastShadows() const;
         void SetReceiveShadows(bool receiveShadows);
         bool GetReceiveShadows() const;
+        void SetRenderOrder(uint32_t order);
+        uint32_t GetRenderOrder() const;
     protected:
         bool castShadows;
         bool receiveShadows;
+        uint32_t renderOrder;
         void OnDestroy() override;
     };
 };

@@ -41,6 +41,11 @@ endif()
 
 add_executable(${PROJECT_NAME} ${SOURCES})
 
+set_target_properties(${PROJECT_NAME} PROPERTIES
+    BUILD_WITH_INSTALL_RPATH TRUE
+    INSTALL_RPATH "$ORIGIN/runtimes"  # Relative to the executable
+)
+
 if(BUILD_PLATFORM STREQUAL "windows")
     target_link_libraries(${PROJECT_NAME} glad glm glfw imgui miniaudioex -lstdc++fs -static -static-libgcc -static-libstdc++)
 elseif(BUILD_PLATFORM STREQUAL "linux")

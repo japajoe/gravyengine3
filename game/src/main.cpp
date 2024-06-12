@@ -2,6 +2,7 @@
 #include "TestManager.hpp"
 #include "AudioPlayer.hpp"
 #include "Resources.hpp"
+
 #include <memory>
 
 static void OnApplicationLoaded();

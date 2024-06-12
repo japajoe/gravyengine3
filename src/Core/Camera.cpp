@@ -3,7 +3,6 @@
 #include "Transform.hpp"
 #include "GameObject.hpp"
 #include "../Rendering/Buffers/UniformBufferObject.hpp"
-#include "../Rendering/Graphics.hpp"
 #include "../System/Mathf.hpp"
 
 namespace GravyEngine
@@ -158,7 +157,7 @@ namespace GravyEngine
     {
         if(uniformBuffer == nullptr)
         {
-            uniformBuffer = Graphics::FindUniformBuffer("Camera");
+            uniformBuffer = UniformBufferObject::Find("Camera");
 
             if(uniformBuffer == nullptr)
                 return;
