@@ -16,12 +16,6 @@ namespace GravyEngine
     class Shader;
     class DepthMaterial;
 
-    struct RendererInfo
-    {
-        GameObject *root;
-        std::vector<Renderer*> renderers;
-    };
-
     struct CompareRendererOrder 
     {
         bool operator()(const Renderer *lhs, const Renderer *rhs) const;
@@ -54,7 +48,6 @@ namespace GravyEngine
         static void DestroyUniformBuffers();
         static void DestroyShadowMap();
         static void DestroyRenderers();
-        static void AddRendererRecursively(GameObject *object, RendererInfo &info);
     };
 };
 

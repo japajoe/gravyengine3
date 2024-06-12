@@ -1,5 +1,6 @@
 #include "GameBehaviourManager.hpp"
 #include "GameBehaviour.hpp"
+#include "GameObject.hpp"
 #include "../External/glfw/glfw3.h"
 
 namespace GravyEngine
@@ -94,5 +95,10 @@ namespace GravyEngine
         }
 
         imgui->EndFrame();
+    }
+
+    void GameBehaviourManager::OnEndFrame()
+    {
+        GameObject::OnEndFrame();
     }
 };

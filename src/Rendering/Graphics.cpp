@@ -89,9 +89,10 @@ namespace GravyEngine
 
     void Graphics::RenderShadowMap()
     {
+        Camera *camera = Camera::GetMain();
+
         if(renderQueue.size() > 0)
         {
-            Camera *camera = Camera::GetMain();
             DepthMaterial *material = depthMaterial.get();
 
             cascadedShadowMap->Bind();
@@ -111,8 +112,8 @@ namespace GravyEngine
 
     void Graphics::RenderScene()
     {
-        Camera *pCamera = Camera::GetMain();
-        auto color = pCamera->GetClearColor();
+        Camera *camera = Camera::GetMain();
+        auto color = camera->GetClearColor();
         glClearColor(color.r, color.g, color.b, color.a);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -131,76 +132,57 @@ namespace GravyEngine
 
     void Graphics::AddRenderer(Renderer *renderer)
     {
-        if(renderer)
+        if(!renderer)
+            return;
+
+        for(size_t i = 0; i < renderers.size(); i++)
         {
-            for(size_t i = 0; i < renderers.size(); i++)
+            if(renderers[i] == renderer)
             {
-                if(renderers[i] == renderer)
-                {
-                    Debug::WriteError("[RENDERER] can't add with ID: %llu because it already exists", renderer->GetInstanceId());
-                    return;
-                }
+                Debug::WriteError("[RENDERER] can't add with ID: %llu because it already exists", renderer->GetInstanceId());
+                return;
             }
-
-            Debug::WriteLog("[RENDERER] added with ID: %llu", renderer->GetInstanceId());
-
-            renderers.push_back(renderer);
-
-            renderQueue.push(renderer);
-        }
-    }
-
-    void Graphics::AddRendererRecursively(GameObject *object, RendererInfo &info)
-    {
-        Renderer *renderer = object->GetComponent<Renderer>();
-
-        if(renderer)
-        {
-            info.renderers.push_back(renderer);
         }
 
-        Transform *transform = object->GetTransform();
-        Transform *child = nullptr;
-        size_t index = 0;
+        Debug::WriteLog("[RENDERER] added with ID: %llu", renderer->GetInstanceId());
 
-        while((child = transform->GetChild(index++)) != nullptr)
-        {
-            AddRendererRecursively(child->GetGameObject(), info);
-        }
+        renderers.push_back(renderer);
+
+        renderQueue.push(renderer);
     }
 
     void Graphics::RemoveRenderer(Renderer *renderer)
     {
-        if(renderer)
+        if(!renderer)
+            return;
+
+        size_t index = 0;
+        bool found = false;
+
+        for(size_t i = 0; i < renderers.size(); i++)
         {
-            size_t index = 0;
-            bool found = false;
+            if(renderers[i] == renderer)
+            {
+                index = i;
+                found = true;
+                break;
+            }
+        }
+
+        if(found)
+        {
+            Debug::WriteLog("[RENDERER] removed with ID: %llu", renderer->GetInstanceId());
+            renderers.erase(renderers.begin() + index);
+
+            //Clear render queue and recreate
+            while(!renderQueue.empty())
+            {
+                renderQueue.pop();
+            }
 
             for(size_t i = 0; i < renderers.size(); i++)
             {
-                if(renderers[i] == renderer)
-                {
-                    index = i;
-                    found = true;
-                    break;
-                }
-            }
-
-            if(found)
-            {
-                Debug::WriteLog("[RENDERER] removed with ID: %llu", renderer->GetInstanceId());
-                renderers.erase(renderers.begin() + index);
-
-                //Clear render queue and recreate
-                while(!renderQueue.empty())
-                {
-                    renderQueue.pop();
-                }
-
-                for(size_t i = 0; i < renderers.size(); i++)
-                {
-                    renderQueue.push(renderers[i]);
-                }
+                renderQueue.push(renderers[i]);
             }
         }
     }

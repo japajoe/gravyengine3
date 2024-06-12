@@ -171,6 +171,7 @@ namespace GravyEngine
 
     void Application::OnEndFrame()
     {
+        GameBehaviourManager::OnEndFrame();
         Input::OnEndFrame();
     }
 

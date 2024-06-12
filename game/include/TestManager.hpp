@@ -12,9 +12,9 @@ protected:
     void OnInitialize() override;
     void OnUpdate() override;
 private:
-    std::shared_ptr<GameObject> skybox;
-    std::shared_ptr<GameObject> ground;
-    std::shared_ptr<GameObject> cube;
+    GameObject *skybox;
+    GameObject *ground;
+    GameObject *cube;
     AudioSource *audioSourceCube;
 };
 

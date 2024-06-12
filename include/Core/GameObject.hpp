@@ -23,18 +23,25 @@ namespace GravyEngine
 
     class GameObject : public Object
     {
+    friend class GameBehaviourManager;
     private:
         Transform transform;
         bool isActive;
         std::vector<std::unique_ptr<Component>> components;
+        static std::vector<std::unique_ptr<GameObject>> objects;
+        static std::vector<GameObject*> destroyQueue;
+        static void DestroyImmediate(GameObject *object);
+        static void OnEndFrame();
+        static void RemoveObject(GameObject *object);
     public:
         GameObject();
         ~GameObject();
         Transform *GetTransform();
         void SetIsActive(bool isActive);
         bool GetIsActive() const;
-
-        static std::shared_ptr<GameObject> CreatePrimitive(PrimitiveType type);
+        static void Destroy(GameObject *object);        
+        static GameObject *Create();
+        static GameObject *CreatePrimitive(PrimitiveType type);
 
         template <typename T>
         T *GetComponent() const

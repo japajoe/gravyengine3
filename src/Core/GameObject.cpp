@@ -8,6 +8,9 @@
 
 namespace GravyEngine
 {
+    std::vector<std::unique_ptr<GameObject>> GameObject::objects;
+    std::vector<GameObject*> GameObject::destroyQueue;
+
     GameObject::GameObject() : Object()
     {
         transform.gameObject = this;
@@ -29,6 +32,13 @@ namespace GravyEngine
     void GameObject::SetIsActive(bool isActive)
     {
         this->isActive = isActive;
+
+        auto &children = transform.GetChildren();
+
+        for(size_t i = 0; i < children.size(); i++)
+        {
+            children[i]->GetGameObject()->SetIsActive(isActive);
+        }
     }
 
     bool GameObject::GetIsActive() const
@@ -36,7 +46,13 @@ namespace GravyEngine
         return isActive;
     }
 
-    std::shared_ptr<GameObject> GameObject::CreatePrimitive(PrimitiveType type)
+    GameObject *GameObject::Create()
+    {
+        objects.push_back(std::make_unique<GameObject>());
+        return objects.back().get();
+    }
+
+    GameObject *GameObject::CreatePrimitive(PrimitiveType type)
     {
         Mesh *mesh = nullptr;
 
@@ -118,7 +134,7 @@ namespace GravyEngine
         if(mesh == nullptr)
             return nullptr;
 
-        auto object = std::make_shared<GameObject>();
+        auto object = GameObject::Create();
         object->SetName(name);
         auto renderer = object->AddComponent<MeshRenderer>();
         auto material = createMaterial();
@@ -137,5 +153,81 @@ namespace GravyEngine
         settings->depthTest = depthTest;
         
         return object;
+    }
+
+    void GameObject::Destroy(GameObject *object)
+    {
+        if(!object)
+            return;
+
+        destroyQueue.push_back(object);
+    }
+
+    void GameObject::DestroyImmediate(GameObject *object)
+    {
+        for(size_t i = 0; i < object->components.size(); i++)
+        {
+            object->components[i]->OnDestroy();
+        }
+
+        auto children = object->GetTransform()->GetChildrenRecursive();
+
+        for(size_t i = 0; i < children.size(); i++)
+        {
+            GameObject *currentObject = children[i]->GetGameObject();
+            for(size_t i = 0; i < currentObject->components.size(); i++)
+            {
+                currentObject->components[i]->OnDestroy();
+            }
+        }
+
+        for(size_t i = 0; i < children.size(); i++)
+        {
+            RemoveObject(children[i]->GetGameObject());
+        }
+
+        RemoveObject(object);
+    }
+
+    void GameObject::RemoveObject(GameObject *object)
+    {
+        if(!object)
+            return;
+        size_t index = 0;
+        bool found = false;
+
+        for(size_t i = 0; i < objects.size(); i++)
+        {
+            if(object->GetInstanceId() == objects[i]->GetInstanceId())
+            {
+                index = i;
+                found = true;
+                break;
+            }
+        }
+
+        if(found)
+        {
+            object->GetTransform()->SetParent(nullptr);
+            objects.erase(objects.begin() + index);
+        }
+    }
+
+    void GameObject::OnEndFrame()
+    {
+        if(destroyQueue.size() == 0)
+            return;
+
+        for(size_t i = 0; i < destroyQueue.size(); i++)
+        {
+            GameObject *object = destroyQueue[i];
+
+            if(!object)
+                continue;
+
+            DestroyImmediate(object);
+        }
+
+        destroyQueue.clear();
     }
 };

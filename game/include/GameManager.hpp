@@ -8,7 +8,7 @@
 class LightObject
 {
 public:
-    std::shared_ptr<GameObject> gameObject;
+    GameObject *gameObject;
     Light *light;
 };
 
@@ -20,10 +20,10 @@ protected:
     void OnGUI() override;
     void OnApplicationQuit();
 private:
-    std::shared_ptr<GameObject> skybox;
-    std::shared_ptr<GameObject> ground;
+    GameObject *skybox;
+    GameObject *ground;
+    GameObject *cube;
     std::vector<LightObject> lights;
-    std::shared_ptr<GameObject> cube;
     AudioSource *audioSourceCube;
 };
 

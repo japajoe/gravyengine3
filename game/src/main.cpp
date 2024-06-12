@@ -6,7 +6,7 @@
 #include <memory>
 
 static void OnApplicationLoaded();
-static std::unique_ptr<GameObject> gameObject;
+static GameObject *gameObject;
 
 int main()
 {
@@ -20,7 +20,7 @@ void OnApplicationLoaded()
 {
     Resources::LoadAll();
     
-    gameObject = std::make_unique<GameObject>();
+    gameObject = GameObject::Create();
     gameObject->AddComponent<GameManager>();
     gameObject->AddComponent<AudioPlayer>();
     //gameObject->AddComponent<TestManager>();
