@@ -36,8 +36,8 @@ namespace GravyEngine
             return;
         }
 
-        glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-        glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+        glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
+        glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 5);
         glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
         glfwWindowHint(GLFW_VISIBLE, GL_FALSE);
 
@@ -72,9 +72,9 @@ namespace GravyEngine
             return;
         }
 
-        // const GLubyte* version = glGetString(GL_VERSION);
-        // if (version != nullptr) 
-        //     std::cout << "OpenGL Version: " << version << std::endl;
+        const GLubyte* version = glGetString(GL_VERSION);
+        if (version != nullptr) 
+            std::cout << "OpenGL Version: " << version << std::endl;
 
         glfwSwapInterval(vsync ? 1 : 0);
 

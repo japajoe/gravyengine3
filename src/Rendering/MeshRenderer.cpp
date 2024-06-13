@@ -1,5 +1,6 @@
 #include "MeshRenderer.hpp"
 #include "../Core/Camera.hpp"
+#include "../Core/GameObject.hpp"
 #include "../Core/Transform.hpp"
 #include "../External/glad/glad.h"
 #include "GL.hpp"
@@ -69,6 +70,9 @@ namespace GravyEngine
 
     void MeshRenderer::OnRender()
     {
+        if(!GetGameObject()->GetIsActive())
+            return;
+
         if(data.size() == 0)
             return;
 

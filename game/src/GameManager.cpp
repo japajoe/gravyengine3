@@ -21,7 +21,6 @@ void GameManager::OnInitialize()
     ground->GetTransform()->SetScale(Vector3(1000, 1, 1000));
     auto renderer = ground->GetComponent<MeshRenderer>();
     auto material = renderer->GetMaterial<DiffuseMaterial>(0);
-    //material->SetDiffuseColor(Color(42, 107, 14, 255));
     material->SetUVScale(Vector2(200, 200));
 
     size_t size = 0;

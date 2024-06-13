@@ -48,8 +48,11 @@ set_target_properties(${PROJECT_NAME} PROPERTIES
 
 if(BUILD_PLATFORM STREQUAL "windows")
     target_link_libraries(${PROJECT_NAME} glad glm glfw imgui miniaudioex -lstdc++fs -static -static-libgcc -static-libstdc++)
+    target_link_libraries(${PROJECT_NAME} -Llibs/assimp/win_x86 -lassimp.dll)
 elseif(BUILD_PLATFORM STREQUAL "linux")
     target_link_libraries(${PROJECT_NAME} glad glm glfw imgui miniaudioex -lstdc++fs)
+    target_link_libraries(${PROJECT_NAME} -Llibs/assimp/linux_x86 -lassimp)
 elseif(BUILD_PLATFORM STREQUAL "mac")
     target_link_libraries(${PROJECT_NAME} glad glm glfw imgui miniaudioex -lstdc++fs -lopengl)
 endif()
+

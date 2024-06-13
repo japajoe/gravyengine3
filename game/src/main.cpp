@@ -18,10 +18,10 @@ int main()
 
 void OnApplicationLoaded()
 {
-    Resources::LoadAll();
+    //Resources::LoadAll();
     
     gameObject = GameObject::Create();
-    gameObject->AddComponent<GameManager>();
-    gameObject->AddComponent<AudioPlayer>();
-    //gameObject->AddComponent<TestManager>();
+    //gameObject->AddComponent<GameManager>();
+    //gameObject->AddComponent<AudioPlayer>();
+    gameObject->AddComponent<TestManager>();
 }
