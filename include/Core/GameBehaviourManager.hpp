@@ -4,6 +4,8 @@
 #include "../External/imgui/ImGuiManager.h"
 #include <vector>
 #include <memory>
+#include <cstdint>
+#include <string>
 
 struct GLFWwindow;
 
@@ -27,6 +29,7 @@ namespace GravyEngine
         static void OnFixedUpdate();
         static void OnGUI();
         static void OnEndFrame();
+        static void OnAssetLoadedAsync(uint64_t id, const std::string &name, const std::vector<uint8_t> &data);
     };
 };
 #endif

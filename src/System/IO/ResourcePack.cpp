@@ -210,13 +210,23 @@ namespace GravyEngine
 
     std::vector<uint8_t> ResourcePack::GetFileData(const std::string &sFile)
     {
-        auto buffer = ResourceBuffer(baseFile, mapFiles[sFile].nOffset, mapFiles[sFile].nSize);
-        return buffer.vMemory;
+        if(mapFiles.count(sFile) > 0)
+        {
+            auto buffer = ResourceBuffer(baseFile, mapFiles[sFile].nOffset, mapFiles[sFile].nSize);
+            return buffer.vMemory;
+        }
+
+        return std::vector<uint8_t>();
     }
 
     bool ResourcePack::Loaded() const
     {
         return baseFile.is_open();
+    }
+
+    bool ResourcePack::FileExists(const std::string &sFile) const
+    {
+        return mapFiles.count(sFile) > 0;
     }
 
     std::vector<char> ResourcePack::Scramble(const std::vector<char> &data, const std::string &key)

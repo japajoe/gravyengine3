@@ -5,6 +5,10 @@ std::unordered_map<std::string,std::vector<uint8_t>> Resources::data;
 
 void Resources::LoadAll()
 {
+    AssetManager::LoadResourcePack("assets", "../res/assets.dat", "assets.dat");
+
+    return;
+
     pack = std::make_unique<ResourcePack>();
 
     std::vector<std::string> files = {

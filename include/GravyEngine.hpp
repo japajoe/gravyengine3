@@ -58,6 +58,7 @@
 #include "Audio/AudioSource.hpp"
 #include "Audio/AudioClip.hpp"
 #include "Audio/AudioListener.hpp"
+#include "Core/AssetManager.hpp"
 #include "Core/GameBehaviourManager.hpp"
 #include "Core/Screen.hpp"
 #include "Core/GameObject.hpp"

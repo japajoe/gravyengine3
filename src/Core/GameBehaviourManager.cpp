@@ -101,4 +101,12 @@ namespace GravyEngine
     {
         GameObject::OnEndFrame();
     }
+
+    void GameBehaviourManager::OnAssetLoadedAsync(uint64_t id, const std::string &name, const std::vector<uint8_t> &data)
+    {
+        for(size_t i = 0; i < behaviours.size(); i++)
+        {
+            behaviours[i]->OnAssetLoadedAsync(id, name, data);
+        }
+    }
 };

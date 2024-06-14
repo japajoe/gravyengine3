@@ -35,6 +35,7 @@ namespace GravyEngine
         std::vector<uint8_t> GetFileData(const std::string &sFile);
         bool Loaded() const;
         std::map<std::string, ResourceFile> GetFiles() const;
+        bool FileExists(const std::string &sFile) const;
     private:
         std::map<std::string, ResourceFile> mapFiles;
         std::ifstream baseFile;

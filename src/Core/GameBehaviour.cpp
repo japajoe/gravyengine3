@@ -1,5 +1,6 @@
 #include "GameBehaviour.hpp"
 #include "GameBehaviourManager.hpp"
+#include "AssetManager.hpp"
 
 namespace GravyEngine
 {
@@ -36,5 +37,20 @@ namespace GravyEngine
     void GameBehaviour::OnGUI()
     {
 
+    }
+
+    void GameBehaviour::OnAssetLoadedAsync(uint64_t id, const std::string &name, const std::vector<uint8_t> &data)
+    {
+
+    }
+
+    void GameBehaviour::LoadAssetFromResourceAsync(uint64_t id, const std::string &resourcePackName, const std::string &filepath)
+    {
+        AssetManager::LoadFileAsync(id, resourcePackName, filepath);
+    }
+
+    void GameBehaviour::LoadAssetFromFileAsync(uint64_t id, const std::string &resourcePackName, const std::string &filepath)
+    {
+        AssetManager::LoadFileAsync(id, filepath);
     }
 };

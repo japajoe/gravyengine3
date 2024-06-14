@@ -27,6 +27,7 @@ include_directories(
     "${PROJECT_SOURCE_DIR}/include/Rendering/Materials"
     "${PROJECT_SOURCE_DIR}/include/Rendering/Shaders"
     "${PROJECT_SOURCE_DIR}/include/System"
+    "${PROJECT_SOURCE_DIR}/include/System/Collections"
     "${PROJECT_SOURCE_DIR}/include/System/Drawing"
     "${PROJECT_SOURCE_DIR}/include/System/IO"
     "${PROJECT_SOURCE_DIR}/include/System/Numerics"

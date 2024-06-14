@@ -3,6 +3,7 @@
 #include "../External/glfw/glfw3.h"
 #include "../Audio/AudioContext.hpp"
 #include "../Rendering/Graphics.hpp"
+#include "AssetManager.hpp"
 #include "GameBehaviourManager.hpp"
 #include "Input.hpp"
 #include "Screen.hpp"
@@ -172,6 +173,7 @@ namespace GravyEngine
     void Application::OnEndFrame()
     {
         GameBehaviourManager::OnEndFrame();
+        AssetManager::OnEndFrame();
         Input::OnEndFrame();
     }
 
