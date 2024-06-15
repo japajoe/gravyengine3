@@ -2,6 +2,7 @@
 #include "../Rendering/Graphics.hpp"
 #include "../Rendering/Mesh.hpp"
 #include "../Rendering/MeshRenderer.hpp"
+#include "../Rendering/ParticleSystem.hpp"
 #include "../Rendering/Texture.hpp"
 #include "../Rendering/Materials/DiffuseMaterial.hpp"
 #include "../Rendering/Materials/ProceduralSkyboxMaterial.hpp"
@@ -20,7 +21,9 @@ namespace GravyEngine
     GameObject::~GameObject()
     {
         for(size_t i = 0; i < components.size(); i++)
+        {
             components[i]->OnDestroy();
+        }
         components.clear();
     }
 
@@ -62,6 +65,7 @@ namespace GravyEngine
         bool cullFace = true;
         bool depthTest = true;
         bool castShadows = true;
+        uint32_t renderOrder = 1000;
         std::string name = "GameObject";
 
         switch(type)
@@ -106,6 +110,14 @@ namespace GravyEngine
                 name = "Quad";
                 break;
             }
+            case PrimitiveType::ParticleSystem:
+            {
+                GameObject *obj = GameObject::Create();
+                obj->SetName("ParticleSystem");
+                auto ps = obj->AddComponent<ParticleSystem>();
+                ps->SetRenderOrder(1001);
+                return obj;
+            }
             case PrimitiveType::Skybox:
             {
                 mesh = Mesh::Find("Hemisphere");
@@ -114,6 +126,7 @@ namespace GravyEngine
                 depthTest = false;
                 castShadows = false;
                 name = "Skybox";
+                renderOrder = 999;
                 break;
             }
             case PrimitiveType::Sphere:
@@ -147,6 +160,7 @@ namespace GravyEngine
 
         renderer->Add(mesh, material);
         renderer->SetCastShadows(castShadows);
+        renderer->SetRenderOrder(renderOrder);
         
         auto settings = renderer->GetSettings(0);
         settings->cullFace = cullFace;
@@ -211,6 +225,11 @@ namespace GravyEngine
             object->GetTransform()->SetParent(nullptr);
             objects.erase(objects.begin() + index);
         }
+    }
+
+    void GameObject::DestroyAll()
+    {
+        objects.clear();
     }
 
     void GameObject::OnEndFrame()

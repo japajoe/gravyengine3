@@ -134,6 +134,9 @@ namespace GravyEngine
 
     void MeshRenderer::OnRender(Material *material, Camera *camera)
     {
+        if(!GetGameObject()->GetIsActive())
+            return;
+
         if(data.size() == 0)
             return;
 

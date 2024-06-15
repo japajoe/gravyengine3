@@ -34,6 +34,11 @@ void GameManager::OnUpdate()
         float z = Mathf::Sin((Time::GetTimeAsDouble() * 1.0f) + i * 360) * 50;
         lights[i].gameObject->GetTransform()->SetPosition(Vector3(x, 2, z));
     }
+
+    if(particleSystem)
+    {
+        particleSystem->Emit(1);
+    }
 }
 
 void GameManager::OnGUI()
@@ -140,6 +145,17 @@ void GameManager::SetupLights()
         light->SetColor(lightColors[i]);
         light->SetStrength(1);
 
+        // auto audioSource = lightObject->AddComponent<AudioSource>();
+        // audioSource->SetAttenuationModel(AttenuationModel::Exponential);
+        // audioSource->SetDopplerFactor(0.1f);
+        // audioSource->SetMinDistance(5.0f);
+        // audioSource->SetMaxDistance(1000.0f);
+        // audioSource->SetSpatial(true);
+        // auto generator = audioSource->AddGenerator<FMGenerator>(WaveType::Sine, 110, 1.0f);
+        // generator->AddOperator(WaveType::Sine, 55, 1.0f);
+        // generator->AddOperator(WaveType::Sine, 22, 0.5f);
+        // audioSource->Play();
+
         LightObject obj;
         obj.gameObject = lightObject;
         obj.light = light;
@@ -149,8 +165,6 @@ void GameManager::SetupLights()
 
 void GameManager::SetupModels()
 {
-    skybox = GameObject::CreatePrimitive(PrimitiveType::Skybox);
-    
     ground = GameObject::CreatePrimitive(PrimitiveType::Plane);
     ground->GetTransform()->SetScale(Vector3(1000, 1, 1000));
     auto renderer = ground->GetComponent<MeshRenderer>();
@@ -162,6 +176,13 @@ void GameManager::SetupModels()
     renderer = cube->GetComponent<MeshRenderer>();
     material = renderer->GetMaterial<DiffuseMaterial>(0);
     material->SetDiffuseColor(Color(237, 160, 5, 255));
+
+    particles = GameObject::CreatePrimitive(PrimitiveType::ParticleSystem);
+    particleSystem = particles->GetComponent<ParticleSystem>();
+    
+    skybox = GameObject::CreatePrimitive(PrimitiveType::Skybox);
+
+
 }
 
 void GameManager::SetupAudio()

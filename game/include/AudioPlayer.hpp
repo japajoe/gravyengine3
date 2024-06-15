@@ -8,6 +8,7 @@ class AudioPlayer : public GameBehaviour
 protected:
     void OnInitialize() override;
     void OnGUI() override;
+    void OnAssetLoadedAsync(uint64_t id, const std::string &name, const std::vector<uint8_t> &data) override;
 private:
     AudioSource *audioSource;
     std::vector<AudioClip> audioClips;

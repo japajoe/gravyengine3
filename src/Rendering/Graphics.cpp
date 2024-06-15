@@ -14,6 +14,7 @@
 #include "Shaders/ProceduralSkyboxShader.hpp"
 #include "Shaders/DepthShader.hpp"
 #include "Shaders/LineShader.hpp"
+#include "Shaders/ParticleShader.hpp"
 #include "../System/Mathf.hpp"
 #include "../System/Drawing/Image.hpp"
 #include "../Core/Camera.hpp"
@@ -208,6 +209,7 @@ namespace GravyEngine
         ProceduralSkyboxShader::Create();
         DepthShader::Create();
         LineShader::Create();
+        ParticleShader::Create();
     }
 
     void Graphics::CreateMeshes()
@@ -253,6 +255,7 @@ namespace GravyEngine
         ProceduralSkyboxShader::Destroy();
         DepthShader::Destroy();
         LineShader::Destroy();
+        ParticleShader::Destroy();
     }
 
     void Graphics::DestroyMeshes()

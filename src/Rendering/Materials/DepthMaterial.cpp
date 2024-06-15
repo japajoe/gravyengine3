@@ -18,11 +18,7 @@ namespace GravyEngine
 
     void DepthMaterial::Use(Transform *transform, Camera *camera)
     {
-        if(!pShader)
-            return;
-        if(!camera)
-            return;
-        if(!transform)
+        if(!pShader || !transform || !camera)
             return;
 
         Matrix4 model = transform->GetModelMatrix();

@@ -24,6 +24,8 @@ private:
     GameObject *skybox;
     GameObject *ground;
     GameObject *cube;
+    GameObject *particles;
+    ParticleSystem *particleSystem;
     std::vector<LightObject> lights;
     AudioSource *audioSourceCube;
     void SetupCamera();

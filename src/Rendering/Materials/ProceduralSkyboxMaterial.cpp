@@ -41,11 +41,7 @@ namespace GravyEngine
 
     void ProceduralSkyboxMaterial::Use(Transform *transform, Camera *camera)
     {
-        if(!pShader)
-            return;
-        if(!camera)
-            return;
-        if(!transform)
+        if(!pShader || !transform || !camera)
             return;
 
         Matrix4 projection = camera->GetProjectionMatrix();

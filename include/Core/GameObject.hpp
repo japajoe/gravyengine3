@@ -16,6 +16,7 @@ namespace GravyEngine
         Hemisphere,
         Plane,
         Quad,
+        ParticleSystem,
         Skybox,
         Sphere,
         Terrain
@@ -33,6 +34,7 @@ namespace GravyEngine
         static void DestroyImmediate(GameObject *object);
         static void OnEndFrame();
         static void RemoveObject(GameObject *object);
+        static void DestroyAll();
     public:
         GameObject();
         ~GameObject();

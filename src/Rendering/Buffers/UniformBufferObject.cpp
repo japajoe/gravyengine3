@@ -30,6 +30,7 @@ namespace GravyEngine
         if(id > 0)
         {
             glDeleteBuffers(1, &id);
+            id = 0;
         }
     }
 

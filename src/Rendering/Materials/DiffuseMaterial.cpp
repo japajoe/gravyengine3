@@ -40,11 +40,7 @@ namespace GravyEngine
     
     void DiffuseMaterial::Use(Transform *transform, Camera *camera)
     {
-        if(!pShader)
-            return;
-        if(!camera)
-            return;
-        if(!transform)
+        if(!pShader || !camera || !transform)
             return;
 
         Matrix4 projection = camera->GetProjectionMatrix();

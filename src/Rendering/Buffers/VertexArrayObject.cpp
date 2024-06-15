@@ -17,6 +17,7 @@ namespace GravyEngine
         if(id > 0)
         {
             glDeleteVertexArrays(1, &id);
+            id = 0;
         }
     }
     
