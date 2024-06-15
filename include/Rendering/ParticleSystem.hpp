@@ -33,6 +33,15 @@ namespace GravyEngine
         World
     };
 
+    enum class ParticleType
+    {
+        Capsule,
+        Cube,
+        Plane,
+        Quad,
+        Sphere
+    };
+
     struct ParticleProperties
     {
         Vector3 position;
@@ -80,6 +89,8 @@ namespace GravyEngine
         ParticleMaterial *GetMaterial() const;
         void SetSpace(ParticleSpace space);
         ParticleSpace GetSpace() const;
+        void SetParticleType(ParticleType type);
+        ParticleType GetParticleType() const;
     protected:
         void OnInitialize() override;
         void OnDestroy() override;
@@ -91,6 +102,7 @@ namespace GravyEngine
         ssize_t poolIndex;
         bool simulate;
         int32_t emitAmount;
+        std::vector<Mesh*> meshes;
         std::vector<Particle> particles;
         std::vector<ParticleData> particleData;
         std::shared_ptr<ParticleMaterial> material;
@@ -98,7 +110,8 @@ namespace GravyEngine
         VertexBufferObject VBO;
         VertexBufferObject instanceVBO;
         ElementBufferObject EBO;
-        Mesh mesh;
+        Mesh *pMesh;
+        ParticleType particleType;
         void Initialize();
         void Update();
         void Emit(const ParticleProperties &particleProps);

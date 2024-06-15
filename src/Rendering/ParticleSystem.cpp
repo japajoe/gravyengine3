@@ -7,8 +7,6 @@
 #include "../Core/Time.hpp"
 #include "../System/Mathf.hpp"
 #include "../System/Random.hpp"
-#include <imgui/imgui.h>
-#include <imgui/imgui_ex.h>
 
 namespace GravyEngine
 {
@@ -81,6 +79,7 @@ namespace GravyEngine
     {
         this->castShadows = false;
         this->receiveShadows = false;
+        this->particleType = ParticleType::Quad;
 
         space = ParticleSpace::Local;
         const size_t maxParticles = 1000;
@@ -107,61 +106,83 @@ namespace GravyEngine
 
     void ParticleSystem::OnInitialize()
     {
-        //mesh = MeshGenerator::CreateQuad(Vector3(1.0f, 1.0f, 1.0f));
-        mesh = MeshGenerator::CreateSphere(Vector3(1.0f, 1.0f, 1.0f));
-        auto &vertices = mesh.GetVertices();
-        auto &indices = mesh.GetIndices();
+        meshes.push_back(Mesh::Find("Capsule"));
+        meshes.push_back(Mesh::Find("Cube"));
+        meshes.push_back(Mesh::Find("Plane"));
+        meshes.push_back(Mesh::Find("Quad"));
+        meshes.push_back(Mesh::Find("Sphere"));
 
-        VAO.Generate();
-        VBO.Generate();
-        instanceVBO.Generate();
-        EBO.Generate();
-        
-        VAO.Bind();
+        pMesh = meshes[3];
 
-        VBO.Bind();
-        VBO.BufferData(vertices.size() * sizeof(Vertex), vertices.data(), GL_STATIC_DRAW);
+        Initialize();
+    }
 
-        VAO.EnableVertexAttribArray(0);
-        VAO.VertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const GLvoid*)offsetof(Vertex, position));
-        
-        VAO.EnableVertexAttribArray(1);
-        VAO.VertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const GLvoid*)offsetof(Vertex, normal));
-        
-        VAO.EnableVertexAttribArray(2);
-        VAO.VertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const GLvoid*)offsetof(Vertex, uv));
+    void ParticleSystem::Initialize()
+    {
+        auto &vertices = pMesh->GetVertices();
+        auto &indices = pMesh->GetIndices();
 
-        instanceVBO.Bind();
-        instanceVBO.BufferData(particleData.size() * sizeof(ParticleData), particleData.data(), GL_STREAM_DRAW);
-        
-        VAO.EnableVertexAttribArray(3);
-        VAO.VertexAttribPointer(3, 4, GL_FLOAT, GL_FALSE, sizeof(ParticleData), (const GLvoid*)(0 * sizeof(Vector4)));
-        
-        VAO.EnableVertexAttribArray(4);
-        VAO.VertexAttribPointer(4, 4, GL_FLOAT, GL_FALSE, sizeof(ParticleData), (const GLvoid*)(1 * sizeof(Vector4)));
-        
-        VAO.EnableVertexAttribArray(5);
-        VAO.VertexAttribPointer(5, 4, GL_FLOAT, GL_FALSE, sizeof(ParticleData), (const GLvoid*)(2 * sizeof(Vector4)));
-        
-        VAO.EnableVertexAttribArray(6);
-        VAO.VertexAttribPointer(6, 4, GL_FLOAT, GL_FALSE, sizeof(ParticleData), (const GLvoid*)(3 * sizeof(Vector4)));
-        
-        VAO.EnableVertexAttribArray(7);
-        VAO.VertexAttribPointer(7, 4, GL_FLOAT, GL_FALSE, sizeof(ParticleData), (const GLvoid*)(4 * sizeof(Color)));
+        if(VAO.GetId() == 0 && VBO.GetId() == 0 && instanceVBO.GetId() == 0 && EBO.GetId() == 0)
+        {
+            VAO.Generate();
+            VBO.Generate();
+            instanceVBO.Generate();
+            EBO.Generate();
+            
+            VAO.Bind();
 
-        VAO.VertexAttribDivisor(3, 1);
-        VAO.VertexAttribDivisor(4, 1);
-        VAO.VertexAttribDivisor(5, 1);
-        VAO.VertexAttribDivisor(6, 1);
-        VAO.VertexAttribDivisor(7, 1);
+            VBO.Bind();
+            VBO.BufferData(vertices.size() * sizeof(Vertex), vertices.data(), GL_STATIC_DRAW);
 
-        EBO.Bind();
-        EBO.BufferData(indices.size() * sizeof(GLuint), indices.data(), GL_STATIC_DRAW);
+            VAO.EnableVertexAttribArray(0);
+            VAO.VertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const GLvoid*)offsetof(Vertex, position));
+            
+            VAO.EnableVertexAttribArray(1);
+            VAO.VertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const GLvoid*)offsetof(Vertex, normal));
+            
+            VAO.EnableVertexAttribArray(2);
+            VAO.VertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const GLvoid*)offsetof(Vertex, uv));
 
-        VAO.Unbind();
-        VBO.Unbind();
-        instanceVBO.Unbind();
-        EBO.Unbind();
+            instanceVBO.Bind();
+            instanceVBO.BufferData(particleData.size() * sizeof(ParticleData), particleData.data(), GL_STREAM_DRAW);
+            
+            VAO.EnableVertexAttribArray(3);
+            VAO.VertexAttribPointer(3, 4, GL_FLOAT, GL_FALSE, sizeof(ParticleData), (const GLvoid*)(0 * sizeof(Vector4)));
+            
+            VAO.EnableVertexAttribArray(4);
+            VAO.VertexAttribPointer(4, 4, GL_FLOAT, GL_FALSE, sizeof(ParticleData), (const GLvoid*)(1 * sizeof(Vector4)));
+            
+            VAO.EnableVertexAttribArray(5);
+            VAO.VertexAttribPointer(5, 4, GL_FLOAT, GL_FALSE, sizeof(ParticleData), (const GLvoid*)(2 * sizeof(Vector4)));
+            
+            VAO.EnableVertexAttribArray(6);
+            VAO.VertexAttribPointer(6, 4, GL_FLOAT, GL_FALSE, sizeof(ParticleData), (const GLvoid*)(3 * sizeof(Vector4)));
+            
+            VAO.EnableVertexAttribArray(7);
+            VAO.VertexAttribPointer(7, 4, GL_FLOAT, GL_FALSE, sizeof(ParticleData), (const GLvoid*)(4 * sizeof(Color)));
+
+            VAO.VertexAttribDivisor(3, 1);
+            VAO.VertexAttribDivisor(4, 1);
+            VAO.VertexAttribDivisor(5, 1);
+            VAO.VertexAttribDivisor(6, 1);
+            VAO.VertexAttribDivisor(7, 1);
+
+            EBO.Bind();
+            EBO.BufferData(indices.size() * sizeof(GLuint), indices.data(), GL_STATIC_DRAW);
+
+            VAO.Unbind();
+            VBO.Unbind();
+            instanceVBO.Unbind();
+            EBO.Unbind();
+        }
+        else
+        {
+            VBO.Bind();
+            VBO.BufferData(vertices.size() * sizeof(Vertex), vertices.data(), GL_STATIC_DRAW);
+            EBO.Bind();
+            EBO.BufferData(indices.size() * sizeof(GLuint), indices.data(), GL_STATIC_DRAW);
+            VBO.Unbind();
+        }
     }
 
     void ParticleSystem::OnDestroy()
@@ -314,6 +335,40 @@ namespace GravyEngine
         return space;
     }
 
+    void ParticleSystem::SetParticleType(ParticleType type)
+    {
+        if(this->particleType == type)
+            return;
+
+        this->particleType = type;
+
+        switch(particleType)
+        {
+            case ParticleType::Capsule:
+                pMesh = meshes[0];
+                break;
+            case ParticleType::Cube:
+                pMesh = meshes[1];
+                break;
+            case ParticleType::Plane:
+                pMesh = meshes[2];
+                break;
+            case ParticleType::Quad:
+                pMesh = meshes[3];
+                break;
+            case ParticleType::Sphere:
+                pMesh = meshes[4];
+                break;
+        }
+
+        Initialize();
+    }
+
+    ParticleType ParticleSystem::GetParticleType() const
+    {
+        return particleType;
+    }
+
     void ParticleSystem::OnRender()
     {
         if(!GetGameObject()->GetIsActive())
@@ -343,8 +398,7 @@ namespace GravyEngine
 
         VAO.Bind();
 
-        //glDrawElementsInstanced(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr, activeParticles);
-        glDrawElementsInstanced(GL_TRIANGLES, mesh.GetIndicesCount(), GL_UNSIGNED_INT, nullptr, activeParticles);
+        glDrawElementsInstanced(GL_TRIANGLES, pMesh->GetIndicesCount(), GL_UNSIGNED_INT, nullptr, activeParticles);
 
         GL::EnableDepthMask();
         GL::DisableBlendMode();
@@ -380,9 +434,7 @@ namespace GravyEngine
 
         VAO.Bind();
         
-        glDrawElementsInstanced(GL_TRIANGLES, mesh.GetIndicesCount(), GL_UNSIGNED_INT, nullptr, activeParticles);
-        
-        //glDrawElementsInstanced(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr, activeParticles);
+        glDrawElementsInstanced(GL_TRIANGLES, pMesh->GetIndicesCount(), GL_UNSIGNED_INT, nullptr, activeParticles);
 
         GL::EnableDepthMask();
         GL::DisableBlendMode();

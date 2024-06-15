@@ -179,6 +179,7 @@ void GameManager::SetupModels()
 
     particles = GameObject::CreatePrimitive(PrimitiveType::ParticleSystem);
     particleSystem = particles->GetComponent<ParticleSystem>();
+    particleSystem->SetParticleType(ParticleType::Sphere);
     
     skybox = GameObject::CreatePrimitive(PrimitiveType::Skybox);
 
