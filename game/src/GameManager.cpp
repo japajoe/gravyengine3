@@ -182,8 +182,6 @@ void GameManager::SetupModels()
     particleSystem->SetParticleType(ParticleType::Sphere);
     
     skybox = GameObject::CreatePrimitive(PrimitiveType::Skybox);
-
-
 }
 
 void GameManager::SetupAudio()

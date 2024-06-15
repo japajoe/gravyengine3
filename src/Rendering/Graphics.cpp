@@ -15,6 +15,7 @@
 #include "Shaders/DepthShader.hpp"
 #include "Shaders/LineShader.hpp"
 #include "Shaders/ParticleShader.hpp"
+#include "Shaders/TerrainShader.hpp"
 #include "../System/Mathf.hpp"
 #include "../System/Drawing/Image.hpp"
 #include "../Core/Camera.hpp"
@@ -210,6 +211,7 @@ namespace GravyEngine
         DepthShader::Create();
         LineShader::Create();
         ParticleShader::Create();
+        TerrainShader::Create();
     }
 
     void Graphics::CreateMeshes()
@@ -256,6 +258,7 @@ namespace GravyEngine
         DepthShader::Destroy();
         LineShader::Destroy();
         ParticleShader::Destroy();
+        TerrainShader::Destroy();
     }
 
     void Graphics::DestroyMeshes()

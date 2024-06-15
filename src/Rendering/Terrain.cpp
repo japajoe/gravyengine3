@@ -1,653 +1,442 @@
-// #include "Terrain.hpp"
-// #include "../Core/GameObject.hpp"
-// #include "../Core/Input.hpp"
-// #include "../Core/Screen.hpp"
-// #include "../Core/Time.hpp"
-// #include "../System/Mathf.hpp"
-// #include "Texture2D.hpp"
-// #include "GL.hpp"
+#include "Terrain.hpp"
+#include "../Core/GameObject.hpp"
+#include "../Core/Input.hpp"
+#include "../Core/Screen.hpp"
+#include "../Core/Time.hpp"
+#include "../System/Mathf.hpp"
+#include "Texture2D.hpp"
+#include "GL.hpp"
 
-// namespace GravyEngine
-// {
-//     Terrain::Terrain() : Renderer()
-//     {
-//         this->type = RendererType::Terrain;
-//         width = 128;
-//         depth = 128;
-//         scale = 10.0f;
-//         maxHeight = 128.0f;
-//         sizeOfVertices = 0;
-//         sizeOfIndices = 0;        
-//         SetName("Terrain");
-//     }
+namespace GravyEngine
+{
+    Terrain::Terrain() : Renderer()
+    {
+        width = 128;
+        depth = 128;
+        scale = 10.0f;
+        maxHeight = 128.0f;
+        SetName("Terrain");
+    }
 
-//     void Terrain::OnInitialize()
-//     {
-//         material = std::make_unique<TerrainMaterial>();
-//         auto texture = Texture2D::Find("Default");
+    void Terrain::OnInitialize()
+    {
+        material = std::make_unique<TerrainMaterial>();
+        auto texture = Texture2D::Find("Default");
 
-//         material->SetSplatMap(texture);
-//         material->SetTexture1(texture);
-//         material->SetTexture2(texture);
-//         material->SetTexture3(texture);
-//         material->SetTexture4(texture);
-//         material->SetGridSize(Vector2(width, depth));
-//         material->SetShowGrid(false);
+        material->SetSplatMap(texture);
+        material->SetTexture1(texture);
+        material->SetTexture2(texture);
+        material->SetTexture3(texture);
+        material->SetTexture4(texture);
 
-//         mesh = MeshGenerator::CreateTerrain(width, depth, Vector3(scale, scale, scale));
-//         mesh.Generate();
-//     }
+        mesh = MeshGenerator::CreateTerrain(width, depth, Vector3(scale, scale, scale));
+        mesh.Generate();
+    }
 
-//     void Terrain::OnDestroy()
-//     {
-//         mesh.Delete();
-//     }
+    void Terrain::OnDestroy()
+    {
+        mesh.Delete();
+    }
 
-//     void Terrain::OnRender()
-//     {
-//         if(!GetGameObject()->GetIsActive())
-//             return;
+    void Terrain::OnRender()
+    {
+        if(!GetGameObject()->GetIsActive())
+            return;
 
-//         if(mesh.GetVAO()->GetId() == 0)
-//             return;
+        if(mesh.GetVAO()->GetId() == 0)
+            return;
         
-//         Camera *camera = Camera::GetMain();
-//         Transform *transform = GetTransform();
+        Camera *camera = Camera::GetMain();
+        Transform *transform = GetTransform();
 
-//         if(!camera || !transform || !material)
-//             return;
+        if(!camera || !transform || !material)
+            return;
 
-//         if(!material->GetShader())
-//             return;
+        if(!material->GetShader())
+            return;
 
-//         material->Use(transform, camera);
+        material->Use(transform, camera);
 
-//         mesh.GetVAO()->Bind();
+        mesh.GetVAO()->Bind();
 
-//         GL::EnableDepthTest();
-//         GL::EnableCullFace();
-//         GL::DisableBlendMode();
+        GL::EnableDepthTest();
+        GL::EnableCullFace();
+        GL::DisableBlendMode();
 
-//         if(mesh.GetEBO()->GetId() > 0)
-//             glDrawElements(GL_TRIANGLES, mesh.GetIndicesCount(), GL_UNSIGNED_INT, 0);
-//         else
-//             glDrawArrays(GL_TRIANGLES, 0, mesh.GetVerticesCount());
+        if(mesh.GetEBO()->GetId() > 0)
+            glDrawElements(GL_TRIANGLES, mesh.GetIndicesCount(), GL_UNSIGNED_INT, 0);
+        else
+            glDrawArrays(GL_TRIANGLES, 0, mesh.GetVerticesCount());
         
-//         mesh.GetVAO()->Unbind();
-//     }
+        mesh.GetVAO()->Unbind();
+    }
 
-//     void Terrain::OnRender(Material *material, Camera *camera)
-//     {
-//         if(!GetGameObject()->GetIsActive())
-//             return;
+    void Terrain::OnRender(Material *material, Camera *camera)
+    {
+        if(!GetGameObject()->GetIsActive())
+            return;
         
-//         if(mesh.GetVAO()->GetId() == 0)
-//             return;
+        if(mesh.GetVAO()->GetId() == 0)
+            return;
         
-//         Transform *transform = GetTransform();
+        Transform *transform = GetTransform();
 
-//         if(!camera || !transform || !material)
-//             return;
+        if(!camera || !transform || !material)
+            return;
 
-//         if(!material->GetShader())
-//             return;
+        if(!material->GetShader())
+            return;
 
-//         material->Use(transform, camera);
+        material->Use(transform, camera);
 
-//         mesh.GetVAO()->Bind();
+        mesh.GetVAO()->Bind();
 
-//         GL::EnableDepthTest();
-//         GL::EnableCullFace();
-//         GL::DisableBlendMode();
+        GL::EnableDepthTest();
+        GL::EnableCullFace();
+        GL::DisableBlendMode();
 
-//         if(mesh.GetEBO()->GetId() > 0)
-//             glDrawElements(GL_TRIANGLES, mesh.GetIndicesCount(), GL_UNSIGNED_INT, 0);
-//         else
-//             glDrawArrays(GL_TRIANGLES, 0, mesh.GetVerticesCount());
+        if(mesh.GetEBO()->GetId() > 0)
+            glDrawElements(GL_TRIANGLES, mesh.GetIndicesCount(), GL_UNSIGNED_INT, 0);
+        else
+            glDrawArrays(GL_TRIANGLES, 0, mesh.GetVerticesCount());
         
-//         mesh.GetVAO()->Unbind();
-//     }
+        mesh.GetVAO()->Unbind();
+    }
 
 
-//     void Terrain::Update()
-//     {
-//         mesh.Generate();
-//     }
+    void Terrain::Update()
+    {
+        mesh.Generate();
+    }
 
-//     void Terrain::SetHeight(uint32_t x, uint32_t y, float height, TerrainHeightMode mode, bool update)
-//     {
-//         auto &vertices = mesh.GetVertices();
-//         int vertsPerRow = width + 1;
-//         int index = (y * vertsPerRow) + x;
-//         if(index < vertices.size())
-//         {
-//             if(mode == TerrainHeightMode::Overwrite)
-//             {
-//                 if(height > maxHeight)
-//                     height = maxHeight;
-//                 vertices[index].position.y = height;
-//             }
-//             else
-//             {
-//                 float newHeight = vertices[index].position.y + height;
-//                 if(newHeight > maxHeight)
-//                     newHeight = maxHeight;
-//                 vertices[index].position.y = newHeight;
-//             }
-//             if(update)
-//                 Update();
-//         }
-//     }
+    void Terrain::SetHeight(uint32_t x, uint32_t y, float height, TerrainHeightMode mode, bool update)
+    {
+        auto &vertices = mesh.GetVertices();
+        int vertsPerRow = width + 1;
+        int index = (y * vertsPerRow) + x;
+        if(index < vertices.size())
+        {
+            if(mode == TerrainHeightMode::Overwrite)
+            {
+                if(height > maxHeight)
+                    height = maxHeight;
+                vertices[index].position.y = height;
+            }
+            else
+            {
+                float newHeight = vertices[index].position.y + height;
+                if(newHeight > maxHeight)
+                    newHeight = maxHeight;
+                vertices[index].position.y = newHeight;
+            }
+            if(update)
+                Update();
+        }
+    }
 
-//     void Terrain::SetHeights(uint32_t x, uint32_t y, int radius, float height, TerrainFalloffMode falloff, TerrainHeightMode mode, bool update)
-//     {
-//         int radius2 = static_cast<int>(Mathf::Pow(radius, 2));
+    void Terrain::SetHeights(uint32_t x, uint32_t y, int radius, float height, TerrainFalloffMode falloff, TerrainHeightMode mode, bool update)
+    {
+        int radius2 = static_cast<int>(Mathf::Pow(radius, 2));
 
-//         for (int j = -radius; j <= radius; j++)
-//         {
-//             int j2 = static_cast<int>(Mathf::Pow(j, 2));
+        for (int j = -radius; j <= radius; j++)
+        {
+            int j2 = static_cast<int>(Mathf::Pow(j, 2));
 
-//             for (int k = -radius; k <= radius; k++)
-//             {
-//                 int k2 = static_cast<int>(Mathf::Pow(k, 2));
+            for (int k = -radius; k <= radius; k++)
+            {
+                int k2 = static_cast<int>(Mathf::Pow(k, 2));
 
-//                 if(j2 + k2 <= radius2)
-//                 {
-//                     float distance = static_cast<float>(j2 + k2);
-//                     float factor = falloff == TerrainFalloffMode::None ? 1.0f : (1.1f - Mathf::InverseLerp(0, radius2, distance));
+                if(j2 + k2 <= radius2)
+                {
+                    float distance = static_cast<float>(j2 + k2);
+                    float factor = falloff == TerrainFalloffMode::None ? 1.0f : (1.1f - Mathf::InverseLerp(0, radius2, distance));
 
-//                     int px = j + x;
-//                     int py = k + y;
-//                     SetHeight(px, py, height * factor, mode);
-//                 }
-//             }
-//         }
+                    int px = j + x;
+                    int py = k + y;
+                    SetHeight(px, py, height * factor, mode);
+                }
+            }
+        }
 
-//         if(update)
-//         {
-//             Update();
-//         }
-//     }
+        if(update)
+        {
+            Update();
+        }
+    }
 
-//     void Terrain::SetHeights(Image *heightmap, float minHeight, float maxHeight, HeightMapFilterMode filterMode)
-//     {
-//         auto pixels = heightmap->GetData();
-//         size_t dataSize = heightmap->GetDataSize();
+    void Terrain::SetHeights(Image *heightmap, float minHeight, float maxHeight, HeightMapFilterMode filterMode)
+    {
+        auto pixels = heightmap->GetData();
+        size_t dataSize = heightmap->GetDataSize();
 
-//         uint32_t w = heightmap->GetWidth();
-//         uint32_t h = heightmap->GetHeight();
-//         uint32_t c = heightmap->GetChannels();
-//         uint32_t w2 = this->width + 1;
+        uint32_t w = heightmap->GetWidth();
+        uint32_t h = heightmap->GetHeight();
+        uint32_t c = heightmap->GetChannels();
+        uint32_t w2 = this->width + 1;
 
-//         Color *mapColors = new Color[w * h];
+        Color *mapColors = new Color[w * h];
 
-//         size_t index = 0;
-//         for(size_t i = 0; i < dataSize; i+=c)
-//         {
-//             mapColors[index++] = Color(pixels[i+0], pixels[i+1], pixels[i+2], 255);
-//         }
+        size_t index = 0;
+        for(size_t i = 0; i < dataSize; i+=c)
+        {
+            mapColors[index++] = Color(pixels[i+0], pixels[i+1], pixels[i+2], 255);
+        }
 
-//         if (w2 != w || h != w)
-//         {
-//             Color *map = new Color[w2 * w2];
+        if (w2 != w || h != w)
+        {
+            Color *map = new Color[w2 * w2];
 
-//             // Resize using nearest-neighbor scaling if texture has no filtering
-//             if (filterMode == HeightMapFilterMode::Point)
-//             {
-//                 float dx = static_cast<float>(w) / static_cast<float>(w2);
-//                 float dy = static_cast<float>(h) / static_cast<float>(w2);
+            // Resize using nearest-neighbor scaling if texture has no filtering
+            if (filterMode == HeightMapFilterMode::Point)
+            {
+                float dx = static_cast<float>(w) / static_cast<float>(w2);
+                float dy = static_cast<float>(h) / static_cast<float>(w2);
 
-//                 for (int y = 0; y < w2; y++)
-//                 {
+                for (int y = 0; y < w2; y++)
+                {
 
-//                     int thisY = static_cast<int>(dy * y) * w;
-//                     int yw = y * w2;
-//                     for (int x = 0; x < w2; x++)
-//                     {
-//                         map[yw + x] = mapColors[static_cast<int>(thisY + dx * x)];
-//                     }
-//                 }
-//             }
-//             // Otherwise resize using bilinear filtering
-//             else
-//             {
-//                 float ratioX = 1.0f / (static_cast<float>(w2) / (w - 1));
-//                 float ratioY = 1.0f / (static_cast<float>(w2) / (h - 1));
-//                 for (int y = 0; y < w2; y++)
-//                 {
-//                     float yy = Mathf::Floor(y * ratioY);
-//                     float y1 = yy * w;
-//                     float y2 = (yy + 1) * w;
-//                     float yw = y * w2;
+                    int thisY = static_cast<int>(dy * y) * w;
+                    int yw = y * w2;
+                    for (int x = 0; x < w2; x++)
+                    {
+                        map[yw + x] = mapColors[static_cast<int>(thisY + dx * x)];
+                    }
+                }
+            }
+            // Otherwise resize using bilinear filtering
+            else
+            {
+                float ratioX = 1.0f / (static_cast<float>(w2) / (w - 1));
+                float ratioY = 1.0f / (static_cast<float>(w2) / (h - 1));
+                for (int y = 0; y < w2; y++)
+                {
+                    float yy = Mathf::Floor(y * ratioY);
+                    float y1 = yy * w;
+                    float y2 = (yy + 1) * w;
+                    float yw = y * w2;
 
-//                     for (int x = 0; x < w2; x++)
-//                     {
-//                         float xx = Mathf::Floor(x * ratioX);
+                    for (int x = 0; x < w2; x++)
+                    {
+                        float xx = Mathf::Floor(x * ratioX);
 
-//                         Color bl = mapColors[static_cast<int>(y1 + xx)];
-//                         Color br = mapColors[static_cast<int>(y1 + xx + 1)];
-//                         Color tl = mapColors[static_cast<int>(y2 + xx)];
-//                         Color tr = mapColors[static_cast<int>(y2 + xx + 1)];
+                        Color bl = mapColors[static_cast<int>(y1 + xx)];
+                        Color br = mapColors[static_cast<int>(y1 + xx + 1)];
+                        Color tl = mapColors[static_cast<int>(y2 + xx)];
+                        Color tr = mapColors[static_cast<int>(y2 + xx + 1)];
 
-//                         float xLerp = x * ratioX - xx;
-//                         map[static_cast<int>(yw + x)] = Color::Lerp(Color::Lerp(bl, br, xLerp), Color::Lerp(tl, tr, xLerp), y * ratioY - yy);
-//                     }
-//                 }
-//             }
+                        float xLerp = x * ratioX - xx;
+                        map[static_cast<int>(yw + x)] = Color::Lerp(Color::Lerp(bl, br, xLerp), Color::Lerp(tl, tr, xLerp), y * ratioY - yy);
+                    }
+                }
+            }
 
-//             // Assign texture data to heightmap
-//             for (int y = 0; y < depth+1; y++)
-//             {
-//                 for (int x = 0; x < width+1; x++)
-//                 {
-//                     Color col = map[y * w2 + x];
-//                     float grayscale = Color::ToGrayScale(col).r;
-//                     float newHeight = minHeight + ((maxHeight - minHeight) * grayscale);                    
-//                     SetHeight(x, y, newHeight);
-//                 }
-//             }
+            // Assign texture data to heightmap
+            for (int y = 0; y < depth+1; y++)
+            {
+                for (int x = 0; x < width+1; x++)
+                {
+                    Color col = map[y * w2 + x];
+                    float grayscale = Color::ToGrayScale(col).r;
+                    float newHeight = minHeight + ((maxHeight - minHeight) * grayscale);                    
+                    SetHeight(x, y, newHeight);
+                }
+            }
 
-//             delete[] map;
-//         }
-//         else
-//         {
-//             // No resize is needed
-//             // Assign texture data to heightmap
-//             for (int y = 0; y < depth+1; y++)
-//             {
-//                 for (int x = 0; x < width+1; x++)
-//                 {
-//                     Color col = mapColors[y * w2 + x];
-//                     float grayscale = Color::ToGrayScale(col).r;
-//                     float newHeight = minHeight + ((maxHeight - minHeight) * grayscale);                    
-//                     SetHeight(x, y, newHeight);
-//                 }
-//             }
-//         }
+            delete[] map;
+        }
+        else
+        {
+            // No resize is needed
+            // Assign texture data to heightmap
+            for (int y = 0; y < depth+1; y++)
+            {
+                for (int x = 0; x < width+1; x++)
+                {
+                    Color col = mapColors[y * w2 + x];
+                    float grayscale = Color::ToGrayScale(col).r;
+                    float newHeight = minHeight + ((maxHeight - minHeight) * grayscale);                    
+                    SetHeight(x, y, newHeight);
+                }
+            }
+        }
 
-//         delete[] mapColors;
-//     }
+        delete[] mapColors;
+    }
 
-//     void Terrain::SmoothHeights(uint32_t x, uint32_t y, int radius, bool update)
-//     {
-//         int radius2 = static_cast<int>(Mathf::Pow(radius, 2));
-//         float averageHeight = GetAverageHeightAtPointWithRadius(x, y, radius);
+    void Terrain::SmoothHeights(uint32_t x, uint32_t y, int radius, bool update)
+    {
+        int radius2 = static_cast<int>(Mathf::Pow(radius, 2));
+        float averageHeight = GetAverageHeightAtPointWithRadius(x, y, radius);
 
-//         for (int j = -radius; j <= radius; j++)
-//         {
-//             int j2 = static_cast<int>(Mathf::Pow(j, 2));
+        for (int j = -radius; j <= radius; j++)
+        {
+            int j2 = static_cast<int>(Mathf::Pow(j, 2));
 
-//             for (int k = -radius; k <= radius; k++)
-//             {
-//                 int k2 = static_cast<int>(Mathf::Pow(k, 2));
+            for (int k = -radius; k <= radius; k++)
+            {
+                int k2 = static_cast<int>(Mathf::Pow(k, 2));
 
-//                 if(j2 + k2 <= radius2)
-//                 {
-//                     int px = j + x;
-//                     int py = k + y;
-//                     float distanceSquared =  glm::length2(Vector2(px, py) - Vector2(x, y));
-//                     float influence = 1.0f - (distanceSquared / radius2);
-//                     influence = Mathf::Clamp(influence, 0.0f, 1.0f);
+                if(j2 + k2 <= radius2)
+                {
+                    int px = j + x;
+                    int py = k + y;
+                    float distanceSquared =  glm::length2(Vector2(px, py) - Vector2(x, y));
+                    float influence = 1.0f - (distanceSquared / radius2);
+                    influence = Mathf::Clamp(influence, 0.0f, 1.0f);
                     
-//                     float distance = static_cast<float>(j2 + k2);
-//                     //float factor = 1.1f - Mathf::InverseLerp(0, radius2, distance);
-//                     float factor = 0.1f + Mathf::InverseLerp(0, radius2, distance);
+                    float distance = static_cast<float>(j2 + k2);
+                    //float factor = 1.1f - Mathf::InverseLerp(0, radius2, distance);
+                    float factor = 0.1f + Mathf::InverseLerp(0, radius2, distance);
 
 
-//                     SetHeight(px, py, averageHeight * factor, TerrainHeightMode::Overwrite);
-//                 }
-//             }
-//         }
+                    SetHeight(px, py, averageHeight * factor, TerrainHeightMode::Overwrite);
+                }
+            }
+        }
 
-//         if(update)
-//         {
-//             Update();
-//         }
-//     }
+        if(update)
+        {
+            Update();
+        }
+    }
 
-//     bool Terrain::WorldToTerrainPoint(const Vector3 &worldPoint, Vector2 &terrainPoint)
-//     {
-//         Transform *transform = GetTransform();
+    bool Terrain::WorldToTerrainPoint(const Vector3 &worldPoint, Vector2 &terrainPoint)
+    {
+        Transform *transform = GetTransform();
 
-//         float offsetX = worldPoint.x - transform->GetPosition().x;
-//         float offsetZ = worldPoint.z - transform->GetPosition().z;
+        float offsetX = worldPoint.x - transform->GetPosition().x;
+        float offsetZ = worldPoint.z - transform->GetPosition().z;
 
-//         offsetZ *= -1.0f; //Flip direction because -z is forward
+        offsetZ *= -1.0f; //Flip direction because -z is forward
 
-//         uint32_t width = GetWidth();
-//         uint32_t depth = GetDepth();
+        uint32_t width = GetWidth();
+        uint32_t depth = GetDepth();
 
-//         float terrainMinX = 0.0f;
-//         float terrainMaxX = width * GetScale();
+        float terrainMinX = 0.0f;
+        float terrainMaxX = width * GetScale();
 
-//         float terrainMinZ = 0.0f;
-//         float terrainMaxZ = depth * GetScale();
+        float terrainMinZ = 0.0f;
+        float terrainMaxZ = depth * GetScale();
 
-//         int tileX = Mathf::FloorToInt(Mathf::InverseLerp(terrainMinX, terrainMaxX, offsetX) * width);
-//         int tileZ = Mathf::FloorToInt(Mathf::InverseLerp(terrainMinZ, terrainMaxZ, offsetZ) * depth);
+        int tileX = Mathf::FloorToInt(Mathf::InverseLerp(terrainMinX, terrainMaxX, offsetX) * width);
+        int tileZ = Mathf::FloorToInt(Mathf::InverseLerp(terrainMinZ, terrainMaxZ, offsetZ) * depth);
 
-//         if(tileX >= width || tileZ >= depth)
-//             return false;
-//         if(tileX < 0 || tileZ < 0)
-//             return false;
+        if(tileX >= width || tileZ >= depth)
+            return false;
+        if(tileX < 0 || tileZ < 0)
+            return false;
         
-//         terrainPoint.x = tileX;
-//         terrainPoint.y = tileZ;
-//         return true;
-//     }
+        terrainPoint.x = tileX;
+        terrainPoint.y = tileZ;
+        return true;
+    }
 
-//     float Terrain::GetHeightAtPoint(uint32_t x, uint32_t y)
-//     {
-//         int vertsPerRow = width + 1;
-//         int index = (y * vertsPerRow) + x;
+    float Terrain::GetHeightAtPoint(uint32_t x, uint32_t y)
+    {
+        int vertsPerRow = width + 1;
+        int index = (y * vertsPerRow) + x;
+        auto &vertices = mesh.GetVertices();
 
-//         if(mesh)
-//         {
-//             auto &vertices = mesh.GetVertices();
-//             int vertsPerRow = width + 1;
+        if(index >= vertices.size())
+            return 0.0f;
 
-//             if(index >= vertices.size())
-//                 return 0.0f;
+        return vertices[index].position.y;
+    }
 
-//             return vertices[index].position.y;
-//         }
+    float Terrain::GetAverageHeightAtPointWithRadius(uint32_t x, uint32_t y, int radius)
+    {
+        float averageHeight = 0;
+        int numTiles = 0;
+        int radius2 = static_cast<int>(Mathf::Pow(radius, 2));
 
-//         return 0.0f;
-//     }
+        for (int j = -radius; j <= radius; j++)
+        {
+            int j2 = static_cast<int>(Mathf::Pow(j, 2));
 
-//     float Terrain::GetAverageHeightAtPointWithRadius(uint32_t x, uint32_t y, int radius)
-//     {
-//         float averageHeight = 0;
-//         int numTiles = 0;
-//         int radius2 = static_cast<int>(Mathf::Pow(radius, 2));
+            for (int k = -radius; k <= radius; k++)
+            {
+                int k2 = static_cast<int>(Mathf::Pow(k, 2));
 
-//         for (int j = -radius; j <= radius; j++)
-//         {
-//             int j2 = static_cast<int>(Mathf::Pow(j, 2));
+                if(j2 + k2 <= radius2)
+                {
+                    float distance = static_cast<float>(j2 + k2);
+                    int px = j + x;
+                    int py = k + y;
+                    averageHeight += GetHeightAtPoint(px, py);
+                    numTiles++;
+                }
+            }
+        }
 
-//             for (int k = -radius; k <= radius; k++)
-//             {
-//                 int k2 = static_cast<int>(Mathf::Pow(k, 2));
+        if(numTiles > 0)
+        {
+            averageHeight /= static_cast<float>(numTiles);
+        }
 
-//                 if(j2 + k2 <= radius2)
-//                 {
-//                     float distance = static_cast<float>(j2 + k2);
-//                     int px = j + x;
-//                     int py = k + y;
-//                     averageHeight += GetHeightAtPoint(px, py);
-//                     numTiles++;
-//                 }
-//             }
-//         }
+        return averageHeight;
+    }
 
-//         if(numTiles > 0)
-//         {
-//             averageHeight /= static_cast<float>(numTiles);
-//         }
+    bool Terrain::GetVertexAtPoint(uint32_t x, uint32_t y, Vector3 &position)
+    {
+        int vertsPerRow = width + 1;
+        int index = (y * vertsPerRow) + x;
+        auto &vertices = mesh.GetVertices();
 
-//         return averageHeight;
-//     }
+        if(index >= vertices.size())
+            return false;
 
-//     bool Terrain::GetVertexAtPoint(uint32_t x, uint32_t y, Vector3 &position)
-//     {
-//         int vertsPerRow = width + 1;
-//         int index = (y * vertsPerRow) + x;
+        position = vertices[index].position;
+        return true;
+    }
 
-//         auto &vertices = mesh.GetVertices();
-//         int vertsPerRow = width + 1;
+    uint32_t Terrain::GetWidth() const
+    {
+        return width;
+    }
 
-//         if(index >= vertices.size())
-//             return false;
+    uint32_t Terrain::GetDepth() const
+    {
+        return depth;
+    }
 
-//         position = vertices[index].position;
-//         return true;
-//     }
-
-//     uint32_t Terrain::GetWidth() const
-//     {
-//         return width;
-//     }
-
-//     uint32_t Terrain::GetDepth() const
-//     {
-//         return depth;
-//     }
-
-//     void Terrain::SetScale(float scale)
-//     {
-//         //this->scale = scale;
-
-//         if(!mesh)
-//             return;
+    void Terrain::SetScale(float scale)
+    {
+        //this->scale = scale;
         
-//         auto &vertices = mesh.GetVertices();
+        auto &vertices = mesh.GetVertices();
 
-//         float normalizedScale = 1.0f / this->scale;
-//         this->scale = scale;
+        float normalizedScale = 1.0f / this->scale;
+        this->scale = scale;
 
-//         for(size_t i = 0; i < vertices.size(); i++)
-//         {
-//             //Normalize scale
-//             vertices[i].position *= normalizedScale;
-//             vertices[i].position *= scale;
-//         }
+        for(size_t i = 0; i < vertices.size(); i++)
+        {
+            //Normalize scale
+            vertices[i].position *= normalizedScale;
+            vertices[i].position *= scale;
+        }
 
-//         //mesh = MeshGenerator::CreateTerrain(width, depth, Vector3(scale, scale, scale));
+        //mesh = MeshGenerator::CreateTerrain(width, depth, Vector3(scale, scale, scale));
 
-//         mesh.RecalculateNormals();
-//     }
+        mesh.RecalculateNormals();
+    }
 
-//     float Terrain::GetScale() const
-//     {
-//         return scale;
-//     }
+    float Terrain::GetScale() const
+    {
+        return scale;
+    }
 
-//     void Terrain::SetMaxHeight(float height)
-//     {
-//         this->maxHeight = height;
-//     }
+    void Terrain::SetMaxHeight(float height)
+    {
+        this->maxHeight = height;
+    }
 
-//     float Terrain::GetMaxHeight() const
-//     {
-//         return maxHeight;
-//     }
+    float Terrain::GetMaxHeight() const
+    {
+        return maxHeight;
+    }
 
-//     TerrainMaterial *Terrain::GetMaterial() const
-//     {
-//         return material.get();
-//     }
-
-//     Mesh *Terrain::GetMesh(size_t index) const
-//     {
-//         //Need to handle the case where an unknown index is passed in to prevent stack overflow
-//         //This renderer has only 1 mesh so asking for another index doesn't make sense
-//         //We still need to treat this function like any other GetMesh function
-//         if(index > 0)
-//             return nullptr;
-//         return mesh.get();
-//     }
-
-//     TerrainEditor::TerrainEditor() : Component()
-//     {
-//         canEdit = false;
-//         mode = TerrainEditMode::Raise;
-//         brushSize = 2;
-//         brushHeight = 1.0f;
-//         showGrid = false;
-//         terrain = nullptr;
-//         material = nullptr;
-//         SetName("TerrainEditor");
-//     }
-
-//     bool TerrainEditor::CanEdit() const
-//     {
-//         return canEdit;
-//     }
-
-//     int TerrainEditor::GetBrushSize() const
-//     {
-//         return brushSize;
-//     }
-
-//     float TerrainEditor::GetBrushHeight() const
-//     {
-//         return brushHeight;
-//     }
-
-//     void TerrainEditor::SetShowGrid(bool show)
-//     {
-//         this->showGrid = show;
-//     }
-
-//     bool TerrainEditor::GetShowGrid() const
-//     {
-//         return showGrid;
-//     }
-
-//     void TerrainEditor::OnInspectorGUI()
-//     {
-//         if(!terrain || !material)
-//             return;
-        
-//         if(ImGuiEx::Checkbox("Show Grid", &showGrid))
-//         {
-//             if(material)
-//                 material->SetShowGrid(showGrid);
-//         }
-
-//         // Raise,
-//         // Lower,
-//         // Flatten,
-//         // Smooth
-
-//         const char *modes[] 
-//         {
-//             "Raise",
-//             "Lower",
-//             "Flatten",
-//             "Smooth"
-//         };
-
-//         int currentMode = static_cast<int>(mode);
-
-//         if (ImGuiEx::BeginCombo("Mode", modes[static_cast<int>(mode)]))
-//         {
-//             for (int j = 0; j < 4; j++)
-//             {
-//                 const bool isSelected = (currentMode == j);
-//                 if (ImGui::Selectable(modes[j], isSelected))
-//                 {
-//                     currentMode = j;
-//                     mode = static_cast<TerrainEditMode>(currentMode);
-//                 }
-//                 // Set the initial focus when opening the combo 
-//                 // (scrolling + for keyboard navigation support in the upcoming navigation branch)
-//                 if (isSelected)
-//                     ImGui::SetItemDefaultFocus();
-//             }
-
-//             ImGuiEx::EndCombo();
-//         }
-        
-//         ImGuiEx::DragInt("Brush Size", &brushSize, 1.0f, 1, 128);
-//         ImGuiEx::DragFloat("Brush Height", &brushHeight, 0.1f, Mathf::FloatMinValue, Mathf::FloatMaxValue, "%.1f");
-
-//         if(Input::GetKeyDown(KeyCode::Subtract))
-//         {
-//             brushSize -= 1;
-//             if(brushSize < 1)
-//                 brushSize = 1;
-//         }
-//         if(Input::GetKeyDown(KeyCode::Add))
-//         {
-//             brushSize += 1;
-//             if(brushSize > 128)
-//                 brushSize = 128;
-//         }
-//         if(Input::GetKeyDown(KeyCode::G))
-//         {
-//             showGrid = !showGrid;
-//             if(material)
-//                 material->SetShowGrid(showGrid);
-//         }
-
-//         Edit();
-//     }
-
-//     void TerrainEditor::Edit()
-//     {
-//         if(!material)
-//             return;
-
-//         Vector4 viewportRect = Screen::GetViewportRect();
-//         Vector2 mousePositionViewport = Input::GetMousePositionRelativeToViewport();
-
-//         Rectangle rect(viewportRect.x, viewportRect.y, viewportRect.z, viewportRect.w);
-
-//         if(!rect.Contains(mousePositionViewport.x, mousePositionViewport.y))
-//         {
-//             material->SetCursorType(-1.0f);
-//             return;
-//         }
-        
-//         Vector2 mousePosition = Input::GetMousePosition();
-
-//         Ray ray = Ray::FromMousePosition(mousePosition, viewportRect);
-
-//         RaycastHit hit;
-
-//         if(Physics::RaycastXZPlane(ray.origin, ray.direction, 10000.0f, hit))
-//         {
-//             material->SetMousePosition(hit.point);
-//             material->SetCursorType(1.0f);
-//             material->SetCursorRadius(GetBrushSize() * 0.5f * terrain->GetScale());
-
-//             if(Input::GetButton(ButtonCode::Left))
-//             {
-//                 if(Input::IsCursorEnabled())
-//                     Input::SetMouseCursor(false);
-
-//                 Vector2 terrainPoint;
-//                 if(terrain->WorldToTerrainPoint(hit.point, terrainPoint))
-//                 {
-//                     switch(mode)
-//                     {
-//                         case TerrainEditMode::Raise:
-//                         {
-//                             float direction = Input::GetKey(KeyCode::LeftShift) ? -1.0f : 1.0f;
-//                             terrain->SetHeights((uint32_t)terrainPoint.x, (uint32_t)terrainPoint.y, GetBrushSize(), direction * GetBrushHeight(), TerrainFalloffMode::Linear, TerrainHeightMode::Additive, true);
-//                             break;
-//                         }
-//                         case TerrainEditMode::Lower:
-//                         {
-//                             float direction = Input::GetKey(KeyCode::LeftShift) ? -1.0f : 1.0f;
-//                             terrain->SetHeights((uint32_t)terrainPoint.x, (uint32_t)terrainPoint.y, GetBrushSize(), direction * GetBrushHeight(), TerrainFalloffMode::Linear, TerrainHeightMode::Additive, true);
-//                             break;
-//                         }
-//                         case TerrainEditMode::Flatten:
-//                         {
-//                             break;
-//                         }
-//                         case TerrainEditMode::Smooth:
-//                         {
-//                             float averageHeight = terrain->GetAverageHeightAtPointWithRadius((uint32_t)terrainPoint.x, (uint32_t)terrainPoint.y, GetBrushSize());
-//                             //terrain->SetHeights((uint32_t)terrainPoint.x, (uint32_t)terrainPoint.y, GetBrushSize(), averageHeight, TerrainHeightMode::Additive, true);
-//                             terrain->SmoothHeights((uint32_t)terrainPoint.x, (uint32_t)terrainPoint.y, GetBrushSize(), true);
-//                             break;
-//                         }
-//                     }
-
-//                 }
-//             }
-//             else
-//             {
-//                 if(!Input::IsCursorEnabled())
-//                     Input::SetMouseCursor(true);
-//             }
-//         }
-//         else
-//         {
-//             material->SetCursorType(-1.0f);
-//         }
-//     }
-// };
+    TerrainMaterial *Terrain::GetMaterial() const
+    {
+        return material.get();
+    }
+};

@@ -117,6 +117,20 @@ namespace GravyEngine
         Initialize();
     }
 
+    void ParticleSystem::OnDestroy()
+    {
+        Renderer::OnDestroy();
+
+        if(EBO.GetId() > 0)
+            EBO.Delete();
+        if(VBO.GetId() > 0)
+            VBO.Delete();
+        if(VAO.GetId() > 0)
+            VAO.Delete();
+        if(instanceVBO.GetId() > 0)
+            instanceVBO.Delete();
+    }
+
     void ParticleSystem::Initialize()
     {
         auto &vertices = pMesh->GetVertices();
@@ -183,20 +197,6 @@ namespace GravyEngine
             EBO.BufferData(indices.size() * sizeof(GLuint), indices.data(), GL_STATIC_DRAW);
             VBO.Unbind();
         }
-    }
-
-    void ParticleSystem::OnDestroy()
-    {
-        Renderer::OnDestroy();
-
-        if(EBO.GetId() > 0)
-            EBO.Delete();
-        if(VBO.GetId() > 0)
-            VBO.Delete();
-        if(VAO.GetId() > 0)
-            VAO.Delete();
-        if(instanceVBO.GetId() > 0)
-            instanceVBO.Delete();
     }
 
     void ParticleSystem::Update()
