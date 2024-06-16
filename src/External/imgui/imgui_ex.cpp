@@ -10,6 +10,34 @@
 
 namespace ImGuiEx
 {
+    void BeginHideWindow(const char *name, const ImVec4 &rect)
+    {
+        ImGuiWindowFlags flags = 0;
+        flags |= ImGuiWindowFlags_NoTitleBar;
+        flags |= ImGuiWindowFlags_NoResize;
+        flags |= ImGuiWindowFlags_NoMove;
+        flags |= ImGuiWindowFlags_NoScrollbar;	
+        flags |= ImGuiWindowFlags_NoBackground;
+        flags |= ImGuiWindowFlags_NoScrollWithMouse;
+
+        bool active = true;
+        ImGui::SetNextWindowSize(ImVec2(rect.z, rect.w));
+        ImGui::SetNextWindowPos(ImVec2(rect.x, rect.y));
+        ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0,0));
+        ImGui::Begin(name, &active, flags);
+    }
+
+    void EndHideWindow()
+    {
+        ImGui::End();
+        ImGui::PopStyleVar();
+    }
+
+    void Image(uint32_t user_texture_id, const ImVec2& image_size, const ImVec2& uv0, const ImVec2& uv1, const ImVec4& tint_col, const ImVec4& border_col)
+    {
+        ImGui::Image(reinterpret_cast<void*>(user_texture_id), image_size, uv0, uv1, tint_col, border_col);
+    }
+
     bool Knob(const char *label, float *value, float min, float max, int snapSteps)
     {
         auto &io = ImGui::GetIO();

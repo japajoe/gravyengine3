@@ -66,52 +66,6 @@ void main()
     vec4 texColor = GetTextureColor();
     vec3 normal = normalize(oNormal);
 
-    vec3 ambient = vec3(0.0);
-    vec3 diffuse = vec3(0.0);
-    vec3 specular = vec3(0.0);
-
-    for(int i = 0; i < MAX_NUM_LIGHTS; i++)
-    {
-        if(Lights.lights[i].isActive > 0)
-        {
-            LightInfo light = Lights.lights[i];
-
-            vec3 lightPosition = light.position.xyz;
-            vec3 lightColor = light.color.rgb;
-            float lightStrength = light.strength;
-            float attenuation = 1.0;
-            
-            vec3 lightDir = vec3(0.0);
-
-            if(Lights.lights[i].type == 0) //Directional
-            {
-                lightDir = normalize(light.direction.xyz);
-            }
-            else //Point
-            {
-                lightDir = normalize(lightPosition - oFragPosition);
-                float lightLinear = light.linear;
-                float lightConstant = light.constant;
-                float lightQuadratic = light.quadratic;
-                float distance  = length(lightPosition - oFragPosition);
-                attenuation = 1.0 / (lightConstant + lightLinear * distance + lightQuadratic * (distance * distance));
-            }
-
-            // ambient
-            ambient += light.ambient.rgb * uAmbientStrength * texColor.rgb * attenuation;
-
-            // diffuse
-            float diff = max(dot(lightDir, normal), 1.0);
-            diffuse += light.diffuse.rgb * diff * lightColor * lightStrength * attenuation;
-
-            // specular
-            vec3 viewDir = normalize(Camera.position.xyz - oFragPosition);
-            vec3 halfwayDir = normalize(lightDir + viewDir);  
-            float spec = pow(max(dot(normal, halfwayDir), 0.0), uShininess);
-            specular += light.specular.rgb * spec * lightColor * lightStrength * attenuation;
-        }
-    }
-
     // calculate shadow
     vec3 lightDirection = normalize(Lights.lights[0].direction.xyz);
 
@@ -119,7 +73,7 @@ void main()
     if(uReceiveShadows > 0)
         shadow = ShadowCalculation(oFragPosition, Camera.view, normal, lightDirection);
 
-    vec3 lighting = (ambient + (1.0 - shadow) * (diffuse + specular)) * texColor.rgb * uDiffuseColor.rgb;
+    vec3 lighting = CalculateLighting(oFragPosition, Camera.position.xyz, normal, texColor.rgb, uDiffuseColor.rgb, uAmbientStrength, uShininess, shadow);
 
     if(World.fogEnabled > 0)
     {

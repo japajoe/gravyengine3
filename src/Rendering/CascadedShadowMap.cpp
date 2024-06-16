@@ -230,7 +230,10 @@ namespace GravyEngine
     void CascadedShadowMap::Delete()
     {
         if(lightFBO > 0)
+        {
             glDeleteFramebuffers(1, &lightFBO);
+            lightFBO = 0;
+        }
     }
 
     std::vector<float> &CascadedShadowMap::GetShadowCascadeLevels()

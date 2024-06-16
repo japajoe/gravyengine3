@@ -2,6 +2,7 @@
 #include "../Core/Debug.hpp"
 #include "../System/String.hpp"
 #include "../System/Environment.hpp"
+#include "../System/IO/File.hpp"
 #include "../External/glad/glad.h"
 
 namespace GravyEngine
@@ -33,7 +34,7 @@ namespace GravyEngine
 
         uint32_t vertexShader = Compile(sVertexSource, GL_VERTEX_SHADER);
         
-        if(!CheckShader(vertexShader, ShaderType::Vertex))
+        if(!CheckShader(vertexShader, ShaderType::Vertex, sVertexSource))
         {
             glDeleteShader(vertexShader);
             return;
@@ -41,7 +42,7 @@ namespace GravyEngine
 
         uint32_t fragmentShader = Compile(sFragmentSource, GL_FRAGMENT_SHADER);
         
-        if(!CheckShader(fragmentShader, ShaderType::Fragment))
+        if(!CheckShader(fragmentShader, ShaderType::Fragment, sFragmentSource))
         {
             glDeleteShader(vertexShader);
             glDeleteShader(fragmentShader);
@@ -54,7 +55,7 @@ namespace GravyEngine
         glAttachShader(id, fragmentShader);
         glLinkProgram(id);
         
-        if(!CheckShader(id, ShaderType::Program))
+        if(!CheckShader(id, ShaderType::Program, sFragmentSource))
         {
             glDeleteShader(vertexShader);
             glDeleteShader(fragmentShader);
@@ -78,7 +79,7 @@ namespace GravyEngine
 
         uint32_t vertexShader = Compile(sVertexSource, GL_VERTEX_SHADER);
         
-        if(!CheckShader(vertexShader, ShaderType::Vertex))
+        if(!CheckShader(vertexShader, ShaderType::Vertex, sVertexSource))
         {
             glDeleteShader(vertexShader);
             return;
@@ -86,7 +87,7 @@ namespace GravyEngine
 
         uint32_t geometryShader = Compile(sGeometrySource, GL_GEOMETRY_SHADER);
         
-        if(!CheckShader(geometryShader, ShaderType::Geometry))
+        if(!CheckShader(geometryShader, ShaderType::Geometry, sGeometrySource))
         {
             glDeleteShader(vertexShader);
             glDeleteShader(geometryShader);
@@ -95,7 +96,7 @@ namespace GravyEngine
 
         uint32_t fragmentShader = Compile(sFragmentSource, GL_FRAGMENT_SHADER);
         
-        if(!CheckShader(fragmentShader, ShaderType::Fragment))
+        if(!CheckShader(fragmentShader, ShaderType::Fragment, sFragmentSource))
         {
             glDeleteShader(vertexShader);
             glDeleteShader(geometryShader);
@@ -111,7 +112,7 @@ namespace GravyEngine
         glAttachShader(id, fragmentShader);
         glLinkProgram(id);
 
-        if(!CheckShader(id, ShaderType::Program))
+        if(!CheckShader(id, ShaderType::Program, sFragmentSource))
         {
             glDeleteShader(vertexShader);
             glDeleteShader(geometryShader);
@@ -186,7 +187,7 @@ namespace GravyEngine
         return &shaders[name];
     }
 
-    bool Shader::CheckShader(uint32_t shader, ShaderType type)
+    bool Shader::CheckShader(uint32_t shader, ShaderType type, const std::string &source)
     {
         int32_t success;
         GLchar infoLog[1024];
@@ -214,6 +215,8 @@ namespace GravyEngine
                 
                 Debug::WriteError("------------------------");
                 Debug::WriteError("ERROR: SHADER_COMPILATION_ERROR of type: %s%s", shaderType.c_str(), infoLog);
+
+                File::WriteAllText("ErrorShader.glsl", source);
                 
                 return false;
             }

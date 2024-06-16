@@ -1,16 +1,15 @@
 #include "GameManager.hpp"
-#include "Resources.hpp"
 
 static Light *testLight = nullptr;
 static bool textureLoaded = false;
 
 void GameManager::OnInitialize()
 {
+    FindTextures();
     SetupCamera();
     SetupLights();
     SetupModels();
     SetupAudio();
-    LoadAssetFromResourceAsync(0, "assets", "Textures/Terrain/forrest_ground_01_diff_1k.jpg");
 }
 
 void GameManager::OnUpdate()
@@ -43,78 +42,26 @@ void GameManager::OnUpdate()
 
 void GameManager::OnGUI()
 {
-    return;
-    
-    ImGui::Begin("Light Settings");
+    Vector2 screenSize = Screen::GetSize();
+    float width = textureLogo->GetWidth() * 0.25f;
+    float height = textureLogo->GetHeight() * 0.25f;
+    float x = screenSize.x - width - 10;
+    float y = screenSize.y - height - 10;
 
-    auto light = lights[0].light;
+    float alpha = (Mathf::Sin(Time::GetTimeAsDouble() * 0.5f) + 1.0f) * 0.5f;
+    alpha = 0.2f + (0.8f * alpha);
+    ImVec4 color(1.0f, 1.0f, 1.0f, alpha);
 
-
-    auto color = light->GetColor();
-    auto ambient = light->GetAmbient();
-    auto diffuse = light->GetDiffuse();
-    auto specular = light->GetSpecular();
-    auto strength = light->GetStrength();
-    auto constant = light->GetConstant();
-    auto linear = light->GetLinear();
-    auto quadratic = light->GetQuadratic();
-
-    if(ImGui::ColorEdit3("Color", &color.r))
-        light->SetColor(color);
-    if(ImGui::ColorEdit3("Ambient", &ambient.r))
-        light->SetAmbient(ambient);
-    if(ImGui::ColorEdit3("Diffuse", &diffuse.r))
-        light->SetDiffuse(diffuse);
-    if(ImGui::ColorEdit3("Specular", &specular.r))
-        light->SetSpecular(specular);
-    if(ImGui::DragFloat("Strength", &strength))
-        light->SetStrength(strength);
-    if(ImGui::DragFloat("Constant", &constant))
-        light->SetConstant(constant);
-    if(ImGui::DragFloat("Linear", &linear))
-        light->SetLinear(linear);
-    if(ImGui::DragFloat("Quadratic", &quadratic))
-        light->SetQuadratic(quadratic);
-
-    ImGui::End();
-
-    ImGui::Begin("Fog Settings");
-    
-    Color fogColor = WorldSettings::GetFogColor();
-    float fogDensity = WorldSettings::GetFogDensity();
-    
-    if(ImGui::ColorEdit3("Fog Color", &fogColor.r))
-        WorldSettings::SetFogColor(fogColor);
-    
-    if(ImGui::DragFloat("Fog Density", &fogDensity))
-        WorldSettings::SetFogDensity(fogDensity);
-    
-    ImGui::End();
+    ImVec4 rect(x, y, width, height);
+    ImGuiEx::BeginHideWindow("Logo", rect);
+    ImGuiEx::Image(textureLogo->GetId(), ImVec2(width, height), ImVec2(0, 0), ImVec2(1, 1), color);
+    ImGuiEx::EndHideWindow();
 }
 
-void GameManager::OnAssetLoadedAsync(uint64_t id, const std::string &name, const std::vector<uint8_t> &data)
+void GameManager::FindTextures()
 {
-    if(id == 0 && data.size() > 0)
-    {
-        Image image(data.data(), data.size());
-        if(image.IsLoaded())
-        {
-            Texture2D texture(&image);
-            auto tex = Texture2D::Add("ForrestGround", texture);
-
-            if(tex != nullptr)
-            {
-                auto renderer = ground->GetComponent<MeshRenderer>();
-                auto material = renderer->GetMaterial<DiffuseMaterial>(0);
-                material->SetDiffuseTexture(tex);
-            }
-        }
-    }
-}
-
-void GameManager::OnApplicationQuit()
-{
-    Texture2D::Remove("ForrestGround");
+    textureGround = Texture2D::Find("Textures/Terrain/forrest_ground_01_diff_1k.jpg");
+    textureLogo = Texture2D::Find("../res/textures/GravyLogoTransparent.png");
 }
 
 void GameManager::SetupCamera()
@@ -170,6 +117,7 @@ void GameManager::SetupModels()
     auto renderer = ground->GetComponent<MeshRenderer>();
     auto material = renderer->GetMaterial<DiffuseMaterial>(0);
     material->SetUVScale(Vector2(200, 200));
+    material->SetDiffuseTexture(textureGround);
 
     cube = GameObject::CreatePrimitive(PrimitiveType::Cube);
     cube->GetTransform()->SetPosition(Vector3(0, 0.5f, 0));

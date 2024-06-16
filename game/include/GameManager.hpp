@@ -18,8 +18,6 @@ protected:
     void OnInitialize() override;
     void OnUpdate() override;
     void OnGUI() override;
-    void OnAssetLoadedAsync(uint64_t id, const std::string &name, const std::vector<uint8_t> &data) override;
-    void OnApplicationQuit();
 private:
     GameObject *skybox;
     GameObject *ground;
@@ -28,6 +26,9 @@ private:
     ParticleSystem *particleSystem;
     std::vector<LightObject> lights;
     AudioSource *audioSourceCube;
+    Texture2D *textureGround;
+    Texture2D *textureLogo;
+    void FindTextures();
     void SetupCamera();
     void SetupLights();
     void SetupModels();

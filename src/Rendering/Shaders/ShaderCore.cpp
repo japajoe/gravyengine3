@@ -147,7 +147,62 @@ float ShadowCalculation(vec3 fragPosWorldSpace, mat4 view, vec3 normal, vec3 lig
     shadow /= 9.0;
         
     return shadow;
-})";
+}
+
+vec3 CalculateLighting(vec3 fragPosition, vec3 cameraPosition, vec3 normal, vec3 texColor, vec3 diffuseColor, float ambientStrength, float shininess, float shadow)
+{
+    vec3 ambient = vec3(0.0);
+    vec3 diffuse = vec3(0.0);
+    vec3 specular = vec3(0.0);
+
+    for(int i = 0; i < MAX_NUM_LIGHTS; i++)
+    {
+        if(Lights.lights[i].isActive > 0)
+        {
+            LightInfo light = Lights.lights[i];
+
+            vec3 lightPosition = light.position.xyz;
+            vec3 lightColor = light.color.rgb;
+            float lightStrength = light.strength;
+            float attenuation = 1.0;
+            
+            vec3 lightDir = vec3(0.0);
+
+            if(Lights.lights[i].type == 0) //Directional
+            {
+                lightDir = normalize(light.direction.xyz);
+            }
+            else //Point
+            {
+                lightDir = normalize(lightPosition - fragPosition);
+                float lightLinear = light.linear;
+                float lightConstant = light.constant;
+                float lightQuadratic = light.quadratic;
+                float distance  = length(lightPosition - fragPosition);
+                attenuation = 1.0 / (lightConstant + lightLinear * distance + lightQuadratic * (distance * distance));
+            }
+
+            // ambient
+            ambient += light.ambient.rgb * ambientStrength * texColor.rgb * attenuation;
+
+            // diffuse
+            float diff = max(dot(lightDir, normal), 1.0);
+            //float diff = 1.0;
+            diffuse += light.diffuse.rgb * diff * lightColor * lightStrength * attenuation;
+
+            // specular
+            vec3 viewDir = normalize(cameraPosition - fragPosition);
+            vec3 halfwayDir = normalize(lightDir + viewDir);  
+            float spec = pow(max(dot(normal, halfwayDir), 0.0), shininess);
+            specular += light.specular.rgb * spec * lightColor * lightStrength * attenuation;
+        }
+    }
+
+    vec3 lighting = (ambient + (1.0 - shadow) * (diffuse + specular)) * texColor.rgb * diffuseColor.rgb;
+    return lighting;
+}
+
+)";
 
     std::string ShaderCore::GetSource()
     {

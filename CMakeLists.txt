@@ -56,4 +56,3 @@ elseif(BUILD_PLATFORM STREQUAL "linux")
 elseif(BUILD_PLATFORM STREQUAL "mac")
     target_link_libraries(${PROJECT_NAME} glad glm glfw imgui miniaudioex -lstdc++fs -lopengl)
 endif()
-

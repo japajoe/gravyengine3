@@ -52,7 +52,7 @@ namespace GravyEngine
         uint32_t id;
         static std::unordered_map<std::string,Shader> shaders;
         static std::unordered_map<std::string, std::string> includesMap;
-        static bool CheckShader(uint32_t shader, ShaderType type);
+        static bool CheckShader(uint32_t shader, ShaderType type, const std::string &source);
         static std::string AddIncludes(const std::string &shaderSource);
     };
 };
