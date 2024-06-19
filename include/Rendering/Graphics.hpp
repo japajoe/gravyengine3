@@ -1,5 +1,5 @@
-#ifndef GRAPHICS_HPP
-#define GRAPHICS_HPP
+#ifndef GRAVYENGINE_GRAPHICS_HPP
+#define GRAVYENGINE_GRAPHICS_HPP
 
 #include <vector>
 #include <string>

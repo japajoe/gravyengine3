@@ -1,5 +1,5 @@
-#ifndef TIME_HPP
-#define TIME_HPP
+#ifndef GRAVYENGINE_TIME_HPP
+#define GRAVYENGINE_TIME_HPP
 
 #include <chrono>
 

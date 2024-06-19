@@ -1,5 +1,5 @@
-#ifndef MATHF_HPP
-#define MATHF_HPP
+#ifndef GRAVYENGINE_MATHF_HPP
+#define GRAVYENGINE_MATHF_HPP
 
 #include <cstdint>
 #include <limits>

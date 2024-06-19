@@ -1,5 +1,5 @@
-#ifndef MINIAUDIOEX_AUDIOEFFECT_HPP
-#define MINIAUDIOEX_AUDIOEFFECT_HPP
+#ifndef GRAVYENGINE_AUDIOEFFECT_HPP
+#define GRAVYENGINE_AUDIOEFFECT_HPP
 
 #include <cstdint>
 #include "../AudioBuffer.hpp"

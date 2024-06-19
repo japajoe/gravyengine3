@@ -1,5 +1,5 @@
-#ifndef TRANSFORM_HPP
-#define TRANSFORM_HPP
+#ifndef GRAVYENGINE_TRANSFORM_HPP
+#define GRAVYENGINE_TRANSFORM_HPP
 
 #include "Component.hpp"
 #include "../System/Numerics/Vector3.hpp"

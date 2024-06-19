@@ -1,9 +1,9 @@
-#ifndef MINIAUDIOEX_FMGENERATOR_HPP
-#define MINIAUDIOEX_FMGENERATOR_HPP
+#ifndef GRAVYENGINE_FMGENERATOR_HPP
+#define GRAVYENGINE_FMGENERATOR_HPP
 
 #include "AudioGenerator.hpp"
 #include "Oscillator.hpp"
-#include "../../System/ConcurrentList.hpp"
+#include "../../System/Collections/ConcurrentList.hpp"
 #include <cstdint>
 
 namespace GravyEngine

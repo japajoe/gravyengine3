@@ -1,5 +1,5 @@
-#ifndef GAMEBEHAVIOUR_HPP
-#define GAMEBEHAVIOUR_HPP
+#ifndef GRAVYENGINE_GAMEBEHAVIOUR_HPP
+#define GRAVYENGINE_GAMEBEHAVIOUR_HPP
 
 #include "Component.hpp"
 #include "AssetInfo.hpp"

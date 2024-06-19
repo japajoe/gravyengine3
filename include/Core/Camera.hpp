@@ -1,5 +1,5 @@
-#ifndef CAMERA_HPP
-#define CAMERA_HPP
+#ifndef GRAVYENGINE_CAMERA_HPP
+#define GRAVYENGINE_CAMERA_HPP
 
 #include "Component.hpp"
 #include "Transform.hpp"

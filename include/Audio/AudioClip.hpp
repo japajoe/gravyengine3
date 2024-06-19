@@ -1,5 +1,5 @@
-#ifndef MINIAUDIOEX_AUDIOCLIP_HPP
-#define MINIAUDIOEX_AUDIOCLIP_HPP
+#ifndef GRAVYENGINE_AUDIOCLIP_HPP
+#define GRAVYENGINE_AUDIOCLIP_HPP
 
 #include <string>
 #include <vector>

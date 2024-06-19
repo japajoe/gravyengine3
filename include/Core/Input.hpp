@@ -1,5 +1,5 @@
-#ifndef INPUT_HPP
-#define INPUT_HPP
+#ifndef GRAVYENGINE_INPUT_HPP
+#define GRAVYENGINE_INPUT_HPP
 
 #include "../External/GLFW/glfw3.h"
 #include "../System/Numerics/Vector2.hpp"

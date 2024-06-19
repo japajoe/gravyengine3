@@ -1,5 +1,5 @@
-#ifndef EVENTHANDLER_HPP
-#define EVENTHANDLER_HPP
+#ifndef GRAVYENGINE_EVENTHANDLER_HPP
+#define GRAVYENGINE_EVENTHANDLER_HPP
 
 #include <vector>
 #include <functional>

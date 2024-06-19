@@ -1,5 +1,5 @@
-#ifndef GAMEOBJECT_HPP
-#define GAMEOBJECT_HPP
+#ifndef GRAVYENGINE_GAMEOBJECT_HPP
+#define GRAVYENGINE_GAMEOBJECT_HPP
 
 #include "Object.hpp"
 #include "Component.hpp"

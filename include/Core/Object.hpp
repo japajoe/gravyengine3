@@ -1,5 +1,5 @@
-#ifndef OBJECT_HPP
-#define OBJECT_HPP
+#ifndef GRAVYENGINE_OBJECT_HPP
+#define GRAVYENGINE_OBJECT_HPP
 
 #include <cstdint>
 #include <string>

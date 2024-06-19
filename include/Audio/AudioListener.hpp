@@ -1,5 +1,5 @@
-#ifndef MINIAUDIOEX_AUDIOLISTENER_HPP
-#define MINIAUDIOEX_AUDIOLISTENER_HPP
+#ifndef GRAVYENGINE_AUDIOLISTENER_HPP
+#define GRAVYENGINE_AUDIOLISTENER_HPP
 
 #include "../External/miniaudioex/miniaudioex.h"
 #include "../System/Numerics/Vector3.hpp"

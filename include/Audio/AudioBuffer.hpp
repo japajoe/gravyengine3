@@ -1,5 +1,5 @@
-#ifndef MINIAUDIOEX_AUDIOBUFFER_HPP
-#define MINIAUDIOEX_AUDIOBUFFER_HPP
+#ifndef GRAVYENGINE_AUDIOBUFFER_HPP
+#define GRAVYENGINE_AUDIOBUFFER_HPP
 
 #include <cstdlib>
 #include <stdexcept>

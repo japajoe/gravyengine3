@@ -1,5 +1,5 @@
-#ifndef MINIAUDIOEX_WAVETABLE_HPP
-#define MINIAUDIOEX_WAVETABLE_HPP
+#ifndef GRAVYENGINE_WAVETABLE_HPP
+#define GRAVYENGINE_WAVETABLE_HPP
 
 #include "WaveCalculator.hpp"
 #include <cstdlib>

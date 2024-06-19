@@ -1,5 +1,5 @@
-#ifndef GAMEBEHAVIOURMANAGER_HPP
-#define GAMEBEHAVIOURMANAGER_HPP
+#ifndef GRAVYENGINE_GAMEBEHAVIOURMANAGER_HPP
+#define GRAVYENGINE_GAMEBEHAVIOURMANAGER_HPP
 
 #include "AssetInfo.hpp"
 #include "../External/imgui/ImGuiManager.h"

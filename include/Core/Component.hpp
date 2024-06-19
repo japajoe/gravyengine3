@@ -1,5 +1,5 @@
-#ifndef COMPONENT_HPP
-#define COMPONENT_HPP
+#ifndef GRAVYENGINE_COMPONENT_HPP
+#define GRAVYENGINE_COMPONENT_HPP
 
 #include "Object.hpp"
 

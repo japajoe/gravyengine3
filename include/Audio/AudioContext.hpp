@@ -1,5 +1,5 @@
-#ifndef MINIAUDIOEX_AUDIOCONTEXT_HPP
-#define MINIAUDIOEX_AUDIOCONTEXT_HPP
+#ifndef GRAVYENGINE_AUDIOCONTEXT_HPP
+#define GRAVYENGINE_AUDIOCONTEXT_HPP
 
 #include "../External/miniaudioex/miniaudioex.h"
 #include "AudioSource.hpp"

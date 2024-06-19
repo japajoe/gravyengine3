@@ -1,5 +1,5 @@
-#ifndef MESHRENDERER_HPP
-#define MESHRENDERER_HPP
+#ifndef GRAVYENGINE_MESHRENDERER_HPP
+#define GRAVYENGINE_MESHRENDERER_HPP
 
 #include "Renderer.hpp"
 #include "Mesh.hpp"

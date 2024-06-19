@@ -1,5 +1,5 @@
-#ifndef SCREEN_HPP
-#define SCREEN_HPP
+#ifndef GRAVYENGINE_SCREEN_HPP
+#define GRAVYENGINE_SCREEN_HPP
 
 #include "../System/Numerics/Vector2.hpp"
 #include "../System/Numerics/Vector4.hpp"

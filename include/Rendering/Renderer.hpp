@@ -1,5 +1,5 @@
-#ifndef RENDERER_HPP
-#define RENDERER_HPP
+#ifndef GRAVYENGINE_RENDERER_HPP
+#define GRAVYENGINE_RENDERER_HPP
 
 #include "../Core/Component.hpp"
 #include "../Core/Camera.hpp"

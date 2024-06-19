@@ -1,5 +1,5 @@
-#ifndef MINIAUDIOEX_FILTER_HPP
-#define MINIAUDIOEX_FILTER_HPP
+#ifndef GRAVYENGINE_FILTER_HPP
+#define GRAVYENGINE_FILTER_HPP
 
 #include <cstdint>
 #include "../../External/miniaudioex/ma_filter.h"

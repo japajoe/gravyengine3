@@ -1,5 +1,5 @@
-#ifndef RANDOM_HPP
-#define RANDOM_HPP
+#ifndef GRAVYENGINE_RANDOM_HPP
+#define GRAVYENGINE_RANDOM_HPP
 
 #include <cstdint>
 
