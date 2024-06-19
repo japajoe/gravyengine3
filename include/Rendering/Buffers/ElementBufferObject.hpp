@@ -1,7 +1,7 @@
 #ifndef GRAVYENGINE_ELEMENTBUFFEROBJECT_HPP
 #define GRAVYENGINE_ELEMENTBUFFEROBJECT_HPP
 
-#include "../Core/Object.hpp"
+#include "../../Core/Object.hpp"
 #include "../../External/glad/glad.h"
 
 namespace GravyEngine

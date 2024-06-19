@@ -369,6 +369,16 @@ namespace GravyEngine
         return particleType;
     }
 
+    void ParticleSystem::SetParticleProperties(const ParticleProperties &particleProps)
+    {
+        this->properties = particleProps;
+    }
+
+    ParticleProperties ParticleSystem::GetParticleProperties() const
+    {
+        return properties;
+    }
+
     void ParticleSystem::OnRender()
     {
         if(!GetGameObject()->GetIsActive())

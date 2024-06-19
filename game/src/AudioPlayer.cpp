@@ -3,6 +3,8 @@
 
 void AudioPlayer::OnInitialize()
 {
+    textureKnobs = Texture2D::Find("Textures/Misc/Knob70_89.png");
+
     auto &audioClips = ResourceManager::GetAudioClips();
 
     clipIndex = 0;
@@ -14,17 +16,19 @@ void AudioPlayer::OnInitialize()
 
 void AudioPlayer::OnGUI()
 {
+    ImGuiEx::ImKnobInfo spriteInfo(reinterpret_cast<void*>(textureKnobs->GetId()), 89, 9, 10);
+
     ImGui::Begin("Audio Settings");
     
     float masterVolume = AudioContext::GetMasterVolume();
     float musicVolume = audioSource->GetVolume();
-    
-    if(ImGuiEx::Knob("Master Volume", &masterVolume, 0.0f, 1.0f, 64))
+
+    if(ImGuiEx::Knob("Master Volume", spriteInfo, ImVec2(48, 48), &masterVolume, 0.0f, 1.0f, 0))
         AudioContext::SetMasterVolume(masterVolume);
 
     ImGui::SameLine();
     
-    if(ImGuiEx::Knob("Music Volume", &musicVolume, 0.0f, 1.0f, 64))
+    if(ImGuiEx::Knob("Music Volume", spriteInfo, ImVec2(48, 48), &musicVolume, 0.0f, 1.0f, 0))
         audioSource->SetVolume(musicVolume);
     
     if(ImGui::Button("<"))
@@ -36,6 +40,10 @@ void AudioPlayer::OnGUI()
         NextTrack();
     
     ImGui::End();
+}
+
+void AudioPlayer::OnApplicationQuit()
+{
 }
 
 void AudioPlayer::OnAudioEnded(AudioSource *source)

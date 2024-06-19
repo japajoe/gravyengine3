@@ -2,6 +2,7 @@
 #define GAMEBEHAVIOUR_HPP
 
 #include "Component.hpp"
+#include "AssetInfo.hpp"
 #include <cstdint>
 #include <string>
 #include <vector>
@@ -20,9 +21,9 @@ namespace GravyEngine
         virtual void OnLateUpdate();
         virtual void OnFixedUpdate();
         virtual void OnGUI();
-        virtual void OnAssetLoadedAsync(uint64_t id, const std::string &name, const std::vector<uint8_t> &data);
-        void LoadAssetFromResourceAsync(uint64_t id, const std::string &resourcePackName, const std::string &filepath);
-        void LoadAssetFromFileAsync(uint64_t id, const std::string &resourcePackName, const std::string &filepath);
+        virtual void OnAssetLoadedAsync(const AssetInfo &assetInfo);
+        void LoadAssetFromResourceAsync(AssetType type, const std::string &resourcePackName, const std::string &filepath);
+        void LoadAssetFromFileAsync(AssetType type, const std::string &resourcePackName, const std::string &filepath);
     };
 };
 #endif

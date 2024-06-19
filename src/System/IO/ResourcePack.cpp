@@ -248,7 +248,7 @@ namespace GravyEngine
         return o;
     };
 
-    std::map<std::string, ResourceFile> ResourcePack::GetFiles() const
+    std::map<std::string, ResourceFile> &ResourcePack::GetFiles()
     {
         return mapFiles;
     }

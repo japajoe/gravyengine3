@@ -91,6 +91,8 @@ namespace GravyEngine
         ParticleSpace GetSpace() const;
         void SetParticleType(ParticleType type);
         ParticleType GetParticleType() const;
+        void SetParticleProperties(const ParticleProperties &particleProps);
+        ParticleProperties GetParticleProperties() const;
     protected:
         void OnInitialize() override;
         void OnDestroy() override;

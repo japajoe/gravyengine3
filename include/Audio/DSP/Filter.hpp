@@ -2,7 +2,7 @@
 #define MINIAUDIOEX_FILTER_HPP
 
 #include <cstdint>
-#include "../../External/miniaudioex/miniaudioex.h"
+#include "../../External/miniaudioex/ma_filter.h"
 #include "../AudioBuffer.hpp"
 
 namespace GravyEngine

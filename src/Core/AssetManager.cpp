@@ -2,6 +2,7 @@
 #include "GameBehaviourManager.hpp"
 #include "../System/IO/File.hpp"
 #include <future>
+#include <iostream>
 
 namespace GravyEngine
 {
@@ -19,39 +20,47 @@ namespace GravyEngine
         resourcePacks[name] = std::make_unique<ResourcePack>();
         auto pack = resourcePacks[name].get();
 
-        return pack->LoadPack(filepath, key);
+        bool status = pack->LoadPack(filepath, key);
+        // auto &files = pack->GetFiles();
+
+        // for(auto &file : files)
+        // {
+        //     std::cout << file.first << '\n';
+        // }
+
+        return status;
     }
 
-    void AssetManager::LoadFileAsync(uint64_t uniqueId, const std::string &resourcePackName, const std::string &filepath)
+    void AssetManager::LoadFileAsync(AssetType type, const std::string &resourcePackName, const std::string &filepath)
     {
         if(resourcePacks.count(resourcePackName) == 0)
             return;
         
-        auto result = std::async(std::launch::async, &AssetManager::GetDataFromPackAsync, uniqueId, resourcePackName, filepath);
+        auto result = std::async(std::launch::async, &AssetManager::GetDataFromPackAsync, type, resourcePackName, filepath);
     }
 
-    void AssetManager::LoadFileAsync(uint64_t uniqueId, const std::string &filepath)
+    void AssetManager::LoadFileAsync(AssetType type, const std::string &filepath)
     {
         if(!File::Exists(filepath))
             return;
         
-        auto result = std::async(std::launch::async, &AssetManager::GetDataFromFileAsync, uniqueId, filepath);
+        auto result = std::async(std::launch::async, &AssetManager::GetDataFromFileAsync, type, filepath);
     }
 
-    void AssetManager::GetDataFromPackAsync(uint64_t uniqueId, const std::string resourcePackName, const std::string &filepath)
+    void AssetManager::GetDataFromPackAsync(AssetType type, const std::string resourcePackName, const std::string &filepath)
     {
         auto pack = resourcePacks[resourcePackName].get();
         AssetInfo info;
-        info.id = uniqueId;
+        info.type = type;
         info.name = filepath;
         info.data = pack->GetFileData(filepath);
         assetQueue.Enqueue(info);
     }
 
-    void AssetManager::GetDataFromFileAsync(uint64_t uniqueId, const std::string &filepath)
+    void AssetManager::GetDataFromFileAsync(AssetType type, const std::string &filepath)
     {
         AssetInfo info;
-        info.id = uniqueId;
+        info.type = type;
         info.name = filepath;
         info.data = File::ReadAllBytes(filepath);
         assetQueue.Enqueue(info);
@@ -64,7 +73,7 @@ namespace GravyEngine
             AssetInfo info;
             while(assetQueue.TryDequeue(info))
             {
-                GameBehaviourManager::OnAssetLoadedAsync(info.id, info.name, info.data);
+                GameBehaviourManager::OnAssetLoadedAsync(info);
             }
         }
     }

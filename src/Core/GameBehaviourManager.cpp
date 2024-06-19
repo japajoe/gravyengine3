@@ -1,7 +1,7 @@
 #include "GameBehaviourManager.hpp"
 #include "GameBehaviour.hpp"
 #include "GameObject.hpp"
-#include "../External/glfw/glfw3.h"
+#include "../External/GLFW/glfw3.h"
 
 namespace GravyEngine
 {
@@ -104,11 +104,11 @@ namespace GravyEngine
         GameObject::OnEndFrame();
     }
 
-    void GameBehaviourManager::OnAssetLoadedAsync(uint64_t id, const std::string &name, const std::vector<uint8_t> &data)
+    void GameBehaviourManager::OnAssetLoadedAsync(const AssetInfo &assetInfo)
     {
         for(size_t i = 0; i < behaviours.size(); i++)
         {
-            behaviours[i]->OnAssetLoadedAsync(id, name, data);
+            behaviours[i]->OnAssetLoadedAsync(assetInfo);
         }
     }
 };

@@ -3,7 +3,7 @@
 
 #include "AudioGenerator.hpp"
 #include "Oscillator.hpp"
-#include "../ConcurrentList.hpp"
+#include "../../System/ConcurrentList.hpp"
 #include <cstdint>
 
 namespace GravyEngine

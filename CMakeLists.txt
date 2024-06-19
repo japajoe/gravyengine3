@@ -1,16 +1,14 @@
 cmake_minimum_required(VERSION 3.12)
+#project(gravyengine3)
 project(app)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-add_subdirectory(libs/glad)
-add_subdirectory(libs/glm)
-add_subdirectory(libs/glfw)
-add_subdirectory(libs/imgui)
-add_subdirectory(libs/miniaudioex)
+#add_subdirectory(libs/glfw)
 
-file(GLOB_RECURSE SOURCES src/*.cpp game/src/*.cpp)
+file(GLOB_RECURSE SOURCES src/*.cpp src/*.c game/*.cpp)
+#file(GLOB_RECURSE SOURCES src/*.cpp)
 
 include_directories(
     "${PROJECT_SOURCE_DIR}/include/"
@@ -19,7 +17,7 @@ include_directories(
     "${PROJECT_SOURCE_DIR}/include/Core"
     "${PROJECT_SOURCE_DIR}/include/External"
     "${PROJECT_SOURCE_DIR}/include/External/glad"
-    "${PROJECT_SOURCE_DIR}/include/External/glfw"
+    "${PROJECT_SOURCE_DIR}/include/External/GLFW"
     "${PROJECT_SOURCE_DIR}/include/External/imgui"
     "${PROJECT_SOURCE_DIR}/include/External/miniaudioex"
     "${PROJECT_SOURCE_DIR}/include/Rendering"
@@ -41,6 +39,7 @@ else()
 endif()
 
 add_executable(${PROJECT_NAME} ${SOURCES})
+#add_library(${PROJECT_NAME} ${SOURCES})
 
 set_target_properties(${PROJECT_NAME} PROPERTIES
     BUILD_WITH_INSTALL_RPATH TRUE
@@ -48,11 +47,15 @@ set_target_properties(${PROJECT_NAME} PROPERTIES
 )
 
 if(BUILD_PLATFORM STREQUAL "windows")
-    target_link_libraries(${PROJECT_NAME} glad glm glfw imgui miniaudioex -lstdc++fs -static -static-libgcc -static-libstdc++)
-    target_link_libraries(${PROJECT_NAME} -Llibs/assimp/win_x86 -lassimp.dll)
+    target_link_libraries(${PROJECT_NAME} -lopengl32 -lgdi32 -lstdc++fs -static -static-libgcc -static-libstdc++)
+    target_compile_definitions(${PROJECT_NAME} PRIVATE _GLFW_WIN32)
 elseif(BUILD_PLATFORM STREQUAL "linux")
-    target_link_libraries(${PROJECT_NAME} glad glm glfw imgui miniaudioex -lstdc++fs)
-    target_link_libraries(${PROJECT_NAME} -Llibs/assimp/linux_x86 -lassimp)
+    target_link_libraries(${PROJECT_NAME} -pthread -ldl -lm -lstdc++fs)
+    target_compile_definitions(${PROJECT_NAME} PRIVATE _GLFW_X11)
 elseif(BUILD_PLATFORM STREQUAL "mac")
-    target_link_libraries(${PROJECT_NAME} glad glm glfw imgui miniaudioex -lstdc++fs -lopengl)
+    target_link_libraries(${PROJECT_NAME} -lstdc++fs -lopengl)
+    target_compile_definitions(${PROJECT_NAME} PRIVATE _GLFW_COCOA)
 endif()
+
+#install(TARGETS ${PROJECT_NAME} DESTINATION /usr/local/lib)
+#install(DIRECTORY ${CMAKE_SOURCE_DIR}/include/ DESTINATION /usr/local/include/GravyEngine3)

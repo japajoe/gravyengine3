@@ -8,9 +8,11 @@ class AudioPlayer : public GameBehaviour
 protected:
     void OnInitialize() override;
     void OnGUI() override;
+    void OnApplicationQuit() override;
 private:
     AudioSource *audioSource;
     int clipIndex;
+    Texture2D *textureKnobs;
     void OnAudioEnded(AudioSource *source);
     void PreviousTrack();
     void NextTrack();

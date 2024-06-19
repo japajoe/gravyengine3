@@ -40,6 +40,8 @@ void GameManager::OnUpdate()
     }
 }
 
+static float knobPercentage = 0.0f;
+
 void GameManager::OnGUI()
 {
     Vector2 screenSize = Screen::GetSize();
@@ -55,18 +57,20 @@ void GameManager::OnGUI()
     ImVec4 rect(x, y, width, height);
     ImGuiEx::BeginHideWindow("Logo", rect);
     ImGuiEx::Image(textureLogo->GetId(), ImVec2(width, height), ImVec2(0, 0), ImVec2(1, 1), color);
+    //ImGuiEx::Knob("Test", textureLogo->GetId(), ImVec2(width, height), &knobPercentage, 0.0f, 1.0f, 89, 9, 10);
     ImGuiEx::EndHideWindow();
 }
 
 void GameManager::FindTextures()
 {
     textureGround = Texture2D::Find("Textures/Terrain/forrest_ground_01_diff_1k.jpg");
-    textureLogo = Texture2D::Find("../res/textures/GravyLogoTransparent.png");
+    textureLogo = Texture2D::Find("Textures/Misc/GravyLogoTransparent.png");
 }
 
 void GameManager::SetupCamera()
 {
     Camera *camera = Camera::GetMain();
+    camera->GetTransform()->SetPosition(Vector3(0, 2, 20));
     camera->GetGameObject()->AddComponent<FirstPersonCamera>();
     camera->GetGameObject()->AddComponent<AudioListener>();
 }
@@ -126,8 +130,14 @@ void GameManager::SetupModels()
     material->SetDiffuseColor(Color(237, 160, 5, 255));
 
     particles = GameObject::CreatePrimitive(PrimitiveType::ParticleSystem);
+    particles->GetTransform()->SetPosition(Vector3(0, 1, 0));
     particleSystem = particles->GetComponent<ParticleSystem>();
-    particleSystem->SetParticleType(ParticleType::Sphere);
+    auto props = particleSystem->GetParticleProperties();
+    props.sizeBegin = 5.0f;
+    particleSystem->SetParticleProperties(props);
+    auto particleMaterial = particleSystem->GetMaterial();
+    auto particleTexture = Texture2D::Find("Textures/Particles/smoke_03.png");
+    particleMaterial->SetDiffuseTexture(particleTexture);
     
     skybox = GameObject::CreatePrimitive(PrimitiveType::Skybox);
 }

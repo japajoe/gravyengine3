@@ -2,7 +2,7 @@
 #define MINIAUDIOEX_AUDIOEFFECT_HPP
 
 #include <cstdint>
-#include "AudioBuffer.hpp"
+#include "../AudioBuffer.hpp"
 
 namespace GravyEngine
 {

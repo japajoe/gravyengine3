@@ -4,28 +4,51 @@
 
 std::vector<AudioClip> ResourceManager::audioClips;
 
+#define RESOURCE_COUNT 32
+
 void ResourceManager::OnInitialize()
 {
     resourceCount = 0;
 
     AssetManager::LoadResourcePack("assets", "../res/assets.dat", "assets.dat");
     
-    LoadAssetFromResourceAsync( 0, "assets", "Textures/Terrain/forrest_ground_01_diff_1k.jpg");
-    LoadAssetFromFileAsync(     1, "assets", "../res/textures/GravyLogoTransparent.png");
-    LoadAssetFromResourceAsync( 2, "assets", "Audio/Beats_by_Law_-_230422-02_160_Fm_Automatic.mp3");
-    LoadAssetFromResourceAsync( 3, "assets", "Audio/Beats_by_Law_-_240217-01_96_Gm_Tangeray.mp3");
-    LoadAssetFromResourceAsync( 4, "assets", "Audio/law_-_090023.mp3");
-    LoadAssetFromResourceAsync( 5, "assets", "Audio/law_-_220207-01.mp3");
-    LoadAssetFromResourceAsync( 6, "assets", "Audio/law_-_220806-01_120_Gm_Master_240209.mp3");
-    LoadAssetFromResourceAsync( 7, "assets", "Audio/law_-_230422-02_v1.01.mp3");
-    LoadAssetFromResourceAsync( 8, "assets", "Audio/law_-_230808-02_-_Bandmanrill_-_Copy_and_Paste.mp3");
-    LoadAssetFromResourceAsync( 9, "assets", "Audio/law_-_240131-01_124_Dm.mp3");
-    LoadAssetFromResourceAsync( 10, "assets", "Audio/law_-_240201-01_130_Ebm.mp3");
+    LoadAssetFromResourceAsync( AssetType::Texture, "assets", "Textures/Terrain/forrest_ground_01_diff_1k.jpg");
+    LoadAssetFromResourceAsync( AssetType::Texture, "assets", "Textures/Particles/smoke_03.png");
+    LoadAssetFromResourceAsync( AssetType::Texture, "assets", "Textures/Misc/GravyLogoTransparent.png");
+    LoadAssetFromResourceAsync( AssetType::Texture, "assets", "Textures/Misc/Knob70_89.png");
+    LoadAssetFromResourceAsync( AssetType::Texture, "assets", "Textures/Misc/Knob71_101.png");
+    LoadAssetFromResourceAsync( AssetType::Audio,   "assets", "Audio/law_-_240201-01_130_Ebm.mp3");
+    LoadAssetFromResourceAsync( AssetType::Audio,   "assets", "Audio/drumpoekel.mp3");
+    LoadAssetFromResourceAsync( AssetType::Audio,   "assets", "Audio/WB24082019.mp3");
+    LoadAssetFromResourceAsync( AssetType::Audio,   "assets", "Audio/WB25122020.mp3");
+    LoadAssetFromResourceAsync( AssetType::Audio,   "assets", "Audio/WB07042020.mp3");
+    LoadAssetFromResourceAsync( AssetType::Audio,   "assets", "Audio/WB21022020.mp3");
+    LoadAssetFromResourceAsync( AssetType::Audio,   "assets", "Audio/WB21042021.mp3");
+    LoadAssetFromResourceAsync( AssetType::Audio,   "assets", "Audio/WB17042021.mp3");
+    LoadAssetFromResourceAsync( AssetType::Audio,   "assets", "Audio/WB12092019.mp3");
+    LoadAssetFromResourceAsync( AssetType::Audio,   "assets", "Audio/WB03072020.mp3");
+    LoadAssetFromResourceAsync( AssetType::Audio,   "assets", "Audio/law_-_220806-01_120_Gm_Master_240209.mp3");
+    LoadAssetFromResourceAsync( AssetType::Audio,   "assets", "Audio/WB07102019.mp3");
+    LoadAssetFromResourceAsync( AssetType::Audio,   "assets", "Audio/WB16042021_vocals.mp3");
+    LoadAssetFromResourceAsync( AssetType::Audio,   "assets", "Audio/WB16042021.mp3");
+    LoadAssetFromResourceAsync( AssetType::Audio,   "assets", "Audio/law_-_230422-02_v1.01.mp3");
+    LoadAssetFromResourceAsync( AssetType::Audio,   "assets", "Audio/PropellerEngine.wav");
+    LoadAssetFromResourceAsync( AssetType::Audio,   "assets", "Audio/Beats_by_Law_-_240217-01_96_Gm_Tangeray.mp3");
+    LoadAssetFromResourceAsync( AssetType::Audio,   "assets", "Audio/Beats_by_Law_-_230422-02_160_Fm_Automatic.mp3");
+    LoadAssetFromResourceAsync( AssetType::Audio,   "assets", "Audio/WB30082017.mp3");
+    LoadAssetFromResourceAsync( AssetType::Audio,   "assets", "Audio/law_-_240131-01_124_Dm.mp3");
+    LoadAssetFromResourceAsync( AssetType::Audio,   "assets", "Audio/WB19042021.mp3");
+    LoadAssetFromResourceAsync( AssetType::Audio,   "assets", "Audio/law_-_230422-02_-_v1.01_-_Drake_-_Jimmy_Cooks.mp3");
+    LoadAssetFromResourceAsync( AssetType::Audio,   "assets", "Audio/WB23042020.mp3");
+    LoadAssetFromResourceAsync( AssetType::Audio,   "assets", "Audio/Kick.mp3");
+    LoadAssetFromResourceAsync( AssetType::Audio,   "assets", "Audio/law_-_230808-02_-_Bandmanrill_-_Copy_and_Paste.mp3");
+    LoadAssetFromResourceAsync( AssetType::Audio,   "assets", "Audio/WB30082019.mp3");
+    LoadAssetFromResourceAsync( AssetType::Audio,   "assets", "Audio/law_-_220207-01.mp3");
 }
 
 void ResourceManager::OnGUI()
 {
-    if(resourceCount == 11)
+    if(resourceCount == RESOURCE_COUNT)
         return;
 
     ImGui::Begin("Loading Screen");
@@ -36,34 +59,26 @@ void ResourceManager::OnGUI()
 void ResourceManager::OnApplicationQuit()
 {
     Texture2D::Remove("Textures/Terrain/forrest_ground_01_diff_1k.jpg");
-    Texture2D::Remove("../res/textures/GravyLogoTransparent.png");
+    Texture2D::Remove("Textures/Particles/smoke_03.png");
+    Texture2D::Remove("Textures/Misc/GravyLogoTransparent.png");
+    Texture2D::Remove("Textures/Misc/Knob70_89.png");
+    Texture2D::Remove("Textures/Misc/Knob71_101.png");
 }
 
-void ResourceManager::OnAssetLoadedAsync(uint64_t id, const std::string &name, const std::vector<uint8_t> &data)
+void ResourceManager::OnAssetLoadedAsync(const AssetInfo &assetInfo)
 {
-    if(data.size() == 0)
-        return;
+    if(assetInfo.type == AssetType::Texture)
+        LoadTexture2D(assetInfo.name, assetInfo.data);
+    else if(assetInfo.type == AssetType::Audio)
+        LoadAudioClip(assetInfo.name, assetInfo.data);
 
-    if(id == 0)
-    {
-        LoadTexture2D(name, data);
-    }
-    else if(id == 1)
-    {
-        LoadTexture2D(name, data);
-    }
-    else if(id >= 2)
-    {
-        LoadAudioClip(name, data);
-    }
+    resourceCount++;
 
-    if(id == 10)
+    if(resourceCount == RESOURCE_COUNT)
     {
         GetGameObject()->AddComponent<GameManager>();
         GetGameObject()->AddComponent<AudioPlayer>();
     }
-
-    resourceCount++;
 }
 
 std::vector<AudioClip> &ResourceManager::GetAudioClips()
@@ -73,6 +88,8 @@ std::vector<AudioClip> &ResourceManager::GetAudioClips()
 
 void ResourceManager::LoadTexture2D(const std::string &name, const std::vector<uint8_t> &data)
 {
+    if(data.size() == 0)
+        return;
     Image image(data.data(), data.size());
     if(image.IsLoaded())
     {
@@ -83,5 +100,7 @@ void ResourceManager::LoadTexture2D(const std::string &name, const std::vector<u
 
 void ResourceManager::LoadAudioClip(const std::string &name, const std::vector<uint8_t> &data)
 {
+    if(data.size() == 0)
+        return;
     audioClips.push_back(AudioClip(data));
 }

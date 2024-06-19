@@ -1,7 +1,7 @@
 #ifndef INPUT_HPP
 #define INPUT_HPP
 
-#include "../External/glfw/glfw3.h"
+#include "../External/GLFW/glfw3.h"
 #include "../System/Numerics/Vector2.hpp"
 #include <string>
 #include <vector>

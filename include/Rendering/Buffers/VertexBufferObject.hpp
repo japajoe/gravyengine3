@@ -1,7 +1,7 @@
 #ifndef GRAVYENGINE_VERTEXBUFFEROBJECT_HPP
 #define GRAVYENGINE_VERTEXBUFFEROBJECT_HPP
 
-#include "../Core/Object.hpp"
+#include "../../Core/Object.hpp"
 #include "../../External/glad/glad.h"
 
 namespace GravyEngine

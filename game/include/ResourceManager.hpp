@@ -14,7 +14,7 @@ protected:
     void OnInitialize() override;
     void OnGUI() override;
     void OnApplicationQuit() override;
-    void OnAssetLoadedAsync(uint64_t id, const std::string &name, const std::vector<uint8_t> &data) override;
+    void OnAssetLoadedAsync(const AssetInfo &assetInfo) override;
 private:
     int resourceCount;
     static std::vector<AudioClip> audioClips;

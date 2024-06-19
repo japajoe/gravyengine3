@@ -1,6 +1,7 @@
 #ifndef GAMEBEHAVIOURMANAGER_HPP
 #define GAMEBEHAVIOURMANAGER_HPP
 
+#include "AssetInfo.hpp"
 #include "../External/imgui/ImGuiManager.h"
 #include <vector>
 #include <memory>
@@ -29,7 +30,7 @@ namespace GravyEngine
         static void OnFixedUpdate();
         static void OnGUI();
         static void OnEndFrame();
-        static void OnAssetLoadedAsync(uint64_t id, const std::string &name, const std::vector<uint8_t> &data);
+        static void OnAssetLoadedAsync(const AssetInfo &assetInfo);
     };
 };
 #endif

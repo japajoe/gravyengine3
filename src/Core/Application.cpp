@@ -1,6 +1,6 @@
 #include "Application.hpp"
 #include "../External/glad/glad.h"
-#include "../External/glfw/glfw3.h"
+#include "../External/GLFW/glfw3.h"
 #include "../Audio/AudioContext.hpp"
 #include "../Rendering/Graphics.hpp"
 #include "AssetManager.hpp"
