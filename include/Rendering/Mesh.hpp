@@ -32,6 +32,7 @@ namespace GravyEngine
         void RecalculateNormals();
         static Mesh *Add(const std::string &name, const Mesh &mesh);
         static void Remove(const std::string &name);
+        static void RemoveAll();
         static Mesh *Find(const std::string &name);
     private:
         std::vector<Vertex> vertices;

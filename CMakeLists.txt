@@ -38,8 +38,10 @@ endif()
 
 add_library(${PROJECT_NAME} SHARED ${SOURCES})
 
-if(BUILD_PLATFORM STREQUAL "windows")
+if(BUILD_PLATFORM STREQUAL "windows_mingw")
     target_link_libraries(${PROJECT_NAME} -lopengl32 -lgdi32 -lstdc++fs -static -static-libgcc -static-libstdc++)
+    target_compile_definitions(${PROJECT_NAME} PRIVATE _GLFW_WIN32)
+elseif(BUILD_PLATFORM STREQUAL "windows_msvc")
     target_compile_definitions(${PROJECT_NAME} PRIVATE _GLFW_WIN32)
 elseif(BUILD_PLATFORM STREQUAL "linux")
     target_link_libraries(${PROJECT_NAME} -pthread -ldl -lm -lstdc++fs)

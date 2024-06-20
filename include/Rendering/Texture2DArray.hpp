@@ -18,6 +18,7 @@ namespace GravyEngine
         uint32_t GetDepth() const;
         static Texture2DArray *Add(const std::string &name, const Texture2DArray &texture);
         static void Remove(const std::string &name);
+        static void RemoveAll();
         static Texture2DArray *Find(const std::string &name);
     private:
         uint32_t depth;

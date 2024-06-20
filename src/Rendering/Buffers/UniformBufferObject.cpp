@@ -98,6 +98,17 @@ namespace GravyEngine
         }
     }
 
+    void UniformBufferObject::RemoveAll()
+    {
+        for(auto &item : buffers)
+        {
+            Debug::WriteLog("[UNIFORMBUFFER] %s deleted with ID: %llu", item.first.c_str(), item.second.GetId());
+            item.second.Delete();
+        }
+
+        buffers.clear();
+    }
+
     UniformBufferObject *UniformBufferObject::Find(const std::string &name)
     {
         if(buffers.count(name) == 0)

@@ -85,6 +85,17 @@ namespace GravyEngine
         }
     }
 
+    void Texture2DArray::RemoveAll()
+    {
+        for(auto &item : textures)
+        {
+            Debug::WriteLog("[TEXTURE] %s deleted with ID: %llu", item.first.c_str(), item.second.GetId());
+            item.second.Delete();
+        }
+
+        textures.clear();
+    }
+
     Texture2DArray *Texture2DArray::Find(const std::string &name)
     {
         if(textures.count(name) == 0)

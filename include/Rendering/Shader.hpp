@@ -28,6 +28,7 @@ namespace GravyEngine
         void Delete();
         static Shader *Add(const std::string &name, const Shader &shader);
         static void Remove(const std::string &name);
+        static void RemoveAll();
         static Shader *Find(const std::string &name);
         void SetMat2(const std::string &name, const float *value, bool transpose = false);
         void SetMat3(const std::string &name, const float *value, bool transpose = false);

@@ -247,37 +247,23 @@ namespace GravyEngine
 
     void Graphics::DestroyTextures()
     {
-        Texture2D::Remove("Default");
-        Texture2DArray::Remove("DepthMap");
+        Texture2D::RemoveAll();
+        Texture2DArray::RemoveAll();
     }
 
     void Graphics::DestroyShaders()
     {
-        DiffuseShader::Destroy();
-        ProceduralSkyboxShader::Destroy();
-        DepthShader::Destroy();
-        LineShader::Destroy();
-        ParticleShader::Destroy();
-        TerrainShader::Destroy();
+        Shader::RemoveAll();
     }
 
     void Graphics::DestroyMeshes()
     {
-        Mesh::Remove("Capsule");
-        Mesh::Remove("Cube");
-        Mesh::Remove("Plane");
-        Mesh::Remove("Skybox");
-        Mesh::Remove("Quad");
-        Mesh::Remove("Sphere");
-        Mesh::Remove("Hemisphere");
+        Mesh::RemoveAll();
     }
 
     void Graphics::DestroyUniformBuffers()
     {
-        UniformBufferObject::Remove("Camera");
-        UniformBufferObject::Remove("Lights");
-        UniformBufferObject::Remove("Shadow");
-        UniformBufferObject::Remove("World");
+        UniformBufferObject::RemoveAll();
     }
 
     void Graphics::DestroyShadowMap()

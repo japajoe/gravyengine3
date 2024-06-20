@@ -198,6 +198,17 @@ namespace GravyEngine
         }
     }
 
+    void Mesh::RemoveAll()
+    {
+        for(auto &item : meshes)
+        {
+            Debug::WriteLog("[MESH] %s deleted with ID: %llu", item.first.c_str(), item.second.GetInstanceId());
+            item.second.Delete();
+        }
+
+        meshes.clear();
+    }
+
     Mesh *Mesh::Find(const std::string &name)
     {
         if(meshes.count(name) == 0)

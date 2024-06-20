@@ -26,6 +26,7 @@ namespace GravyEngine
         GLuint GetId() const;
         static UniformBufferObject *Add(const std::string &name, const UniformBufferObject &buffer);
         static void Remove(const std::string &name);
+        static void RemoveAll();
         static UniformBufferObject *Find(const std::string &name);
     private:
         GLuint id;

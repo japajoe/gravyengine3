@@ -179,6 +179,17 @@ namespace GravyEngine
         }
     }
 
+    void Shader::RemoveAll()
+    {
+        for(auto &item : shaders)
+        {
+            Debug::WriteLog("[SHADER] %s deleted with ID: %llu", item.first.c_str(), item.second.GetId());
+            item.second.Delete();
+        }
+
+        shaders.clear();
+    }
+
     Shader *Shader::Find(const std::string &name)
     {
         if(shaders.count(name) == 0)

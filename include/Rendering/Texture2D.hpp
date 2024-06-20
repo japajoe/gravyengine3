@@ -21,6 +21,7 @@ namespace GravyEngine
         void Delete() override;
         static Texture2D *Add(const std::string &name, const Texture2D &texture);
         static void Remove(const std::string &name);
+        static void RemoveAll();
         static Texture2D *Find(const std::string &name);
     private:
         static std::unordered_map<std::string,Texture2D> textures;
