@@ -24,14 +24,12 @@ namespace GravyEngine
 
             previousPosition = Vector3(0, 0, 0);
             
-            ma_ex_audio_source_callbacks callbacks = 
-            {
-                .pUserData = this,
-                .endCallback = OnAudioEnded,
-                .loadCallback = OnAudioLoaded,
-                .processCallback = OnAudioProcess,
-                .waveformCallback = OnAudioRead
-            };
+            ma_ex_audio_source_callbacks callbacks;
+            callbacks.pUserData = this;
+            callbacks.endCallback = OnAudioEnded;
+            callbacks.loadCallback = OnAudioLoaded;
+            callbacks.processCallback = OnAudioProcess;
+            callbacks.waveformCallback = OnAudioRead;
 
             ma_ex_audio_source_set_callbacks(handle, callbacks);
 

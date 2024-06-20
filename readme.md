@@ -26,19 +26,19 @@ To compile the library you need CMake. All required libraries (GLFW/imgui/miniau
 
 This command works for building on Linux with gcc/g++.
 ```bash
-cmake -DBUILD_PLATFORM=linux
+cmake -DBUILD_PLATFORM=linux ..
 cmake --build .
 ```
 
 For cross compiling (on Linux) you might have to coerce CMake a little so it uses the right compiler.
 ```bash
-cmake -DBUILD_PLATFORM=windows -DCMAKE_C_COMPILER=x86_64-w64-mingw32-gcc-posix -DCMAKE_CXX_COMPILER=x86_64-w64-mingw32-g++-posix
+cmake -DBUILD_PLATFORM=windows_mingw -DCMAKE_C_COMPILER=x86_64-w64-mingw32-gcc-posix ..-DCMAKE_CXX_COMPILER=x86_64-w64-mingw32-g++-posix
 cmake --build .
 ```
 
 If you are on Windows and use MSVC then this command should work.
 ```bash
-cmake -DBUILD_PLATFORM=windows
+cmake -DBUILD_PLATFORM=windows_msvc ..
 cmake --build .
 ```
 

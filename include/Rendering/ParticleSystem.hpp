@@ -101,7 +101,7 @@ namespace GravyEngine
         ParticleProperties properties;
         size_t numParticles;
         size_t activeParticles;
-        ssize_t poolIndex;
+        int32_t poolIndex;
         bool simulate;
         int32_t emitAmount;
         std::vector<Mesh*> meshes;

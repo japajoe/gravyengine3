@@ -19,42 +19,42 @@ namespace GravyEngine
 
     int DateTime::Day()
     {
-        time_t tt = std::chrono::_V2::system_clock::to_time_t(timestamp);
+        time_t tt = std::chrono::system_clock::to_time_t(timestamp);
         tm local_tm = *localtime(&tt);
         return local_tm.tm_mday;
     }
 
     int DateTime::DayOfWeek()
     {
-        time_t tt = std::chrono::_V2::system_clock::to_time_t(timestamp);
+        time_t tt = std::chrono::system_clock::to_time_t(timestamp);
         tm local_tm = *localtime(&tt);
         return local_tm.tm_wday;
     }
 
     int DateTime::DayOfYear()
     {
-        time_t tt = std::chrono::_V2::system_clock::to_time_t(timestamp);
+        time_t tt = std::chrono::system_clock::to_time_t(timestamp);
         tm local_tm = *localtime(&tt);
         return local_tm.tm_yday;
     }
 
     int DateTime::Hour()
     {
-        time_t tt = std::chrono::_V2::system_clock::to_time_t(timestamp);
+        time_t tt = std::chrono::system_clock::to_time_t(timestamp);
         tm local_tm = *localtime(&tt);
         return local_tm.tm_hour;
     }
 
     int DateTime::Minute()
     {
-        time_t tt = std::chrono::_V2::system_clock::to_time_t(timestamp);
+        time_t tt = std::chrono::system_clock::to_time_t(timestamp);
         tm local_tm = *localtime(&tt);
         return local_tm.tm_min;
     }
 
     int DateTime::Month()
     {
-        time_t tt = std::chrono::_V2::system_clock::to_time_t(timestamp);
+        time_t tt = std::chrono::system_clock::to_time_t(timestamp);
         tm local_tm = *localtime(&tt);
         return local_tm.tm_mon;
     }
@@ -96,14 +96,14 @@ namespace GravyEngine
 
     int DateTime::Second()
     {
-        time_t tt = std::chrono::_V2::system_clock::to_time_t(timestamp);
+        time_t tt = std::chrono::system_clock::to_time_t(timestamp);
         tm local_tm = *localtime(&tt);
         return local_tm.tm_sec;
     }
 
     int DateTime::Year()
     {
-        time_t tt = std::chrono::_V2::system_clock::to_time_t(timestamp);
+        time_t tt = std::chrono::system_clock::to_time_t(timestamp);
         tm local_tm = *localtime(&tt);
         return local_tm.tm_year;
     }
