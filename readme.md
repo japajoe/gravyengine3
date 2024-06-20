@@ -24,13 +24,13 @@ The idea is to have a game engine that is easy to use if you are familiar with U
 # Building
 To compile the library you need CMake. All required libraries (GLFW/imgui/miniaudioex/glm/glad) are already included. The engine is developed on Linux and can also be cross compiled for windows with mingw32-64. I've also tested to compile with MSVC in a Windows 10 virtual machine and it worked without problems. If you are on MacOS then I can unfortunately not help you, thank Apple for being hostile towards developers.
 
-This commands works for building on Linux with gcc/g++.
+This command works for building on Linux with gcc/g++.
 ```bash
 cmake -DBUILD_PLATFORM=linux
 cmake --build .
 ```
 
-For cross compiling you might have to coerce CMake a little so it uses the right compiler.
+For cross compiling (on Linux) you might have to coerce CMake a little so it uses the right compiler.
 ```bash
 cmake -DBUILD_PLATFORM=windows -DCMAKE_C_COMPILER=x86_64-w64-mingw32-gcc-posix -DCMAKE_CXX_COMPILER=x86_64-w64-mingw32-g++-posix
 cmake --build .
@@ -40,4 +40,55 @@ If you are on Windows and use MSVC then this command should work.
 ```bash
 cmake -DBUILD_PLATFORM=windows
 cmake --build .
+```
+
+# Demo application
+```cpp
+#include <GravyEngine3/GravyEngine.hpp>
+
+static void OnApplicationLoaded();
+
+int main()
+{
+    Application application("Gravy Engine Demo", 512, 512);
+    application.loaded = OnApplicationLoaded;
+    application.Run();    
+    return 0;
+}
+
+class Demo : public GameBehaviour
+{
+protected:
+    void OnInitialize() override
+    {
+        auto camera = Camera::GetMain();
+        camera->AddComponent<FirstPersonCamera>();
+
+        cube = GameObject::CreatePrimitive(PrimitiveType::Cube);
+        skybox = GameObject::CreatePrimitive(PrimitiveType::Skybox);
+    }
+
+    void OnUpdate() override
+    {
+        float x = Mathf::Cos(Time::GetTime() * 1.0f) * 50;
+        float z = Mathf::Sin(Time::GetTime() * 1.0f) * 50;
+        cube->GetTransform()->SetPosition(Vector3(x, 0, z));
+    }
+
+    void OnGUI() override
+    {
+        ImGui::Begin("Demo");
+        ImGui::Text("Hello world");
+        ImGui::End();
+    }
+private:
+    GameObject *cube;
+    GameObject *skybox;
+};
+
+void OnApplicationLoaded()
+{    
+    auto gameObject = GameObject::Create();
+    gameObject->AddComponent<Demo>();
+}
 ```
