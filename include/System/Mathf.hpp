@@ -41,6 +41,7 @@ namespace GravyEngine
         static float RadiansToDegrees(float radians);
         static float ClampPeriodicRange(float a, float min, float max);
         static bool IsNan(float value);
+        static float PerlinNoise(float x, float y);
     };
 };
 

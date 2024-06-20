@@ -1,4 +1,5 @@
 #include "Mathf.hpp"
+#include "Numerics/Noise.hpp"
 #include <algorithm>
 #include <cmath>
 
@@ -127,5 +128,10 @@ namespace GravyEngine
     bool Mathf::IsNan(float value)
     {
         return std::isnan(value);
+    }
+
+    float Mathf::PerlinNoise(float x, float y)
+    {
+        return Noise::GetSample(x, y);
     }
 }

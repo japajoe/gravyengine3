@@ -9,6 +9,7 @@
 #include "System/Numerics/Vector2.hpp"
 #include "System/Numerics/Quaternion.hpp"
 #include "System/Numerics/Vector3.hpp"
+#include "System/Numerics/Noise.hpp"
 #include "System/String.hpp"
 #include "System/Mathf.hpp"
 #include "System/DateTime.hpp"
