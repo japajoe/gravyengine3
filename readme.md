@@ -1,5 +1,5 @@
 # GravyEngine
-A general purpose component based game engine. The idea is to have a game engine that is easy to use if you are familiar with Unity. The basic workflow is to create a game object and attach components to it which implement some type of behaviour. For example Unity has `MonoBehaviour` as a base class for scripts, while GravyEngine uses `GameBehaviour`. Game objects are created with the `GameObject::Create` method and components are added with the `AddComponent<T>` method. To retrieve a component from a GameObject you use the `GetComponent<T>`method. Keep in mind that the minimum required OpenGL version is 4.5.
+A general purpose component based game engine.
 
 # Features
 - UI rendering.
@@ -11,6 +11,15 @@ A general purpose component based game engine. The idea is to have a game engine
 - Cascaded shadow mapping.
 - Advanced audio engine with 3D spatialization.
 - Resource (asset) packing and loading.
+
+# About
+The idea is to have a game engine that is easy to use if you are familiar with Unity. The basic workflow is to create a game object and attach components to it which implement some type of behaviour. For example Unity has `MonoBehaviour` as a base class for scripts, while GravyEngine uses `GameBehaviour`. Game objects are created with the `GameObject::Create` method and components are added with the `AddComponent<T>` method. To retrieve a component from a GameObject you use the `GetComponent<T>`method. Keep in mind that the minimum required OpenGL version is 4.5.
+
+# Important notes
+- Only use the `GameObject::Create` method to create game objects. This is necessary so the object is properly registered by the engine.
+- Likewise, only use `AddComponent` to add components to a game object.
+- To destroy a game object, use `GameObject::Destroy`.
+- Don't call `GetTransform` or `GetGameObject` in a constructor of a `Component` because it will return NULL. Any initialization that needs to use the transform or game object pointer needs to do this in the `OnInitialize` method.
 
 # Building
 To compile the library you need CMake. All required libraries (GLFW/imgui/miniaudioex/glm/glad) are already included. The engine is developed on Linux and can also be cross compiled for windows with mingw32-64. I've also tested to compile with MSVC in a Windows 10 virtual machine and it worked without problems. If you are on MacOS then I can unfortunately not help you, thank Apple for being hostile towards developers.
