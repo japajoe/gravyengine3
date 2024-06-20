@@ -25,7 +25,7 @@ cmake -DBUILD_PLATFORM=windows -DCMAKE_C_COMPILER=x86_64-w64-mingw32-gcc-posix -
 cmake --build .
 ```
 
-If you are on Windows and use MSVC= then this command should work.
+If you are on Windows and use MSVC then this command should work.
 ```bash
 cmake -DBUILD_PLATFORM=windows
 cmake --build .
