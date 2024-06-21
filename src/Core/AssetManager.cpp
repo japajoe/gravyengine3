@@ -31,6 +31,30 @@ namespace GravyEngine
         return status;
     }
 
+    void AssetManager::LoadFilesAsyncThread(const std::vector<AssetLoadInfo> &assets)
+    {
+        for(auto &asset : assets)
+        {
+            if(resourcePacks.count(asset.resourcePackName) > 0)
+            {
+                auto pack = resourcePacks[asset.resourcePackName].get();
+                AssetInfo info;
+                info.type = asset.type;
+                info.name = asset.filePath;
+                info.data = pack->GetFileData(asset.filePath);
+                assetQueue.Enqueue(info);
+            }
+        }
+    }
+
+    void AssetManager::LoadFilesAsync(const std::vector<AssetLoadInfo> &assets)
+    {
+        std::thread workerThread(LoadFilesAsyncThread, assets);
+
+        // Optionally, detach the thread if you don't need to join it later
+        workerThread.detach();
+    }
+
     void AssetManager::LoadFileAsync(AssetType type, const std::string &resourcePackName, const std::string &filepath)
     {
         if(resourcePacks.count(resourcePackName) == 0)
@@ -71,7 +95,8 @@ namespace GravyEngine
         if(assetQueue.GetCount() > 0)
         {
             AssetInfo info;
-            while(assetQueue.TryDequeue(info))
+            //Do only 1 asset per frame or this might block the main thread for a while
+            if(assetQueue.TryDequeue(info))
             {
                 GameBehaviourManager::OnAssetLoadedAsync(info);
             }

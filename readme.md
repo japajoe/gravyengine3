@@ -10,7 +10,8 @@ A general purpose component based game engine.
 - Directional and point lighting.
 - Cascaded shadow mapping.
 - Advanced audio engine with 3D spatialization.
-- Resource (asset) packing and loading.
+- Asset packing.
+- Asynchronous asset loading.
 
 # About
 The idea is to have a game engine that is easy to use if you are familiar with Unity. The basic workflow is to create a game object and attach components to it which implement some type of behaviour. For example Unity has `MonoBehaviour` as a base class for scripts, while GravyEngine uses `GameBehaviour`. Game objects are created with the `GameObject::Create` method and components are added with the `AddComponent<T>` method. To retrieve a component from a GameObject you use the `GetComponent<T>`method. Keep in mind that the minimum required OpenGL version is 4.5.

@@ -133,7 +133,8 @@ namespace ImGuiEx
         float lineHeight = ImGui::GetTextLineHeight();
 
         auto &style = ImGui::GetStyle();
-        ImGui::InvisibleButton(label, ImVec2(size.x, size.y + lineHeight + style.ItemInnerSpacing.y));
+        //ImGui::InvisibleButton(label, ImVec2(size.x, size.y + lineHeight + style.ItemInnerSpacing.y));
+        ImGui::InvisibleButton(label, ImVec2(size.x, size.y));
         bool valueChanged = false;
         bool isActive = ImGui::IsItemActive();
         bool isHovered = ImGui::IsItemHovered();
@@ -157,6 +158,9 @@ namespace ImGuiEx
 
             if(snapSteps > 0)
             {
+                if(snapSteps > knobInfo.numberOfSprites)
+                    snapSteps = knobInfo.numberOfSprites;
+
                 float stepSize = (max - min) / snapSteps;
                 float snappedValue = min + round(val * snapSteps) * stepSize;
                 *value = (float)clamp(snappedValue, min, max);

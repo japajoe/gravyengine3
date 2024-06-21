@@ -21,6 +21,19 @@ namespace GravyEngine
         std::string name;
         std::vector<uint8_t> data;
     };
+
+    struct AssetLoadInfo
+    {
+        AssetType type;
+        std::string resourcePackName;
+        std::string filePath;
+        AssetLoadInfo(AssetType type, const std::string &resourcePackName, const std::string &filePath)
+        {
+            this->type = type;
+            this->resourcePackName = resourcePackName;
+            this->filePath = filePath;
+        }
+    };
 };
 
 #endif

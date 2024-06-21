@@ -17,6 +17,7 @@ namespace GravyEngine
     friend class Application;
     public:
         static bool LoadResourcePack(const std::string &name, const std::string &filepath, const std::string &key);
+        static void LoadFilesAsync(const std::vector<AssetLoadInfo> &assets);
         static void LoadFileAsync(AssetType type, const std::string &resourcePackName, const std::string &filepath);
         static void LoadFileAsync(AssetType type, const std::string &filepath);
     private:
@@ -25,6 +26,7 @@ namespace GravyEngine
         static void GetDataFromPackAsync(AssetType type, const std::string resourcePackName, const std::string &filepath);
         static void GetDataFromFileAsync(AssetType type, const std::string &filepath);
         static void OnEndFrame();
+        static void LoadFilesAsyncThread(const std::vector<AssetLoadInfo> &assets);
     };
 };
 
