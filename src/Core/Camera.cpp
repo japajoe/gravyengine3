@@ -34,6 +34,14 @@ namespace GravyEngine
         Initialize();
     }
 
+    void Camera::OnDestroy()
+    {
+        if(pMainCamera == this)
+        {
+            pMainCamera = nullptr;
+        }
+    }
+
     void Camera::Initialize()
     {
         auto screenSize = Screen::GetSize();

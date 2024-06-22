@@ -23,6 +23,7 @@ namespace GravyEngine
         virtual void OnGUI();
         virtual void OnAssetLoadedAsync(const AssetInfo &assetInfo);
         void LoadAssetsFromResourceAsync(const std::vector<AssetLoadInfo> &assets);
+        void LoadAssetsFromFileAsync(const std::vector<AssetLoadInfo> &assets);
         void LoadAssetFromResourceAsync(AssetType type, const std::string &resourcePackName, const std::string &filepath);
         void LoadAssetFromFileAsync(AssetType type, const std::string &resourcePackName, const std::string &filepath);
     };

@@ -13,9 +13,8 @@ namespace GravyEngine
 {
     class Resources
     {
+    friend class Graphics;
     public:
-        static void Initialize();
-        static void Deinitialize();
         static Texture2D *AddTexture2D(const std::string &name, const Texture2D &texture);
         static Texture2DArray *AddTexture2DArray(const std::string &name, const Texture2DArray &texture);
         static Shader *AddShader(const std::string &name, const Shader &shader);
@@ -37,6 +36,8 @@ namespace GravyEngine
         static std::unordered_map<std::string,Shader> shaders;
         static std::unordered_map<std::string,UniformBufferObject> ubos;
         static std::unordered_map<std::string,Mesh> meshes;
+        static void Initialize();
+        static void Deinitialize();
         static void CreateTextures();
         static void CreateShaders();
         static void CreateMeshes();

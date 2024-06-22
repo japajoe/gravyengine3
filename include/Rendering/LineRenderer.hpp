@@ -8,7 +8,6 @@
 
 namespace GravyEngine
 {
-    class Camera;
     class Shader;
 
     struct LineVertex
@@ -40,7 +39,6 @@ namespace GravyEngine
         static GLuint VAO;
         static GLuint VBO;
         static Shader *shader;
-        static Camera *camera;
         static float lineWidth;
         static void AddToDrawList(const Vector3 &p1, const Vector3 &p2, const Color &color);
         static void Clear();

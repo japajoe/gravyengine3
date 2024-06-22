@@ -55,6 +55,10 @@ namespace GravyEngine
     void Light::OnDestroy()
     {
         Remove(this);
+        if(pMainLight == this)
+        {
+            pMainLight = nullptr;
+        }
     }
 
     void Light::SetDirty(bool isDirty)

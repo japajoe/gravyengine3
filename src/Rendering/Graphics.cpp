@@ -3,13 +3,14 @@
 #include "CascadedShadowMap.hpp"
 #include "Renderer.hpp"
 #include "Materials/DepthMaterial.hpp"
-#include "../System/Mathf.hpp"
+#include "../Audio/AudioListener.hpp"
 #include "../Core/Resources.hpp"
 #include "../Core/Camera.hpp"
 #include "../Core/Light.hpp"
 #include "../Core/GameObject.hpp"
 #include "../Core/Debug.hpp"
 #include "../Core/WorldSettings.hpp"
+#include "../System/Mathf.hpp"
 #include "../External/glad/glad.h"
 #include <iostream>
 #include <memory>
@@ -34,6 +35,7 @@ namespace GravyEngine
     {
         mainCamera = std::make_unique<GameObject>();
         mainCamera->AddComponent<Camera>();
+        mainCamera->AddComponent<AudioListener>();
 
         mainLight = std::make_unique<GameObject>();
         auto light = mainLight->AddComponent<Light>();
@@ -74,7 +76,7 @@ namespace GravyEngine
     {
         Camera *camera = Camera::GetMain();
 
-        if(renderQueue.size() > 0)
+        if(renderQueue.size() > 0 && camera)
         {
             DepthMaterial *material = depthMaterial.get();
 
@@ -96,11 +98,20 @@ namespace GravyEngine
     void Graphics::RenderScene()
     {
         Camera *camera = Camera::GetMain();
-        auto color = camera->GetClearColor();
-        glClearColor(color.r, color.g, color.b, color.a);
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        if(renderQueue.size() > 0)
+        if(camera)
+        {
+            auto color = camera->GetClearColor();
+            glClearColor(color.r, color.g, color.b, color.a);
+            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        }
+        else
+        {
+            glClearColor(1, 1, 1, 1);
+            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        }
+
+        if(renderQueue.size() > 0 && camera)
         {
             std::priority_queue<Renderer*, std::vector<Renderer*>, CompareRendererOrder> queue = renderQueue;
 

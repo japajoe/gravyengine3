@@ -46,16 +46,21 @@ namespace GravyEngine
 
     void GameBehaviour::LoadAssetsFromResourceAsync(const std::vector<AssetLoadInfo> &assets)
     {
-        AssetManager::LoadFilesAsync(assets);
+        AssetManager::LoadFromPackAsync(assets);
+    }
+
+    void GameBehaviour::LoadAssetsFromFileAsync(const std::vector<AssetLoadInfo> &assets)
+    {
+        AssetManager::LoadFromFileAsync(assets);
     }
 
     void GameBehaviour::LoadAssetFromResourceAsync(AssetType type, const std::string &resourcePackName, const std::string &filepath)
     {
-        AssetManager::LoadFileAsync(type, resourcePackName, filepath);
+        AssetManager::LoadFromPackAsync(type, resourcePackName, filepath);
     }
 
     void GameBehaviour::LoadAssetFromFileAsync(AssetType type, const std::string &resourcePackName, const std::string &filepath)
     {
-        AssetManager::LoadFileAsync(type, filepath);
+        AssetManager::LoadFromFileAsync(type, filepath);
     }
 };

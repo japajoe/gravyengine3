@@ -37,13 +37,13 @@ namespace GravyEngine
     {
         if(pWindow)
         {
-            std::cerr << "Window is already created" << std::endl;
+            std::cerr << "Window is already created\n";
             return;
         }
 
         if (!glfwInit())
         {
-            std::cerr << "Failed to initialize GLFW" << std::endl;
+            std::cerr << "Failed to initialize GLFW\n";
             return;
         }
 
@@ -68,7 +68,7 @@ namespace GravyEngine
         
         if (!pWindow)
         {
-            std::cerr << "Failed to create GLFW window" << std::endl;
+            std::cerr << "Failed to create GLFW window" <<  '\n';
             Dispose();
             return;
         }
@@ -87,14 +87,15 @@ namespace GravyEngine
 
         if(!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
         {
-            std::cerr << "Failed to initialize OpenGL" << std::endl;
+            std::cerr << "Failed to initialize OpenGL\n";
             Dispose();
             return;
         }
 
         const GLubyte* version = glGetString(GL_VERSION);
+
         if (version != nullptr) 
-            std::cout << "OpenGL Version: " << version << std::endl;
+            std::cout << "OpenGL Version: " << version << '\n';
 
         if(config.inconData.size() > 0)
         {
@@ -112,10 +113,8 @@ namespace GravyEngine
         else
         {
             EmbeddedLogo logo;
-            
-            uint8_t *imageData = const_cast<uint8_t*>(logo.GetData());
 
-            Image image(imageData, logo.GetSize());
+            Image image(logo.GetData(), logo.GetSize());
 
             if(image.IsLoaded())
             {
@@ -178,18 +177,18 @@ namespace GravyEngine
 
     void Application::OnInitialize()
     {
+        AudioContext::Initialize(48000, 2);
         Screen::SetSize(config.width, config.height);
         Graphics::Initialize();
         Input::Initialize(pWindow);
-        AudioContext::Initialize(48000, 2);
         GameBehaviourManager::Initialize(pWindow);
     }
 
     void Application::OnDeinitialize()
     {
+        AudioContext::Deinitialize();
         GameBehaviourManager::OnApplicationQuit();
         GameBehaviourManager::Deinitialize();
-        AudioContext::Deinitialize();
         Graphics::Deinitialize();
     }
 
@@ -229,7 +228,7 @@ namespace GravyEngine
 
     void Application::OnError(int32_t error_code, const char *description)
     {
-        fprintf(stderr, "GLFW error code %d: %s", error_code, description);
+        std::cerr << "GLFW error code " << error_code << ":" << description << '\n';
     }
 
     void Application::OnWindowClose(GLFWwindow *window)

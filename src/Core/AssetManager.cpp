@@ -31,7 +31,7 @@ namespace GravyEngine
         return status;
     }
 
-    void AssetManager::LoadFilesAsyncThread(const std::vector<AssetLoadInfo> &assets)
+    void AssetManager::LoadFromPackAsyncThread(const std::vector<AssetLoadInfo> &assets)
     {
         for(auto &asset : assets)
         {
@@ -47,15 +47,32 @@ namespace GravyEngine
         }
     }
 
-    void AssetManager::LoadFilesAsync(const std::vector<AssetLoadInfo> &assets)
+    void AssetManager::LoadFromFileAsyncThread(const std::vector<AssetLoadInfo> &assets)
     {
-        std::thread workerThread(LoadFilesAsyncThread, assets);
+        for(auto &asset : assets)
+        {
+            AssetInfo info;
+            info.type = asset.type;
+            info.name = asset.filePath;
+            if(File::Exists(asset.filePath))
+                info.data = File::ReadAllBytes(asset.filePath);
+            assetQueue.Enqueue(info);
+        }
+    }
 
-        // Optionally, detach the thread if you don't need to join it later
+    void AssetManager::LoadFromPackAsync(const std::vector<AssetLoadInfo> &assets)
+    {
+        std::thread workerThread(LoadFromPackAsyncThread, assets);
         workerThread.detach();
     }
 
-    void AssetManager::LoadFileAsync(AssetType type, const std::string &resourcePackName, const std::string &filepath)
+    void AssetManager::LoadFromFileAsync(const std::vector<AssetLoadInfo> &assets)
+    {
+        std::thread workerThread(LoadFromFileAsyncThread, assets);
+        workerThread.detach();
+    }
+
+    void AssetManager::LoadFromPackAsync(AssetType type, const std::string &resourcePackName, const std::string &filepath)
     {
         if(resourcePacks.count(resourcePackName) == 0)
             return;
@@ -63,7 +80,7 @@ namespace GravyEngine
         auto result = std::async(std::launch::async, &AssetManager::GetDataFromPackAsync, type, resourcePackName, filepath);
     }
 
-    void AssetManager::LoadFileAsync(AssetType type, const std::string &filepath)
+    void AssetManager::LoadFromFileAsync(AssetType type, const std::string &filepath)
     {
         if(!File::Exists(filepath))
             return;

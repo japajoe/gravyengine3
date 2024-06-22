@@ -47,6 +47,7 @@ namespace GravyEngine
         static void UpdateUniformBuffer();
     protected:
         void OnInitialize() override;
+        void OnDestroy() override;
     private:
         static Camera *pMainCamera;
         ProjectionMode mode;

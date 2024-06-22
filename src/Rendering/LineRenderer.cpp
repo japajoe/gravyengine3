@@ -27,13 +27,11 @@ namespace GravyEngine
     GLuint LineRenderer::VAO = 0;
     GLuint LineRenderer::VBO = 0;
     Shader *LineRenderer::shader = nullptr;
-    Camera *LineRenderer::camera = nullptr;
     float LineRenderer::lineWidth = 1.0f;
 
     void LineRenderer::Initialize()
     {
         shader = Resources::FindShader("Line");
-        camera = Camera::GetMain();
 
         size_t maxVertices = maxLines * 2;
 
@@ -224,6 +222,11 @@ namespace GravyEngine
     void LineRenderer::OnRender()
     {
         if(numLines == 0)
+            return;
+
+        auto camera = Camera::GetMain();
+
+        if(!camera)
             return;
 
         GLsizei numVertices = numLines * 2;
