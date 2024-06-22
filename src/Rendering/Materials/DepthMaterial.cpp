@@ -1,4 +1,5 @@
 #include "DepthMaterial.hpp"
+#include "../../Core/Resources.hpp"
 #include "../../System/Numerics/Matrix4.hpp"
 #include "../../External/glad/glad.h"
 
@@ -6,7 +7,7 @@ namespace GravyEngine
 {
     DepthMaterial::DepthMaterial() : Material()
     {
-        pShader = Shader::Find("Depth");
+        pShader = Resources::FindShader("Depth");
 
         if(pShader)
         {

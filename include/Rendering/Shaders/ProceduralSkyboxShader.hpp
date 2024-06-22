@@ -9,8 +9,7 @@ namespace GravyEngine
     class ProceduralSkyboxShader
     {
     public:
-        static Shader *Create();
-        static void Destroy();
+        static Shader Create();
     };
 }
 

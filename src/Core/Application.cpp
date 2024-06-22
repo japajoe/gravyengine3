@@ -3,6 +3,8 @@
 #include "../External/GLFW/glfw3.h"
 #include "../Audio/AudioContext.hpp"
 #include "../Rendering/Graphics.hpp"
+#include "../Embedded/EmbeddedLogo.hpp"
+#include "../System/Drawing/Image.hpp"
 #include "AssetManager.hpp"
 #include "GameBehaviourManager.hpp"
 #include "Input.hpp"
@@ -76,6 +78,20 @@ namespace GravyEngine
         const GLubyte* version = glGetString(GL_VERSION);
         if (version != nullptr) 
             std::cout << "OpenGL Version: " << version << std::endl;
+
+        {
+            EmbeddedLogo logo;
+            
+            uint8_t *imageData = const_cast<uint8_t*>(logo.GetData());
+
+            Image image(imageData, logo.GetSize());
+            GLFWimage windowIcon;
+            windowIcon.width = image.GetWidth();
+            windowIcon.height = image.GetHeight();
+            windowIcon.pixels = image.GetData();
+
+            glfwSetWindowIcon(pWindow, 1, &windowIcon);
+        }
 
         glfwSwapInterval(vsync ? 1 : 0);
 

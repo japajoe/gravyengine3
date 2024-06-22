@@ -1,5 +1,6 @@
 #include "TerrainMaterial.hpp"
 #include "../Shader.hpp"
+#include "../../Core/Resources.hpp"
 #include "../../Core/GameObject.hpp"
 #include "../../Core/Camera.hpp"
 #include "../../Core/Light.hpp"
@@ -27,7 +28,7 @@ namespace GravyEngine
         pTexture4 = nullptr;
         pDepthMap = nullptr;
 
-        pShader = Shader::Find("Terrain");
+        pShader = Resources::FindShader("Terrain");
 
         if(pShader)
         {
@@ -106,7 +107,7 @@ namespace GravyEngine
 
         if(pDepthMap == nullptr)
         {
-            pDepthMap = Texture2DArray::Find("DepthMap");
+            pDepthMap = Resources::FindTexture2DArray("DepthMap");
         }
 
         if(pDepthMap != nullptr)

@@ -37,15 +37,7 @@ namespace GravyEngine
         static void OnRender();
         static void RenderShadowMap();
         static void RenderScene();
-        static void CreateTextures();
-        static void CreateShaders();
-        static void CreateMeshes();
-        static void CreateUniformBuffers();
         static void CreateShadowMap();
-        static void DestroyTextures();
-        static void DestroyShaders();
-        static void DestroyMeshes();
-        static void DestroyUniformBuffers();
         static void DestroyShadowMap();
         static void DestroyRenderers();
     };

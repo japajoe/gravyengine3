@@ -67,19 +67,8 @@ void main() {
     FragColor = vec4(lighting, alpha);
 })";
 
-    static const char *name = "Diffuse";
-
-    Shader *DiffuseShader::Create()
+    Shader DiffuseShader::Create()
     {
-        if(Shader::Find(name) != nullptr)
-            return nullptr;
-
-        Shader shader(vertex, fragment);
-        return Shader::Add(name, shader);
-    }
-
-    void DiffuseShader::Destroy()
-    {
-        Shader::Remove(name);
+        return Shader(vertex, fragment);
     }
 };

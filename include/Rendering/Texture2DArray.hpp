@@ -3,7 +3,6 @@
 
 #include "Texture.hpp"
 #include "../External/glad/glad.h"
-#include <unordered_map>
 
 namespace GravyEngine
 {
@@ -16,13 +15,8 @@ namespace GravyEngine
         void Unbind() override;
         void Delete() override;
         uint32_t GetDepth() const;
-        static Texture2DArray *Add(const std::string &name, const Texture2DArray &texture);
-        static void Remove(const std::string &name);
-        static void RemoveAll();
-        static Texture2DArray *Find(const std::string &name);
     private:
         uint32_t depth;
-        static std::unordered_map<std::string,Texture2DArray> textures;
     };
 };
 

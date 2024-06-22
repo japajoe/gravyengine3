@@ -1,5 +1,6 @@
 #include "WorldSettings.hpp"
 #include "Time.hpp"
+#include "Resources.hpp"
 #include "../Rendering/Buffers/UniformBufferObject.hpp"
 
 namespace GravyEngine
@@ -66,7 +67,7 @@ namespace GravyEngine
     {
         if(uniformBuffer == nullptr)
         {
-            uniformBuffer = UniformBufferObject::Find("World");
+            uniformBuffer = Resources::FindUniformBuffer("World");
 
             if(uniformBuffer == nullptr)
                 return;

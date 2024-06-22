@@ -3,8 +3,6 @@
 
 namespace GravyEngine
 {
-    std::unordered_map<std::string,Texture2DArray> Texture2DArray::textures;
-
     Texture2DArray::Texture2DArray() : Texture()
     {
         this->type = TextureType::Texture2DArray;
@@ -55,52 +53,5 @@ namespace GravyEngine
     uint32_t Texture2DArray::GetDepth() const
     {
         return depth;
-    }
-
-    Texture2DArray *Texture2DArray::Add(const std::string &name, const Texture2DArray &texture)
-    {
-        if(textures.count(name) > 0)
-        {
-            Debug::WriteError("[TEXTURE] can't add %s with ID: %llu because it already exists", name.c_str(), texture.GetId());
-            return nullptr;
-        }
-
-        textures[name] = texture;
-
-        Debug::WriteLog("[TEXTURE] %s added with ID: %llu", name.c_str(), texture.GetId());
-
-        auto pTexture = &textures[name];
-        return pTexture;
-    }
-
-    void Texture2DArray::Remove(const std::string &name)
-    {
-        auto texture = Find(name);
-
-        if(texture)
-        {
-            Debug::WriteLog("[TEXTURE] %s deleted with ID: %llu", name.c_str(), texture->GetId());
-            texture->Delete();
-            textures.erase(name);
-        }
-    }
-
-    void Texture2DArray::RemoveAll()
-    {
-        for(auto &item : textures)
-        {
-            Debug::WriteLog("[TEXTURE] %s deleted with ID: %llu", item.first.c_str(), item.second.GetId());
-            item.second.Delete();
-        }
-
-        textures.clear();
-    }
-
-    Texture2DArray *Texture2DArray::Find(const std::string &name)
-    {
-        if(textures.count(name) == 0)
-            return nullptr;
-        
-        return &textures[name];
     }
 };

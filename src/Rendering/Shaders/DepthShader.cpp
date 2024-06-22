@@ -61,19 +61,8 @@ void main()
     }
 })";
 
-    static const char *name = "Depth";
-
-    Shader *DepthShader::Create()
+    Shader DepthShader::Create()
     {
-        if(Shader::Find(name) != nullptr)
-            return nullptr;
-
-        Shader shader(vertex, fragment, geometry);
-        return Shader::Add(name, shader);
-    }
-
-    void DepthShader::Destroy()
-    {
-        Shader::Remove(name);
+        return Shader(vertex, fragment, geometry);
     }
 };

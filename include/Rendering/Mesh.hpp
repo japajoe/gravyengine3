@@ -11,7 +11,6 @@
 #include <vector>
 #include <cstdint>
 #include <string>
-#include <unordered_map>
 
 namespace GravyEngine
 {
@@ -30,10 +29,6 @@ namespace GravyEngine
         void Generate();
         void Delete();
         void RecalculateNormals();
-        static Mesh *Add(const std::string &name, const Mesh &mesh);
-        static void Remove(const std::string &name);
-        static void RemoveAll();
-        static Mesh *Find(const std::string &name);
     private:
         std::vector<Vertex> vertices;
         std::vector<uint32_t> indices;
@@ -42,7 +37,6 @@ namespace GravyEngine
         VertexArrayObject VAO;
         VertexBufferObject VBO;
         ElementBufferObject EBO;
-        static std::unordered_map<std::string,Mesh> meshes;
         Vector3 SurfaceNormalFromIndices(int32_t indexA, int32_t indexB, int32_t indexC);
     };
 

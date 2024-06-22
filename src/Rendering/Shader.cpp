@@ -7,7 +7,6 @@
 
 namespace GravyEngine
 {
-    std::unordered_map<std::string,Shader> Shader::shaders;
     std::unordered_map<std::string, std::string> Shader::includesMap;
 
     static uint32_t Compile(const std::string &source, GLenum type)
@@ -144,58 +143,6 @@ namespace GravyEngine
             glDeleteShader(id);
             id = 0;
         }
-    }
-
-    Shader *Shader::Add(const std::string &name, const Shader &shader)
-    {
-        if(shaders.count(name) > 0)
-        {
-            Debug::WriteError("[SHADER] can't add %s with ID: %d because it already exists", name.c_str(), shader.GetId());
-            return nullptr;
-        }
-
-        if(shader.GetId() == 0)
-        {
-            Debug::WriteError("[SHADER] can't add %s because it's not initialized", name.c_str());
-            return nullptr;
-        }
-
-        shaders[name] = shader;
-
-        Debug::WriteLog("[SHADER] %s created with ID: %d", name.c_str(), shader.GetId());
-        
-        return &shaders[name];
-    }
-
-    void Shader::Remove(const std::string &name)
-    {
-        auto shader = Find(name);
-
-        if(shader)
-        {
-            Debug::WriteLog("[SHADER] %s deleted with ID: %d", name.c_str(), shader->GetId());
-            shader->Delete();
-            shaders.erase(name);
-        }
-    }
-
-    void Shader::RemoveAll()
-    {
-        for(auto &item : shaders)
-        {
-            Debug::WriteLog("[SHADER] %s deleted with ID: %llu", item.first.c_str(), item.second.GetId());
-            item.second.Delete();
-        }
-
-        shaders.clear();
-    }
-
-    Shader *Shader::Find(const std::string &name)
-    {
-        if(shaders.count(name) == 0)
-            return nullptr;
-        
-        return &shaders[name];
     }
 
     bool Shader::CheckShader(uint32_t shader, ShaderType type, const std::string &source)

@@ -2,6 +2,7 @@
 #include "../Core/Debug.hpp"
 #include "../Core/Screen.hpp"
 #include "../Core/WorldSettings.hpp"
+#include "../Core/Resources.hpp"
 #include "../External/glad/glad.h"
 
 namespace GravyEngine
@@ -19,7 +20,7 @@ namespace GravyEngine
     CascadedShadowMap::CascadedShadowMap(Texture2DArray *depthMap, UniformBufferObject *matricesUBO, Camera *camera, Light *light)
     {
         this->depthMap = depthMap;
-        shader = Shader::Find("Depth");
+        shader = Resources::FindShader("Depth");
 
         this->camera = camera;
         this->light = light;

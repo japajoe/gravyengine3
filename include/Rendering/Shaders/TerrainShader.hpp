@@ -9,8 +9,7 @@ namespace GravyEngine
     class TerrainShader
     {
     public:
-        static Shader *Create();
-        static void Destroy();
+        static Shader Create();
     };
 }
 

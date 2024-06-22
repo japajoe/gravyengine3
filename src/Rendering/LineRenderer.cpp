@@ -4,6 +4,7 @@
 #include "../System/Mathf.hpp"
 #include "../System/Numerics/Quaternion.hpp"
 #include "../Core/Camera.hpp"
+#include "../Core/Resources.hpp"
 
 namespace GravyEngine
 {
@@ -31,7 +32,7 @@ namespace GravyEngine
 
     void LineRenderer::Initialize()
     {
-        shader = Shader::Find("Line");
+        shader = Resources::FindShader("Line");
         camera = Camera::GetMain();
 
         size_t maxVertices = maxLines * 2;

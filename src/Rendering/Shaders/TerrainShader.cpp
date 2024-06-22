@@ -88,19 +88,8 @@ void main()
     FragColor = vec4(lighting, alpha);
 })";
 
-    static const char *name = "Terrain";
-
-    Shader *TerrainShader::Create()
+    Shader TerrainShader::Create()
     {
-        if(Shader::Find(name) != nullptr)
-            return nullptr;
-
-        Shader shader(vertex, fragment);
-        return Shader::Add(name, shader);
-    }
-
-    void TerrainShader::Destroy()
-    {
-        Shader::Remove(name);
+        return Shader(vertex, fragment);
     }
 };

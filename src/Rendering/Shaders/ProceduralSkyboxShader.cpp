@@ -169,19 +169,8 @@ void main()
 	}
 })";
 
-    static const char *name = "ProceduralSkybox";
-
-    Shader *ProceduralSkyboxShader::Create()
+    Shader ProceduralSkyboxShader::Create()
     {
-        if(Shader::Find(name) != nullptr)
-            return nullptr;
-
-        Shader shader(vertex, fragment);
-        return Shader::Add(name, shader);
-    }
-
-    void ProceduralSkyboxShader::Destroy()
-    {
-        Shader::Remove(name);
+        return Shader(vertex, fragment);
     }
 };

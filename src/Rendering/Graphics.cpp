@@ -2,22 +2,9 @@
 #include "LineRenderer.hpp"
 #include "CascadedShadowMap.hpp"
 #include "Renderer.hpp"
-#include "MeshRenderer.hpp"
-#include "Mesh.hpp"
-#include "Texture.hpp"
-#include "Texture2D.hpp"
-#include "Texture2DArray.hpp"
-#include "Buffers/UniformBufferObject.hpp"
 #include "Materials/DepthMaterial.hpp"
-#include "Shaders/ShaderCore.hpp"
-#include "Shaders/DiffuseShader.hpp"
-#include "Shaders/ProceduralSkyboxShader.hpp"
-#include "Shaders/DepthShader.hpp"
-#include "Shaders/LineShader.hpp"
-#include "Shaders/ParticleShader.hpp"
-#include "Shaders/TerrainShader.hpp"
 #include "../System/Mathf.hpp"
-#include "../System/Drawing/Image.hpp"
+#include "../Core/Resources.hpp"
 #include "../Core/Camera.hpp"
 #include "../Core/Light.hpp"
 #include "../Core/GameObject.hpp"
@@ -54,10 +41,7 @@ namespace GravyEngine
         light->GetTransform()->SetPosition(Vector3(0, 10, 0));
         light->GetTransform()->SetRotation(Quaternionf::Euler(45 * Mathf::Deg2Rad, 0, 0));
 
-        CreateTextures();
-        CreateShaders();
-        CreateMeshes();
-        CreateUniformBuffers();
+        Resources::Initialize();
         CreateShadowMap();
 
         LineRenderer::Initialize();
@@ -68,10 +52,7 @@ namespace GravyEngine
 
     void Graphics::Deinitialize()
     {
-        DestroyTextures();
-        DestroyShaders();
-        DestroyMeshes();
-        DestroyUniformBuffers();
+        Resources::Deinitialize();
         DestroyShadowMap();
         DestroyRenderers();
         LineRenderer::Deinitialize();
@@ -189,81 +170,16 @@ namespace GravyEngine
         }
     }
 
-    void Graphics::CreateTextures()
-    {
-        Image defaultImage(32, 32, 4, Color::White());
-        if(defaultImage.IsLoaded())
-        {
-            Texture2D texture(&defaultImage);
-            Texture2D::Add("Default", texture);
-        }
-
-        Texture2DArray depthTexture(2048, 2048, 5);
-        Texture2DArray::Add("DepthMap", depthTexture);
-    }
-
-    void Graphics::CreateShaders()
-    {
-        Shader::AddIncludeFile("ShaderCore", ShaderCore::GetSource());
-
-        DiffuseShader::Create();
-        ProceduralSkyboxShader::Create();
-        DepthShader::Create();
-        LineShader::Create();
-        ParticleShader::Create();
-        TerrainShader::Create();
-    }
-
-    void Graphics::CreateMeshes()
-    {
-        Mesh::Add("Capsule", MeshGenerator::CreateCapsule(Vector3f::One()));
-        Mesh::Add("Cube", MeshGenerator::CreateCube(Vector3f::One()));
-        Mesh::Add("Plane", MeshGenerator::CreatePlane(Vector3f::One()));
-        Mesh::Add("Skybox", MeshGenerator::CreateSkybox(Vector3f::One()));
-        Mesh::Add("Quad", MeshGenerator::CreateQuad(Vector3f::One()));
-        Mesh::Add("Sphere", MeshGenerator::CreateSphere(Vector3f::One()));
-        Mesh::Add("Hemisphere", MeshGenerator::CreateHemisphere(Vector3f::One()));
-    }
-
-    void Graphics::CreateUniformBuffers()
-    {
-        UniformBufferObject::Add("Camera", UniformBufferObject(0, sizeof(UniformCameraInfo)));
-        UniformBufferObject::Add("Lights", UniformBufferObject(1, Light::MaxLights * sizeof(UniformLightInfo)));
-        UniformBufferObject::Add("Shadow", UniformBufferObject(2, sizeof(UniformShadowInfo)));
-        UniformBufferObject::Add("World", UniformBufferObject(3, sizeof(UniformWorldInfo)));
-    }
-
     void Graphics::CreateShadowMap()
     {
-        Texture2DArray *depthMap = Texture2DArray::Find("DepthMap");
-        UniformBufferObject *shadowData = UniformBufferObject::Find("Shadow");
+        Texture2DArray *depthMap = Resources::FindTexture2DArray("DepthMap");
+        UniformBufferObject *shadowData = Resources::FindUniformBuffer("Shadow");
         Camera *camera = mainCamera->GetComponent<Camera>();
         Light *light = mainLight->GetComponent<Light>();
 
         cascadedShadowMap = std::make_unique<CascadedShadowMap>(depthMap, shadowData, camera, light);
         
         depthMaterial = std::make_unique<DepthMaterial>();
-    }
-
-    void Graphics::DestroyTextures()
-    {
-        Texture2D::RemoveAll();
-        Texture2DArray::RemoveAll();
-    }
-
-    void Graphics::DestroyShaders()
-    {
-        Shader::RemoveAll();
-    }
-
-    void Graphics::DestroyMeshes()
-    {
-        Mesh::RemoveAll();
-    }
-
-    void Graphics::DestroyUniformBuffers()
-    {
-        UniformBufferObject::RemoveAll();
     }
 
     void Graphics::DestroyShadowMap()

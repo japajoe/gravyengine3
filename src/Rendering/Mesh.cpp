@@ -5,8 +5,6 @@
 
 namespace GravyEngine
 {
-    std::unordered_map<std::string,Mesh> Mesh::meshes;
-
     Mesh::Mesh() : Object()
     {
         sizeOfVertices = 0;
@@ -168,54 +166,6 @@ namespace GravyEngine
         Vector3 sideAC = pC - pA;
         return Vector3f::Normalize(Vector3f::Cross(sideAB, sideAC));
     }
-
-    Mesh *Mesh::Add(const std::string &name, const Mesh &mesh)
-    {
-        if(meshes.count(name) > 0)
-        {
-            Debug::WriteError("[MESH] can't add %s with ID: %llu because it already exists", name.c_str(), mesh.GetInstanceId());
-            return nullptr;
-        }
-
-        meshes[name] = mesh;
-
-        Debug::WriteLog("[MESH] %s added with ID: %llu", name.c_str(), mesh.GetInstanceId());
-
-        auto pMesh = &meshes[name];
-        pMesh->Generate();
-        return pMesh;
-    }
-
-    void Mesh::Remove(const std::string &name)
-    {
-        auto mesh = Find(name);
-
-        if(mesh)
-        {
-            Debug::WriteLog("[MESH] %s deleted with ID: %llu", name.c_str(), mesh->GetInstanceId());
-            mesh->Delete();
-            meshes.erase(name);
-        }
-    }
-
-    void Mesh::RemoveAll()
-    {
-        for(auto &item : meshes)
-        {
-            Debug::WriteLog("[MESH] %s deleted with ID: %llu", item.first.c_str(), item.second.GetInstanceId());
-            item.second.Delete();
-        }
-
-        meshes.clear();
-    }
-
-    Mesh *Mesh::Find(const std::string &name)
-    {
-        if(meshes.count(name) == 0)
-            return nullptr;
-        
-        return &meshes[name];
-    }    
 
     static Vector3 PointOnSpheroid(float radius, float height, float horizontalAngle, float verticalAngle)
     {

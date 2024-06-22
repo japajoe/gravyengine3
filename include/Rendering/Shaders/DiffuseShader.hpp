@@ -9,8 +9,7 @@ namespace GravyEngine
     class DiffuseShader
     {
     public:
-        static Shader *Create();
-        static void Destroy();
+        static Shader Create();
     };
 }
 

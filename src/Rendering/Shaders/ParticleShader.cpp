@@ -66,19 +66,8 @@ void main()
     FragColor = finalColor;
 })";
 
-    static const char *name = "Particle";
-
-    Shader *ParticleShader::Create()
+    Shader ParticleShader::Create()
     {
-        if(Shader::Find(name) != nullptr)
-            return nullptr;
-
-        Shader shader(vertex, fragment);
-        return Shader::Add(name, shader);
-    }
-
-    void ParticleShader::Destroy()
-    {
-        Shader::Remove(name);
+        return Shader(vertex, fragment);
     }
 };

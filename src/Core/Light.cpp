@@ -1,5 +1,6 @@
 #include "Light.hpp"
 #include "GameObject.hpp"
+#include "Resources.hpp"
 #include "../System/Numerics/Vector4.hpp"
 #include "../Rendering/Buffers/UniformBufferObject.hpp"
 #include <cstring>
@@ -200,7 +201,7 @@ namespace GravyEngine
     {
         if(uniformBuffer == nullptr)
         {
-            uniformBuffer = UniformBufferObject::Find("Lights");
+            uniformBuffer = Resources::FindUniformBuffer("Lights");
 
             if(uniformBuffer == nullptr)
                 return;

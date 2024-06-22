@@ -3,6 +3,7 @@
 #include "../Core/Input.hpp"
 #include "../Core/Screen.hpp"
 #include "../Core/Time.hpp"
+#include "../Core/Resources.hpp"
 #include "../System/Mathf.hpp"
 #include "Texture2D.hpp"
 #include "GL.hpp"
@@ -21,7 +22,7 @@ namespace GravyEngine
     void Terrain::OnInitialize()
     {
         material = std::make_unique<TerrainMaterial>();
-        auto texture = Texture2D::Find("Default");
+        auto texture = Resources::FindTexture2D("Default");
 
         material->SetSplatMap(texture);
         material->SetTexture1(texture);

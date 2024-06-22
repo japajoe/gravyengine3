@@ -4,7 +4,6 @@
 #include "../../External/glad/glad.h"
 #include "../../Core/Object.hpp"
 #include <string>
-#include <unordered_map>
 #include <cstdlib>
 #include <cstdint>
 
@@ -24,13 +23,8 @@ namespace GravyEngine
         void BufferSubData(GLintptr offset, GLsizeiptr size, const void *data);
         void BindToShader(GLuint program, GLuint uniformBlockBinding, const std::string &uniformBlockName);
         GLuint GetId() const;
-        static UniformBufferObject *Add(const std::string &name, const UniformBufferObject &buffer);
-        static void Remove(const std::string &name);
-        static void RemoveAll();
-        static UniformBufferObject *Find(const std::string &name);
     private:
         GLuint id;
-        static std::unordered_map<std::string,UniformBufferObject> buffers;
     };
 };
 

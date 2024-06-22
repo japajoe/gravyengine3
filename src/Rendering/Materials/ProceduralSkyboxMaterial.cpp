@@ -1,4 +1,5 @@
 #include "ProceduralSkyboxMaterial.hpp"
+#include "../../Core/Resources.hpp"
 #include "../../System/Numerics/Matrix3.hpp"
 #include "../../System/Numerics/Matrix4.hpp"
 #include "../../System/Numerics/Vector2.hpp"
@@ -8,7 +9,7 @@ namespace GravyEngine
 {
     ProceduralSkyboxMaterial::ProceduralSkyboxMaterial() : Material()
     {
-        pShader = Shader::Find("ProceduralSkybox");
+        pShader = Resources::FindShader("ProceduralSkybox");
 
         if(pShader)
         {

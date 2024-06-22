@@ -14,6 +14,7 @@ include_directories(
     "${PROJECT_SOURCE_DIR}/include/Audio"
     "${PROJECT_SOURCE_DIR}/include/Audio/DSP"
     "${PROJECT_SOURCE_DIR}/include/Core"
+    "${PROJECT_SOURCE_DIR}/include/Embedded"
     "${PROJECT_SOURCE_DIR}/include/External"
     "${PROJECT_SOURCE_DIR}/include/External/glad"
     "${PROJECT_SOURCE_DIR}/include/External/GLFW"

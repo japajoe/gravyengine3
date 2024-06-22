@@ -1,4 +1,5 @@
 #include "GameObject.hpp"
+#include "Resources.hpp"
 #include "../Rendering/Graphics.hpp"
 #include "../Rendering/Mesh.hpp"
 #include "../Rendering/MeshRenderer.hpp"
@@ -72,41 +73,41 @@ namespace GravyEngine
         {
             case PrimitiveType::Capsule:
             {
-                mesh = Mesh::Find("Capsule");
+                mesh = Resources::FindMesh("Capsule");
                 createMaterial = [] () { return std::make_shared<DiffuseMaterial>(); };
-                pTexture = Texture2D::Find("Default");
+                pTexture = Resources::FindTexture2D("Default");
                 name = "Capsule";
                 break;
             }
             case PrimitiveType::Cube:
             {
-                mesh = Mesh::Find("Cube");
+                mesh = Resources::FindMesh("Cube");
                 createMaterial = [] () { return std::make_shared<DiffuseMaterial>(); };
-                pTexture = Texture2D::Find("Default");
+                pTexture = Resources::FindTexture2D("Default");
                 name = "Cube";
                 break;
             }
             case PrimitiveType::Hemisphere:
             {
-                mesh = Mesh::Find("Hemisphere");
+                mesh = Resources::FindMesh("Hemisphere");
                 createMaterial = [] () { return std::make_shared<DiffuseMaterial>(); };
-                pTexture = Texture2D::Find("Default");
+                pTexture = Resources::FindTexture2D("Default");
                 name = "Hemisphere";
                 break;
             }
             case PrimitiveType::Plane:
             {
-                mesh = Mesh::Find("Plane");
+                mesh = Resources::FindMesh("Plane");
                 createMaterial = [] () { return std::make_shared<DiffuseMaterial>(); };
-                pTexture = Texture2D::Find("Default");
+                pTexture = Resources::FindTexture2D("Default");
                 name = "Plane";
                 break;
             }
             case PrimitiveType::Quad:
             {
-                mesh = Mesh::Find("Quad");
+                mesh = Resources::FindMesh("Quad");
                 createMaterial = [] () { return std::make_shared<DiffuseMaterial>(); };
-                pTexture = Texture2D::Find("Default");
+                pTexture = Resources::FindTexture2D("Default");
                 name = "Quad";
                 break;
             }
@@ -120,7 +121,7 @@ namespace GravyEngine
             }
             case PrimitiveType::Skybox:
             {
-                mesh = Mesh::Find("Hemisphere");
+                mesh = Resources::FindMesh("Hemisphere");
                 createMaterial = [] () { return std::make_shared<ProceduralSkyboxMaterial>(); };
                 cullFace = false;
                 depthTest = false;
@@ -131,9 +132,9 @@ namespace GravyEngine
             }
             case PrimitiveType::Sphere:
             {
-                mesh = Mesh::Find("Sphere");
+                mesh = Resources::FindMesh("Sphere");
                 createMaterial = [] () { return std::make_shared<DiffuseMaterial>(); };
-                pTexture = Texture2D::Find("Default");
+                pTexture = Resources::FindTexture2D("Default");
                 name = "Sphere";
                 break;
             }

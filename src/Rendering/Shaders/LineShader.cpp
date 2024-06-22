@@ -34,19 +34,8 @@ void main()
     FragColor.a = oColor.a;
 })";
 
-    static const char *name = "Line";
-
-    Shader *LineShader::Create()
+    Shader LineShader::Create()
     {
-        if(Shader::Find(name) != nullptr)
-            return nullptr;
-
-        Shader shader(vertex, fragment);
-        return Shader::Add(name, shader);
-    }
-
-    void LineShader::Destroy()
-    {
-        Shader::Remove(name);
+        return Shader(vertex, fragment);
     }
 };

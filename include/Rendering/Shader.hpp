@@ -26,10 +26,6 @@ namespace GravyEngine
         uint32_t GetId() const;
         void Use();
         void Delete();
-        static Shader *Add(const std::string &name, const Shader &shader);
-        static void Remove(const std::string &name);
-        static void RemoveAll();
-        static Shader *Find(const std::string &name);
         void SetMat2(const std::string &name, const float *value, bool transpose = false);
         void SetMat3(const std::string &name, const float *value, bool transpose = false);
         void SetMat4(const std::string &name, const float *value, bool transpose = false);
@@ -51,7 +47,6 @@ namespace GravyEngine
         static void AddIncludeFile(const std::string &name, const std::string &code);
     private:
         uint32_t id;
-        static std::unordered_map<std::string,Shader> shaders;
         static std::unordered_map<std::string, std::string> includesMap;
         static bool CheckShader(uint32_t shader, ShaderType type, const std::string &source);
         static std::string AddIncludes(const std::string &shaderSource);

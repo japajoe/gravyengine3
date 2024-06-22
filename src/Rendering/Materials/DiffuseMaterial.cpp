@@ -1,4 +1,5 @@
 #include "DiffuseMaterial.hpp"
+#include "../../Core/Resources.hpp"
 #include "../../System/Numerics/Matrix3.hpp"
 #include "../../System/Numerics/Matrix4.hpp"
 #include "../../System/Numerics/Vector2.hpp"
@@ -18,7 +19,7 @@ namespace GravyEngine
         pDepthMap = nullptr;
         receiveShadows = true;
 
-        pShader = Shader::Find("Diffuse");
+        pShader = Resources::FindShader("Diffuse");
 
         if(pShader)
         {
@@ -61,7 +62,7 @@ namespace GravyEngine
 
         if(pDepthMap == nullptr)
         {
-            pDepthMap = Texture2DArray::Find("DepthMap");
+            pDepthMap = Resources::FindTexture2DArray("DepthMap");
         }
 
         if(pDepthMap != nullptr)

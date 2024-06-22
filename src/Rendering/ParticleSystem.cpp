@@ -1,6 +1,7 @@
 #include "ParticleSystem.hpp"
 #include "Shader.hpp"
 #include "GL.hpp"
+#include "../Core/Resources.hpp"
 #include "../Core/Camera.hpp"
 #include "../Core/GameObject.hpp"
 #include "../Core/Transform.hpp"
@@ -96,7 +97,7 @@ namespace GravyEngine
         }
 
         material = std::make_shared<ParticleMaterial>();
-        material->SetDiffuseTexture(Texture2D::Find("Default"));
+        material->SetDiffuseTexture(Resources::FindTexture2D("Default"));
 
         simulate = false;
         emitAmount = 1;
@@ -106,11 +107,11 @@ namespace GravyEngine
 
     void ParticleSystem::OnInitialize()
     {
-        meshes.push_back(Mesh::Find("Capsule"));
-        meshes.push_back(Mesh::Find("Cube"));
-        meshes.push_back(Mesh::Find("Plane"));
-        meshes.push_back(Mesh::Find("Quad"));
-        meshes.push_back(Mesh::Find("Sphere"));
+        meshes.push_back(Resources::FindMesh("Capsule"));
+        meshes.push_back(Resources::FindMesh("Cube"));
+        meshes.push_back(Resources::FindMesh("Plane"));
+        meshes.push_back(Resources::FindMesh("Quad"));
+        meshes.push_back(Resources::FindMesh("Sphere"));
 
         pMesh = meshes[3];
 

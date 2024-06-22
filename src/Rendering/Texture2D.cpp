@@ -4,8 +4,6 @@
 
 namespace GravyEngine
 {
-    std::unordered_map<std::string,Texture2D> Texture2D::textures;
-
     Texture2D::Texture2D() : Texture()
     {
         this->id = 0;
@@ -157,52 +155,5 @@ namespace GravyEngine
             glDeleteTextures(1, &id);
             id = 0;
         }
-    }
-
-    Texture2D *Texture2D::Add(const std::string &name, const Texture2D &texture)
-    {
-        if(textures.count(name) > 0)
-        {
-            Debug::WriteError("[TEXTURE] can't add %s with ID: %llu because it already exists", name.c_str(), texture.GetId());
-            return nullptr;
-        }
-
-        textures[name] = texture;
-
-        Debug::WriteLog("[TEXTURE] %s added with ID: %llu", name.c_str(), texture.GetId());
-
-        auto pTexture = &textures[name];
-        return pTexture;
-    }
-
-    void Texture2D::Remove(const std::string &name)
-    {
-        auto texture = Find(name);
-
-        if(texture)
-        {
-            Debug::WriteLog("[TEXTURE] %s deleted with ID: %llu", name.c_str(), texture->GetId());
-            texture->Delete();
-            textures.erase(name);
-        }
-    }
-
-    void Texture2D::RemoveAll()
-    {
-        for(auto &item : textures)
-        {
-            Debug::WriteLog("[TEXTURE] %s deleted with ID: %llu", item.first.c_str(), item.second.GetId());
-            item.second.Delete();
-        }
-
-        textures.clear();
-    }
-
-    Texture2D *Texture2D::Find(const std::string &name)
-    {
-        if(textures.count(name) == 0)
-            return nullptr;
-        
-        return &textures[name];
     }
 };

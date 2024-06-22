@@ -1,4 +1,5 @@
 #include "ParticleMaterial.hpp"
+#include "../../Core/Resources.hpp"
 
 namespace GravyEngine
 {
@@ -10,7 +11,7 @@ namespace GravyEngine
         alphaCutOff = 0.0f;
         blendMode = ParticleBlendMode::Add;
 
-        pShader = Shader::Find("Particle");
+        pShader = Resources::FindShader("Particle");
 
         if(pShader)
         {
