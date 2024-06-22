@@ -14,13 +14,21 @@
 
 namespace GravyEngine
 {
-    Application::Application(const char *title, int width, int height, bool vsync, bool maximize)
+    Application::Application(const Configuration &config)
     {
-        this->title = title;
-        this->width = width;
-        this->height = height;
-        this->vsync = vsync;
-        this->maximize = maximize;
+        this->config = config;
+        this->pWindow = nullptr;
+        this->loaded = nullptr;
+    }
+
+    Application::Application(const char *title, int width, int height, bool vsync, bool maximize, bool fullScreen)
+    {
+        this->config.title = title;
+        this->config.width = width;
+        this->config.height = height;
+        this->config.vsync = vsync;
+        this->config.maximize = maximize;
+        this->config.fullScreen = fullScreen;
         this->pWindow = nullptr;
         this->loaded = nullptr;
     }
@@ -44,10 +52,19 @@ namespace GravyEngine
         glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
         glfwWindowHint(GLFW_VISIBLE, GL_FALSE);
 
-        if(maximize)
+        if(config.maximize)
             glfwWindowHint(GLFW_MAXIMIZED, GL_TRUE);
 
-        pWindow = glfwCreateWindow(width, height, title.c_str(), NULL, NULL);
+        if(config.fullScreen)
+        {
+            GLFWmonitor* monitor =  glfwGetPrimaryMonitor();
+            const GLFWvidmode* mode = glfwGetVideoMode(monitor);
+            pWindow = glfwCreateWindow(mode->width, mode->height, config.title.c_str(), monitor, nullptr);
+        }   
+        else
+        {
+            pWindow = glfwCreateWindow(config.width, config.height, config.title.c_str(), NULL, NULL);
+        }
         
         if (!pWindow)
         {
@@ -79,21 +96,38 @@ namespace GravyEngine
         if (version != nullptr) 
             std::cout << "OpenGL Version: " << version << std::endl;
 
+        if(config.inconData.size() > 0)
+        {
+            Image image(config.inconData.data(), config.inconData.size());
+
+            if(image.IsLoaded())
+            {
+                GLFWimage windowIcon;
+                windowIcon.width = image.GetWidth();
+                windowIcon.height = image.GetHeight();
+                windowIcon.pixels = image.GetData();
+                glfwSetWindowIcon(pWindow, 1, &windowIcon);
+            }
+        }
+        else
         {
             EmbeddedLogo logo;
             
             uint8_t *imageData = const_cast<uint8_t*>(logo.GetData());
 
             Image image(imageData, logo.GetSize());
-            GLFWimage windowIcon;
-            windowIcon.width = image.GetWidth();
-            windowIcon.height = image.GetHeight();
-            windowIcon.pixels = image.GetData();
 
-            glfwSetWindowIcon(pWindow, 1, &windowIcon);
+            if(image.IsLoaded())
+            {
+                GLFWimage windowIcon;
+                windowIcon.width = image.GetWidth();
+                windowIcon.height = image.GetHeight();
+                windowIcon.pixels = image.GetData();
+                glfwSetWindowIcon(pWindow, 1, &windowIcon);
+            }
         }
 
-        glfwSwapInterval(vsync ? 1 : 0);
+        glfwSwapInterval(config.vsync ? 1 : 0);
 
         OnInitialize();
 
@@ -144,7 +178,7 @@ namespace GravyEngine
 
     void Application::OnInitialize()
     {
-        Screen::SetSize(width, height);
+        Screen::SetSize(config.width, config.height);
         Graphics::Initialize();
         Input::Initialize(pWindow);
         AudioContext::Initialize(48000, 2);

@@ -3,26 +3,36 @@
 
 #include <string>
 #include <cstdint>
+#include <vector>
 
 struct GLFWwindow;
 
 namespace GravyEngine
 {
     typedef void (*LoadEventCallback)(void);
+
+    struct Configuration
+    {
+        std::string title;
+        uint32_t width;
+        uint32_t height;
+        bool vsync;
+        bool maximize;
+        bool fullScreen;
+        std::vector<uint8_t> inconData;
+    };
+
     class Application
     {
     public:
         LoadEventCallback loaded;
-        Application(const char *title, int width, int height, bool vsync = true, bool maximize = false);
+        Application(const Configuration &config);
+        Application(const char *title, int width, int height, bool vsync = true, bool maximize = false, bool fullScreen = false);
         void Run();
         void Close();
     private:
         GLFWwindow *pWindow;
-        std::string title;
-        int width;
-        int height;
-        bool vsync;
-        bool maximize;        
+        Configuration config;
         void Dispose();
         void OnInitialize();
         void OnDeinitialize();
