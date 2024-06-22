@@ -44,7 +44,7 @@ cmake --build .
 ```
 
 # Questions and issues
-Feel free to open an issue or join the (Discord channel)[https://discord.gg/2kaAWXAb6t].
+Feel free to open an issue or join the (https://discord.gg/2kaAWXAb6t)[Discord channel].
 
 # Demo application
 ```cpp
