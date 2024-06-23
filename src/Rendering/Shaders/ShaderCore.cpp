@@ -54,7 +54,11 @@ layout(std140, binding = 3) uniform uWorld
     float fogDensity;   //4
     float fogGradient;  //4
     int fogEnabled;     //4
+    int shadowsEnabled; //4
     float time;         //4
+    float padding1;     //4
+    float padding2;     //4
+    float padding3;     //4
 } World;
 
 const float PI = 3.14159265359;
@@ -87,6 +91,9 @@ float GetFogVisibility(float density, float gradient, vec3 camPosition, vec3 fra
 
 float ShadowCalculation(vec3 fragPosWorldSpace, mat4 view, vec3 normal, vec3 lightDirection)
 {
+    if(World.shadowsEnabled < 0)
+        return 0.0;
+
     // select cascade layer
     vec4 fragPosViewSpace = view * vec4(fragPosWorldSpace, 1.0);
     float depthValue = abs(fragPosViewSpace.z);

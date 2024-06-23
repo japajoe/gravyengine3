@@ -74,6 +74,9 @@ namespace GravyEngine
 
     void Graphics::RenderShadowMap()
     {
+        if(!WorldSettings::GetShadowsEnabled())
+            return;
+
         Camera *camera = Camera::GetMain();
 
         if(renderQueue.size() > 0 && camera)

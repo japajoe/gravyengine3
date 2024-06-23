@@ -11,7 +11,11 @@ namespace GravyEngine
         float fogDensity;
         float fogGradient;
         int fogEnabled;
+        int shadowsEnabled;
         float time;
+        float padding1;
+        float padding2;
+        float padding3;
     };
 
     class WorldSettings
@@ -25,6 +29,8 @@ namespace GravyEngine
         static float GetFogGradient();
         static void SetFogDensity(float value);
         static float GetFogDensity();
+        static void SetShadowsEnabled(bool enabled);
+        static bool GetShadowsEnabled();
         static void SetShadowBias(float bias);
         static float GetShadowBias();
         static void UpdateUniformBuffer();
@@ -33,6 +39,7 @@ namespace GravyEngine
         static float fogDensity;
         static float fogGradient;
         static bool fogEnabled;
+        static bool shadowsEnabled;
         static float shadowBias;
     };
 };

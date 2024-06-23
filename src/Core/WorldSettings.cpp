@@ -9,6 +9,7 @@ namespace GravyEngine
     float WorldSettings::fogDensity = 0.001f;
     float WorldSettings::fogGradient = 1.5f;
     bool WorldSettings::fogEnabled = true;
+    bool WorldSettings::shadowsEnabled = true;
     float WorldSettings::shadowBias = 0.005f;
 
     void WorldSettings::SetFogEnabled(bool enabled)
@@ -51,6 +52,16 @@ namespace GravyEngine
         return fogDensity;
     }
 
+    void WorldSettings::SetShadowsEnabled(bool enabled)
+    {
+        shadowsEnabled = enabled;
+    }
+
+    bool WorldSettings::GetShadowsEnabled()
+    {
+        return shadowsEnabled;
+    }
+
     void WorldSettings::SetShadowBias(float bias)
     {
         shadowBias = bias;
@@ -78,6 +89,7 @@ namespace GravyEngine
         worldInfo.fogDensity = fogDensity;
         worldInfo.fogGradient = fogGradient;
         worldInfo.fogEnabled = fogEnabled ? 1 : -1;
+        worldInfo.shadowsEnabled = shadowsEnabled ? 1 : -1;
         worldInfo.time = Time::GetTime();
 
         uniformBuffer->Bind();
