@@ -68,6 +68,7 @@ void main()
 
     // calculate shadow
     vec3 lightDirection = normalize(Lights.lights[0].direction.xyz);
+    //vec3 lightDirection = normalize(Lights.lights[0].position.xyz - oFragPosition);
 
     float shadow  = 0.0;
     if(uReceiveShadows > 0)

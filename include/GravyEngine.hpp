@@ -84,6 +84,7 @@
 #include "Core/Application.hpp"
 #include "Core/Transform.hpp"
 #include "Core/Light.hpp"
+#include "Core/MouseOrbit.hpp"
 #include "Core/Input.hpp"
 #include "Core/AssetManager.hpp"
 #include "Core/FirstPersonCamera.hpp"
