@@ -27,7 +27,7 @@ namespace GravyEngine
         void Add(Mesh *mesh, const std::shared_ptr<Material> &material);
         void Remove(size_t index);
         void SetMesh(Mesh *mesh, size_t index);
-        Mesh *GetMesh(size_t index) const;
+        Mesh *GetMesh(size_t index) const override;
         RenderSettings *GetSettings(size_t index);
         void SetMaterial(const std::shared_ptr<Material> &material, size_t index);
 

@@ -16,6 +16,7 @@ namespace GravyEngine
         depth = 128;
         scale = 10.0f;
         maxHeight = 128.0f;
+        pMesh = &mesh;
         SetName("Terrain");
     }
 
@@ -402,8 +403,6 @@ namespace GravyEngine
 
     void Terrain::SetScale(float scale)
     {
-        //this->scale = scale;
-        
         auto &vertices = mesh.GetVertices();
 
         float normalizedScale = 1.0f / this->scale;
@@ -439,5 +438,10 @@ namespace GravyEngine
     TerrainMaterial *Terrain::GetMaterial() const
     {
         return material.get();
+    }
+
+    Mesh *Terrain::GetMesh(size_t index) const
+    {
+        return pMesh;
     }
 };

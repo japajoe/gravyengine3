@@ -22,12 +22,19 @@ namespace GravyEngine
         Terrain
     };
 
+    enum class Layer : uint32_t
+    {
+        Default = 1 << 0,
+        IgnoreRaycast = 1 << 1
+    };
+
     class GameObject : public Object
     {
     friend class GameBehaviourManager;
     private:
         Transform transform;
         bool isActive;
+        Layer layer;
         std::vector<std::unique_ptr<Component>> components;
         static std::vector<std::unique_ptr<GameObject>> objects;
         static std::vector<GameObject*> destroyQueue;
@@ -41,6 +48,8 @@ namespace GravyEngine
         Transform *GetTransform();
         void SetIsActive(bool isActive);
         bool GetIsActive() const;
+        void SetLayer(Layer layer);
+        Layer GetLayer() const;
         static void Destroy(GameObject *object);        
         static GameObject *Create();
         static GameObject *CreatePrimitive(PrimitiveType type);

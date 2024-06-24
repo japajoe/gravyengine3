@@ -27,6 +27,7 @@ namespace GravyEngine
     public:
         static void AddRenderer(Renderer *renderer);
         static void RemoveRenderer(Renderer *renderer);
+        static Renderer *GetRendererByIndex(size_t index);
     private:
         static std::priority_queue<Renderer*, std::vector<Renderer*>, CompareRendererOrder> renderQueue;
         static std::vector<Renderer*> renderers;

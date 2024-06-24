@@ -184,6 +184,13 @@ namespace GravyEngine
         }
     }
 
+    Renderer *Graphics::GetRendererByIndex(size_t index)
+    {
+        if(index >= renderers.size())
+            return nullptr;
+        return renderers[index];
+    }
+
     void Graphics::CreateShadowMap()
     {
         Texture2DArray *depthMap = Resources::FindTexture2DArray("DepthMap");

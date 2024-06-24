@@ -26,6 +26,11 @@ namespace GravyEngine
         Graphics::RemoveRenderer(this);
     }
 
+    Mesh *Renderer::GetMesh(size_t index) const
+    {
+        return nullptr;
+    }
+
     void Renderer::SetCastShadows(bool castShadows)
     {
         this->castShadows = castShadows;

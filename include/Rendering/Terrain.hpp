@@ -50,11 +50,13 @@ namespace GravyEngine
         void SetMaxHeight(float height);
         float GetMaxHeight() const;
         TerrainMaterial *GetMaterial() const;
+        Mesh *GetMesh(size_t index) const override;
     protected:
         void OnInitialize() override;
         void OnDestroy() override;
     private:
         Mesh mesh;
+        Mesh *pMesh;
         std::unique_ptr<TerrainMaterial> material;
         uint32_t width;
         uint32_t depth;

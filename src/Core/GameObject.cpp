@@ -17,6 +17,7 @@ namespace GravyEngine
     {
         transform.gameObject = this;
         isActive = true;
+        layer = Layer::Default;
     }
 
     GameObject::~GameObject()
@@ -48,6 +49,16 @@ namespace GravyEngine
     bool GameObject::GetIsActive() const
     {
         return isActive;
+    }
+
+    void GameObject::SetLayer(Layer layer)
+    {
+        this->layer = layer;
+    }
+
+    Layer GameObject::GetLayer() const
+    {
+        return layer;
     }
 
     GameObject *GameObject::Create()

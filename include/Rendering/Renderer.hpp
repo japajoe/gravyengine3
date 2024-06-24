@@ -8,6 +8,7 @@
 #include <memory>
 #include <type_traits>
 #include <cstdint>
+#include <cstdlib>
 
 namespace GravyEngine
 {
@@ -21,12 +22,15 @@ namespace GravyEngine
         RenderSettings();
     };
 
+    class Mesh;
+
     class Renderer : public Component
     {
     public:
         Renderer();
         virtual void OnRender() = 0;
         virtual void OnRender(Material *material, Camera *camera) = 0;
+        virtual Mesh *GetMesh(size_t index) const;
         void SetCastShadows(bool castShadows);
         bool GetCastShadows() const;
         void SetReceiveShadows(bool receiveShadows);
