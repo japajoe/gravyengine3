@@ -442,6 +442,8 @@ namespace GravyEngine
 
     Mesh *Terrain::GetMesh(size_t index) const
     {
-        return pMesh;
+        if(index == 0)
+            return pMesh;
+        return nullptr;
     }
 };
