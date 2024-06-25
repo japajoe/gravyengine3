@@ -90,6 +90,7 @@ namespace GravyEngine
                             intersection.triangleIndex2 = indices[j*3+1];
                             intersection.triangleIndex3 = indices[j*3+2];
                             intersection.transform = renderer->GetTransform();
+                            hit.normal = SurfaceNormalFromIndices(v1, v2, v3);
                         }
                     }
                 }
@@ -108,17 +109,6 @@ namespace GravyEngine
                 hit.triangleIndex2 = intersection.triangleIndex2;
                 hit.triangleIndex3 = intersection.triangleIndex3;
                 hit.transform = intersection.transform;
-                
-                if(mesh != nullptr)
-                {
-                    auto &vertices = mesh->GetVertices();
-                    Vector3 p1 = vertices[intersection.triangleIndex1].position;
-                    Vector3 p2 = vertices[intersection.triangleIndex1].position;
-                    Vector3 p3 = vertices[intersection.triangleIndex1].position;
-
-                    hit.normal = SurfaceNormalFromIndices(p1, p2, p3);
-                }
-                
                 return true;
             }
         }
