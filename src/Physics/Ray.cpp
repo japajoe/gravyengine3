@@ -23,29 +23,26 @@ namespace GravyEngine
         Vector2 viewportPosition(viewportRect.x, viewportRect.y);
         Vector2 relativeMousePosition = mousePosition - viewportPosition;
 
-        float screenWidth = viewportRect.z;
-        float screenHeight = viewportRect.w;
-
         float mouseX = relativeMousePosition.x;
-        float mouseY = screenHeight - relativeMousePosition.y;
-
-        Camera *mainCamera = Camera::GetMain();
-        Matrix4 viewMatrix = mainCamera->GetViewMatrix();
-        Matrix4 projectionMatrix = mainCamera->GetProjectionMatrix();
+        float mouseY = viewportRect.w - relativeMousePosition.y;
 
         Vector4 rayStartNDC(
-            (mouseX / screenWidth - 0.5f) * 2.0f,  // [0,1024] -> [-1,1]
-            (mouseY / screenHeight - 0.5f) * 2.0f, // [0, 768] -> [-1,1]
+            (mouseX / viewportRect.z - 0.5f) * 2.0f,  // [0,1024] -> [-1,1]
+            (mouseY / viewportRect.w - 0.5f) * 2.0f, // [0, 768] -> [-1,1]
             -1.0, // The near plane maps to Z=-1 in Normalized Device Coordinates
             1.0f
         );
 
         Vector4 rayEndNDC(
-            (mouseX /  screenWidth - 0.5f) * 2.0f,
-            (mouseY /  screenHeight - 0.5f) * 2.0f,
+            (mouseX /  viewportRect.z - 0.5f) * 2.0f,
+            (mouseY /  viewportRect.w - 0.5f) * 2.0f,
             0.0,
             1.0f
         );
+
+        Camera *mainCamera = Camera::GetMain();
+        Matrix4 viewMatrix = mainCamera->GetViewMatrix();
+        Matrix4 projectionMatrix = mainCamera->GetProjectionMatrix();
 
         Matrix4 m = Matrix4f::Invert(projectionMatrix * viewMatrix);
         Vector4 rayStartWorld = m * rayStartNDC; 
@@ -59,6 +56,6 @@ namespace GravyEngine
         Vector3 origin = Vector3(rayStartWorld);
         Vector3 direction = Vector3f::Normalize(rayDirWorld);
 
-        return Ray(origin, direction, 10000);
+        return Ray(origin, direction, mainCamera->GetFarClippingPlane());
     }
 };

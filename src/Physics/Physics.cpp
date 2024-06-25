@@ -98,24 +98,29 @@ namespace GravyEngine
 
         if(intersection.triangleIndex1 >= 0)
         {
-            hit.point = origin + (direction * intersection.lastPos);
-            hit.distance = Vector3f::Distance(origin, hit.point);
-            hit.triangleIndex1 = intersection.triangleIndex1;
-            hit.triangleIndex2 = intersection.triangleIndex2;
-            hit.triangleIndex3 = intersection.triangleIndex3;
-            hit.transform = intersection.transform;
-            
-            if(mesh != nullptr)
-            {
-                auto &vertices = mesh->GetVertices();
-                Vector3 p1 = vertices[intersection.triangleIndex1].position;
-                Vector3 p2 = vertices[intersection.triangleIndex1].position;
-                Vector3 p3 = vertices[intersection.triangleIndex1].position;
+            float totalDistance = Vector3f::Distance(origin, origin + (direction * intersection.lastPos));
 
-                hit.normal = SurfaceNormalFromIndices(p1, p2, p3);
+            if(totalDistance <= maxDistance)
+            {
+                hit.point = origin + (direction * intersection.lastPos);
+                hit.distance = Vector3f::Distance(origin, hit.point);
+                hit.triangleIndex1 = intersection.triangleIndex1;
+                hit.triangleIndex2 = intersection.triangleIndex2;
+                hit.triangleIndex3 = intersection.triangleIndex3;
+                hit.transform = intersection.transform;
+                
+                if(mesh != nullptr)
+                {
+                    auto &vertices = mesh->GetVertices();
+                    Vector3 p1 = vertices[intersection.triangleIndex1].position;
+                    Vector3 p2 = vertices[intersection.triangleIndex1].position;
+                    Vector3 p3 = vertices[intersection.triangleIndex1].position;
+
+                    hit.normal = SurfaceNormalFromIndices(p1, p2, p3);
+                }
+                
+                return true;
             }
-            
-            return true;
         }
 
         return false;
