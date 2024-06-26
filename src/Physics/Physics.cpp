@@ -65,6 +65,18 @@ namespace GravyEngine
 
                 Matrix4 transformation = renderer->GetTransform()->GetModelMatrix();
 
+                auto bounds = mesh->GetBounds();
+                Vector3 min = bounds.GetMin();
+                Vector3 max = bounds.GetMax();
+                Vector4 boundsMin = transformation * Vector4(min.x, min.y, min.z, 1.0f);
+                Vector4 boundsMax = transformation * Vector4(max.x, max.y, max.z, 1.0f);
+                min = Vector3(boundsMin.x, boundsMin.y, boundsMin.z);
+                max = Vector3(boundsMax.x, boundsMax.y, boundsMax.z);
+
+                float inters = 0;
+                if(!RayIntersectsBounds(origin, direction, min, max, inters))
+                    continue;
+
                 for(size_t j = 0; j < indices.size() / 3; j++)
                 {
                     float currIntersectionPos = 0.0f;
@@ -202,6 +214,60 @@ namespace GravyEngine
 
         // No intersection
         return false;
+    }
+
+    bool Physics::RayIntersectsBounds(const Vector3 &origin, const Vector3 &dir, const Vector3 &min, const Vector3 &max, float &intersection)
+    {
+        float tNear = Mathf::FloatMinValue;
+        float tFar = Mathf::FloatMaxValue;
+
+        // Check each axis (X, Y, Z)
+        for (int i = 0; i < 3; ++i)
+        {
+            if (Mathf::Abs(dir[i]) < Mathf::Epsilon)
+            {
+                // Ray is parallel to the plane along this axis
+                if (origin[i] < min[i] || origin[i] > max[i])
+                {
+                    return false; // No intersection
+                }
+            }
+            else
+            {
+                // Calculate intersection distances
+                float t1 = (min[i] - origin[i]) / dir[i];
+                float t2 = (max[i] - origin[i]) / dir[i];
+
+                // Ensure t1 is the intersection with near plane
+                if (t1 > t2)
+                {
+                    float temp = t1;
+                    t1 = t2;
+                    t2 = temp;
+                }
+
+                // Update the near intersection point
+                if (t1 > tNear)
+                {
+                    tNear = t1;
+                }
+
+                // Update the far intersection point
+                if (t2 < tFar)
+                {
+                    tFar = t2;
+                }
+
+                // Check if ray misses the box
+                if (tNear > tFar || tFar < 0)
+                {
+                    return false; // No intersection
+                }
+            }
+        }
+
+        intersection = tNear;
+        return true; // Ray intersects the AABB
     }
 
     Vector3 Physics::SurfaceNormalFromIndices(const Vector3 &pA, const Vector3 &pB, const Vector3 &pC)

@@ -51,6 +51,7 @@ namespace GravyEngine
         glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 5);
         glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
         glfwWindowHint(GLFW_VISIBLE, GL_FALSE);
+        //glfwWindowHint(GLFW_SAMPLES, 4);
 
         if(config.maximize)
             glfwWindowHint(GLFW_MAXIMIZED, GL_TRUE);
@@ -134,6 +135,8 @@ namespace GravyEngine
             loaded();
 
         glfwShowWindow(pWindow);
+
+        //glEnable(GL_MULTISAMPLE);
 
         while (!glfwWindowShouldClose(pWindow))
         {

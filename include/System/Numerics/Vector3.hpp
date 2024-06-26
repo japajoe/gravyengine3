@@ -24,6 +24,8 @@ namespace GravyEngine
         static float LengthSquared(const glm::vec3 &v);
         static glm::vec3 Lerp(const glm::vec3 &v1, const glm::vec3 &v2, float t);
         static glm::vec3 Slerp(const Vector3 &a, const Vector3 &b, float t);
+        static glm::vec3 Max(const glm::vec3 &lhs, const glm::vec3 &rhs);
+        static glm::vec3 Min(const glm::vec3 &lhs, const glm::vec3 &rhs);
         static glm::vec3 Normalize(const glm::vec3 &v);
         static glm::vec3 TransformPosition(const glm::vec3 &v, const glm::mat4 &m);
         static glm::vec3 TransformVector(const glm::vec3 &v, const glm::mat4 &m);

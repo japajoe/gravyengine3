@@ -17,6 +17,7 @@ namespace GravyEngine
         static constexpr float FloatMinValue = -FLT_MAX;
         static constexpr float FloatMaxValue = FLT_MAX;
         static constexpr float Infinity = std::numeric_limits<float>::infinity();
+        static constexpr float Epsilon = std::numeric_limits<float>::epsilon();
 
         static float Exp(float power);
         static float Min(float a, float b);

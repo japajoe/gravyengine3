@@ -1,4 +1,5 @@
 #include "Vector2.hpp"
+#include "../Mathf.hpp"
 
 namespace GravyEngine
 {
@@ -30,6 +31,16 @@ namespace GravyEngine
     glm::vec2 Vector2f::Lerp(const glm::vec2 &v1, const glm::vec2 &v2, float t)
     {
         return glm::lerp(v1, v2, t);
+    }
+
+    glm::vec2 Vector2f::Max(const glm::vec2 &lhs, const glm::vec2 &rhs)
+    {
+        return glm::vec2(Mathf::Max(lhs.x, rhs.x), Mathf::Max(lhs.y, rhs.y));
+    }
+
+    glm::vec2 Vector2f::Min(const glm::vec2 &lhs, const glm::vec2 &rhs)
+    {
+        return glm::vec2(Mathf::Min(lhs.x, rhs.x), Mathf::Min(lhs.y, rhs.y));
     }
 
     glm::vec2 Vector2f::Normalize(const glm::vec2 &v)

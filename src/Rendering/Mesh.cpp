@@ -110,6 +110,12 @@ namespace GravyEngine
 
             VBO.Unbind();
         }
+
+        bounds.Clear();
+        for(size_t i = 0; i < vertices.size(); i++)
+        {
+            bounds.Grow(vertices[i].position);
+        }
     }
 
     void Mesh::Delete()
@@ -127,6 +133,11 @@ namespace GravyEngine
     size_t Mesh::GetIndicesCount() const
     {
         return indices.size();
+    }
+
+    BoundingBox Mesh::GetBounds() const
+    {
+        return bounds;
     }
 
     void Mesh::RecalculateNormals()

@@ -8,6 +8,7 @@
 #include "Buffers/VertexArrayObject.hpp"
 #include "Buffers/VertexBufferObject.hpp"
 #include "Vertex.hpp"
+#include "BoundingBox.hpp"
 #include <vector>
 #include <cstdint>
 #include <string>
@@ -26,6 +27,7 @@ namespace GravyEngine
         VertexArrayObject *GetVAO();
         VertexBufferObject *GetVBO();
         ElementBufferObject *GetEBO();
+        BoundingBox GetBounds() const;
         void Generate();
         void Delete();
         void RecalculateNormals();
@@ -37,6 +39,7 @@ namespace GravyEngine
         VertexArrayObject VAO;
         VertexBufferObject VBO;
         ElementBufferObject EBO;
+        BoundingBox bounds;
         Vector3 SurfaceNormalFromIndices(int32_t indexA, int32_t indexB, int32_t indexC);
     };
 

@@ -1,4 +1,5 @@
 #include "Vector3.hpp"
+#include "../Mathf.hpp"
 
 namespace GravyEngine
 {
@@ -83,6 +84,16 @@ namespace GravyEngine
         Vector3 b1 = RelativeVec * glm::sin(theta);
 
         return a1 + b1;
+    }
+
+    glm::vec3 Vector3f::Max(const glm::vec3 &lhs, const glm::vec3 &rhs)
+    {
+        return glm::vec3(Mathf::Max(lhs.x, rhs.x), Mathf::Max(lhs.y, rhs.y), Mathf::Max(lhs.z, rhs.z));
+    }
+
+    glm::vec3 Vector3f::Min(const glm::vec3 &lhs, const glm::vec3 &rhs)
+    {
+        return glm::vec3(Mathf::Min(lhs.x, rhs.x), Mathf::Min(lhs.y, rhs.y), Mathf::Min(lhs.z, rhs.z));
     }
 
     glm::vec3 Vector3f::Normalize(const glm::vec3 &v)
