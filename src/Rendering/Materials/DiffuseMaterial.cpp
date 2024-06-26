@@ -144,7 +144,7 @@ namespace GravyEngine
 
     void DiffuseMaterial::SetReceiveShadows(bool receiveShadows)
     {
-        this->receiveShadows = true;
+        this->receiveShadows = receiveShadows;
     }
 
     bool DiffuseMaterial::GetReceiveShadows() const

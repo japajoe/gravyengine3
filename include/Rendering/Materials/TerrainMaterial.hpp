@@ -39,6 +39,8 @@ namespace GravyEngine
         Vector2 GetUVScale3() const;
         void SetUVScale4(const Vector2 &scale);
         Vector2 GetUVScale4() const;
+        void SetReceiveShadows(bool receiveShadows);
+        bool GetReceiveShadows() const;
     private:
         int uSplatMap;
         int uTexture1;

@@ -51,9 +51,19 @@ namespace GravyEngine
         return isActive;
     }
 
-    void GameObject::SetLayer(Layer layer)
+    void GameObject::SetLayer(Layer layer, bool recursive)
     {
         this->layer = layer;
+
+        if(recursive)
+        {
+            auto &children = transform.GetChildren();
+
+            for(size_t i = 0; i < children.size(); i++)
+            {
+                children[i]->GetGameObject()->SetLayer(layer);
+            }
+        }
     }
 
     Layer GameObject::GetLayer() const

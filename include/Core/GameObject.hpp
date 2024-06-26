@@ -48,7 +48,7 @@ namespace GravyEngine
         Transform *GetTransform();
         void SetIsActive(bool isActive);
         bool GetIsActive() const;
-        void SetLayer(Layer layer);
+        void SetLayer(Layer layer, bool recursive = true);
         Layer GetLayer() const;
         static void Destroy(GameObject *object);        
         static GameObject *Create();

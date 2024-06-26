@@ -66,7 +66,6 @@ void main()
     vec4 texColor = GetTextureColor();
     vec3 normal = normalize(oNormal);
 
-    // calculate shadow
     vec3 lightDirection = normalize(Lights.lights[0].direction.xyz);
     //vec3 lightDirection = normalize(Lights.lights[0].position.xyz - oFragPosition);
 

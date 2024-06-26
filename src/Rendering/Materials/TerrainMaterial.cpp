@@ -247,4 +247,14 @@ namespace GravyEngine
     {
         return uvScale4;
     }
+
+    void TerrainMaterial::SetReceiveShadows(bool receiveShadows)
+    {
+        this->receiveShadows = receiveShadows;
+    }
+
+    bool TerrainMaterial::GetReceiveShadows() const
+    {
+        return receiveShadows;
+    }
 };

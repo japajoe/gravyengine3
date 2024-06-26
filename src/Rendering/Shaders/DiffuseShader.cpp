@@ -41,7 +41,8 @@ in vec2 oUV;
 
 out vec4 FragColor;
 
-void main() {
+void main() 
+{
     vec4 texColor = texture(uDiffuseTexture, (oUV + uUVOffset) * uUVScale);
     vec3 normal = normalize(oNormal);
 
