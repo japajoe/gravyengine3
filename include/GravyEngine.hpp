@@ -35,6 +35,7 @@
 #include "Rendering/Vertex.hpp"
 #include "Rendering/Terrain.hpp"
 #include "Rendering/MeshRenderer.hpp"
+#include "Rendering/ModelImporter.hpp"
 #include "Rendering/Shaders/DepthShader.hpp"
 #include "Rendering/Shaders/ShaderCore.hpp"
 #include "Rendering/Shaders/TerrainShader.hpp"

@@ -101,6 +101,26 @@ namespace GravyEngine
         return glm::normalize(v);
     }
 
+    glm::vec3 Vector3f::Transform(const glm::vec3 &v, const glm::quat &r)
+    {
+        const float x = r.x + r.x;
+        const float y = r.y + r.y;
+        const float z = r.z + r.z;
+        const float wx = r.w * x;
+        const float wy = r.w * y;
+        const float wz = r.w * z;
+        const float xx = r.x * x;
+        const float xy = r.x * y;
+        const float xz = r.x * z;
+        const float yy = r.y * y;
+        const float yz = r.y * z;
+        const float zz = r.z * z;
+        return glm::vec3(
+            v.x * (1.0f - yy - zz) + v.y * (xy - wz) + v.z * (xz + wy),
+            v.x * (xy + wz) + v.y * (1.0f - xx - zz) + v.z * (yz - wx),
+            v.x * (xz - wy) + v.y * (yz + wx) + v.z * (1.0f - xx - yy));
+    }
+
     glm::vec3 Vector3f::TransformPosition(const glm::vec3 &v, const glm::mat4 &m)
     {
         //glm::mat4 mat = glm::transpose(m);

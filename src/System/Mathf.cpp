@@ -130,6 +130,11 @@ namespace GravyEngine
         return std::isnan(value);
     }
 
+    bool Mathf::IsZero(float value)
+    {
+        return Abs(value) < ZeroTolerance;
+    }
+
     float Mathf::PerlinNoise(float x, float y)
     {
         return Noise::GetSample(x, y);

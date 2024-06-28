@@ -52,6 +52,8 @@ namespace GravyEngine
         void Rotate(const Quaternion &rotation);
         void Rotate(const Vector3 &rotation);
         Transform *FindChild(const std::string &name);
+        Vector3 WorldToLocal(const Vector3 &v);
+        Vector3 WorldToLocalVector(const Vector3 &v);
     private:
         Transform *parent;
         Transform *root;        

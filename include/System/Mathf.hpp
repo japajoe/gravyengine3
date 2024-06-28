@@ -18,6 +18,7 @@ namespace GravyEngine
         static constexpr float FloatMaxValue = FLT_MAX;
         static constexpr float Infinity = std::numeric_limits<float>::infinity();
         static constexpr float Epsilon = std::numeric_limits<float>::epsilon();
+        static constexpr float ZeroTolerance = 1e-6f;
 
         static float Exp(float power);
         static float Min(float a, float b);
@@ -42,6 +43,7 @@ namespace GravyEngine
         static float RadiansToDegrees(float radians);
         static float ClampPeriodicRange(float a, float min, float max);
         static bool IsNan(float value);
+        static bool IsZero(float value);
         static float PerlinNoise(float x, float y);
     };
 };

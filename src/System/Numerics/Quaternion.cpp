@@ -2,6 +2,11 @@
 
 namespace GravyEngine
 {
+    glm::quat Quaternionf::Conjugate(const glm::quat &v)
+    {
+        return glm::conjugate(v);
+    }
+
     glm::quat Quaternionf::Euler(float x, float y, float z)
     {
         return glm::quat(glm::vec3(x, y, z));

@@ -9,7 +9,15 @@ namespace GravyEngine
 {
     MeshRendererData::MeshRendererData(Mesh *mesh, const std::shared_ptr<Material> &material)
     {
+        this->mesh = nullptr;
         this->pMesh = mesh;
+        this->pMaterial = material;
+    }
+
+    MeshRendererData::MeshRendererData(const std::shared_ptr<Mesh> &mesh, const std::shared_ptr<Material> &material)
+    {
+        this->mesh = mesh;
+        this->pMesh = this->mesh.get();
         this->pMaterial = material;
     }
 
@@ -19,6 +27,11 @@ namespace GravyEngine
     }
 
     void MeshRenderer::Add(Mesh *mesh, const std::shared_ptr<Material> &material)
+    {
+        data.push_back(MeshRendererData(mesh, material));
+    }
+
+    void MeshRenderer::Add(const std::shared_ptr<Mesh> &mesh, const std::shared_ptr<Material> &material)
     {
         data.push_back(MeshRendererData(mesh, material));
     }
@@ -39,6 +52,16 @@ namespace GravyEngine
         if(index >= data.size())
             return;
         data[index].pMesh = mesh;
+    }
+
+    void MeshRenderer::SetMesh(const std::shared_ptr<Mesh> &mesh, size_t index)
+    {
+        if(data.size() == 0)
+            return;
+        if(index >= data.size())
+            return;
+        data[index].mesh = mesh;
+        data[index].pMesh = data[index].mesh.get();
     }
 
     Mesh *MeshRenderer::GetMesh(size_t index) const

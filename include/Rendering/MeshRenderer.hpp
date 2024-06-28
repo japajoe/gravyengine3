@@ -10,10 +10,12 @@ namespace GravyEngine
 {
     struct MeshRendererData
     {
+        std::shared_ptr<Mesh> mesh;
         Mesh *pMesh;
         std::shared_ptr<Material> pMaterial;
         RenderSettings settings;
         MeshRendererData(Mesh *mesh, const std::shared_ptr<Material> &material);
+        MeshRendererData(const std::shared_ptr<Mesh> &mesh, const std::shared_ptr<Material> &material);
     };
 
     class MeshRenderer : public Renderer
@@ -25,8 +27,10 @@ namespace GravyEngine
         void OnRender() override;
         void OnRender(Material *material, Camera *camera) override;
         void Add(Mesh *mesh, const std::shared_ptr<Material> &material);
+        void Add(const std::shared_ptr<Mesh> &mesh, const std::shared_ptr<Material> &material);
         void Remove(size_t index);
         void SetMesh(Mesh *mesh, size_t index);
+        void SetMesh(const std::shared_ptr<Mesh> &mesh, size_t index);
         Mesh *GetMesh(size_t index) const override;
         RenderSettings *GetSettings(size_t index);
         void SetMaterial(const std::shared_ptr<Material> &material, size_t index);

@@ -367,4 +367,36 @@ namespace GravyEngine
 
         return nullptr;
     }
+
+    Vector3 Transform::WorldToLocal(const Vector3 &v)
+    {
+        return glm::inverse(GetRotation()) * (v - GetPosition());
+        // auto invScale = GetScale();
+        // if (invScale.x != 0.0f)
+        //     invScale.x = 1.0f / invScale.x;
+        // if (invScale.y != 0.0f)
+        //     invScale.y = 1.0f / invScale.y;
+        // if (invScale.z != 0.0f)
+        //     invScale.z = 1.0f / invScale.z;
+        // const Quaternion invRotation = Quaternionf::Conjugate(GetRotation());
+        // Vector3 result = v - GetPosition();
+        // result = Vector3f::Transform(result, invRotation);
+        // result *= invScale;
+    }
+
+    Vector3 Transform::WorldToLocalVector(const Vector3 &v)
+    {
+        return glm::inverse(GetRotation()) * v;
+        // auto invScale = GetScale();
+        // if (invScale.x != 0.0f)
+        //     invScale.x = 1.0f / invScale.x;
+        // if (invScale.y != 0.0f)
+        //     invScale.y = 1.0f / invScale.y;
+        // if (invScale.z != 0.0f)
+        //     invScale.z = 1.0f / invScale.z;
+        // const Quaternion invRotation = Quaternionf::Conjugate(GetRotation());
+        // Vector3 result = Vector3f::Transform(v, invRotation);
+        // result *= invScale;
+        // return result;
+    }
 };

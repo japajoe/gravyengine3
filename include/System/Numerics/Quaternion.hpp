@@ -11,6 +11,7 @@ namespace GravyEngine
     class Quaternionf
     {
     public:
+        static glm::quat Conjugate(const glm::quat &v);
         static glm::quat Euler(float x, float y, float z);
         static glm::quat FromAxisAngle(const glm::vec3 &axis, float angle);
         static glm::quat FromMatrix(const glm::mat3 &v);
