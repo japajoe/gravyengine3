@@ -16,6 +16,7 @@ namespace GravyEngine
         uint32_t triangleIndex1;
         uint32_t triangleIndex2;
         uint32_t triangleIndex3;
+        void *userData;
     };
 };
 

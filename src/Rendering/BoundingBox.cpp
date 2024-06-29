@@ -53,67 +53,104 @@ namespace GravyEngine
         return extents;
     }
 
-    bool BoundingBox::Intersects(const Ray &ray, const Matrix4 &transformation, float &distance) const
+    bool BoundingBox::Intersects(const Ray &ray, float &distance) const
     {
-        float nearestFarIntersection = 0.0f;
-        float farthestNearIntersection = Mathf::FloatMaxValue;
-        Vector3 worldPosition = transformation * Vector4(center.x, center.y, center.z, 1.0f);
+        distance = 0.0f;
+        float tmax = Mathf::FloatMaxValue;
 
-        Vector3 bbMin = transformation * Vector4(min.x, min.y, min.z, 1.0f);
-        Vector3 bbMax = transformation * Vector4(max.x, max.y, max.z, 1.0f);
-
-        Vector3 delta = ray.origin - worldPosition;
-
-        Vector3 xAxis = glm::vec3(transformation[0]);
-        Vector3 yAxis = glm::vec3(transformation[1]);
-        Vector3 zAxis = glm::vec3(transformation[2]);
-        
-        Vector3 axes[3] = {
-            xAxis,
-            yAxis,
-            zAxis
-        };
-
-        for(size_t i = 0; i < 3; i++)
+        if (Mathf::IsZero(ray.direction.x))
         {
-            float e = Vector3f::Dot(axes[i], delta);
-            float f = Vector3f::Dot(ray.direction, axes[i]);
-
-            if(Mathf::Abs(f) > Mathf::Epsilon)
+            if (ray.origin.x < min.x || ray.origin.x > max.x)
             {
-                //Intersection with left plane
-                float t1 = (e + bbMin[i]) / f;
-
-                //Intersection with right plane
-                float t2 = (e + bbMax[i]) / f;
-
-                if(t1 > t2)
-                {
-                    float temp = t1;
-                    t1 = t2;
-                    t2 = temp;
-                }
-
-                if(t2 < farthestNearIntersection)
-                    farthestNearIntersection = t2;
-
-                if(t1 < nearestFarIntersection)
-                    nearestFarIntersection = t1;
-
-                if(farthestNearIntersection < nearestFarIntersection)
-                    return false;
+                distance = 0.0f;
+                return false;
             }
-            else
+        }
+        else
+        {
+            const float inverse = 1.0f / ray.direction.x;
+            float t1 = (min.x - ray.origin.x) * inverse;
+            float t2 = (max.x - ray.origin.x) * inverse;
+
+            if (t1 > t2)
             {
-                if(-e + bbMin[i] > 0.0f || -e + bbMax[i] < 0.0f)
-                    return false;
+                const float temp = t1;
+                t1 = t2;
+                t2 = temp;
+            }
+
+            distance = Mathf::Max(t1, distance);
+            tmax = Mathf::Min(t2, tmax);
+
+            if (distance > tmax)
+            {
+                distance = 0.0f;
+                return false;
             }
         }
 
-        if(nearestFarIntersection == 0.0f)
-            return false;
-        
-        distance = nearestFarIntersection;
+        if (Mathf::IsZero(ray.direction.y))
+        {
+            if (ray.origin.y < min.y || ray.origin.y > max.y)
+            {
+                distance = 0.0f;
+                return false;
+            }
+        }
+        else
+        {
+            const float inverse = 1.0f / ray.direction.y;
+            float t1 = (min.y - ray.origin.y) * inverse;
+            float t2 = (max.y - ray.origin.y) * inverse;
+
+            if (t1 > t2)
+            {
+                const float temp = t1;
+                t1 = t2;
+                t2 = temp;
+            }
+
+            distance = Mathf::Max(t1, distance);
+            tmax = Mathf::Min(t2, tmax);
+
+            if (distance > tmax)
+            {
+                distance = 0.0f;
+                return false;
+            }
+        }
+
+        if (Mathf::IsZero(ray.direction.z))
+        {
+            if (ray.origin.z < min.z || ray.origin.z > max.z)
+            {
+                distance = 0.0f;
+                return false;
+            }
+        }
+        else
+        {
+            const float inverse = 1.0f / ray.direction.z;
+            float t1 = (min.z - ray.origin.z) * inverse;
+            float t2 = (max.z - ray.origin.z) * inverse;
+
+            if (t1 > t2)
+            {
+                const float temp = t1;
+                t1 = t2;
+                t2 = temp;
+            }
+
+            distance = Mathf::Max(t1, distance);
+            tmax = Mathf::Min(t2, tmax);
+
+            if (distance > tmax)
+            {
+                distance = 0.0f;
+                return false;
+            }
+        }
+
         return true;
     }
 };

@@ -18,7 +18,7 @@ namespace GravyEngine
         Vector3 GetCenter() const;
         Vector3 GetExtents() const;
         void Clear();
-        bool Intersects(const Ray &ray, const Matrix4 &transformation, float &distance) const;
+        bool Intersects(const Ray &ray, float &distance) const;
     private:
         Vector3 min;
         Vector3 max;
