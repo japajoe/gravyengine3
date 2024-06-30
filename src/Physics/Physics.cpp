@@ -260,7 +260,7 @@ namespace GravyEngine
                     {
                         intersection.lastPos = currIntersectionPos;
                         intersection.userData = mesh;
-                        intersection.transform = renderer->GetTransform();
+                        intersection.transform = transform;
                     }
                 }
             }

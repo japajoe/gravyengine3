@@ -182,7 +182,7 @@ namespace GravyEngine
         }
 
         // Tune this parameter according to the scene
-        constexpr float zMult = 10.0f;
+        constexpr float zMult = 1.0f;
         if (minZ < 0)
         {
             minZ *= zMult;
