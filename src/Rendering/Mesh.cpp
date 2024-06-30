@@ -781,7 +781,10 @@ namespace GravyEngine
         width += 1;
         height += 1;
 
-        uint32_t verticesPerLine = (uint32_t)((width - 1) / 2);
+        int32_t LOD = 0;
+
+        int32_t meshSimplificationIncrement = (LOD == 0) ? 1 : LOD * 2;
+        uint32_t verticesPerLine = (uint)((width - 1) / meshSimplificationIncrement + 1);
 
         float topLeftX = 0;
         float topLeftZ = 0;
@@ -797,9 +800,9 @@ namespace GravyEngine
         vertices.resize(numVertices);
         indices.resize(numIndices);
 
-        for (int y = 0; y < height; y++)
+        for (int y = 0; y < height; y += meshSimplificationIncrement)
         {
-            for (int x = 0; x < width; x++)
+            for (int x = 0; x < width; x += meshSimplificationIncrement)
             {
                 vertices[vertexIndex].position = Vector3(topLeftX + x, 0.0f, topLeftZ - y);
                 vertices[vertexIndex].uv = Vector2((float)x / (width - 1.0f), (float)y / (height - 1.0f));

@@ -13,7 +13,7 @@ namespace GravyEngine
     TerrainMaterial::TerrainMaterial() : Material()
     {
         diffuseColor = Color(255, 255, 255, 255);
-        ambientStrength = 0.0001f;
+        ambientStrength = 0.5f;
         shininess = 16.0f;
         uvScale1 = Vector2(1.0, 1.0);
         uvScale2 = Vector2(1.0, 1.0);

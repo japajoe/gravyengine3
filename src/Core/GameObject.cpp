@@ -5,6 +5,7 @@
 #include "../Rendering/MeshRenderer.hpp"
 #include "../Rendering/ParticleSystem.hpp"
 #include "../Rendering/Texture.hpp"
+#include "../Rendering/Terrain.hpp"
 #include "../Rendering/Materials/DiffuseMaterial.hpp"
 #include "../Rendering/Materials/ProceduralSkyboxMaterial.hpp"
 
@@ -137,9 +138,9 @@ namespace GravyEngine
             {
                 GameObject *obj = GameObject::Create();
                 obj->SetName("ParticleSystem");
+                obj->SetLayer(Layer::IgnoreRaycast);
                 auto ps = obj->AddComponent<ParticleSystem>();
                 ps->SetRenderOrder(1001);
-                layer = Layer::IgnoreRaycast;
                 return obj;
             }
             case PrimitiveType::Skybox:
@@ -161,6 +162,14 @@ namespace GravyEngine
                 pTexture = Resources::FindTexture2D("Default");
                 name = "Sphere";
                 break;
+            }
+            case PrimitiveType::Terrain:
+            {
+                GameObject *obj = GameObject::Create();
+                obj->SetName("Terrain");
+                obj->SetLayer(Layer::Default);
+                obj->AddComponent<Terrain>();
+                return obj;
             }
             default:
             {
