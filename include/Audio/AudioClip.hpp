@@ -17,8 +17,11 @@ namespace GravyEngine
         void *GetHandle() const;
         size_t GetDataSize() const;
         bool GetStreamFromDisk() const;
+        void SetName(const std::string &name);
+        std::string GetName() const;
     private:
         std::string filePath;
+        std::string name;
         std::vector<uint8_t> data;
         size_t dataSize;
         void *handle;

@@ -44,4 +44,14 @@ namespace GravyEngine
     {
         return streamFromDisk;
     }
+
+    void AudioClip::SetName(const std::string &name)
+    {
+        this->name = name;
+    }
+    
+    std::string AudioClip::GetName() const
+    {
+        return name;
+    }
 };

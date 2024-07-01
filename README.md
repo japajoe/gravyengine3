@@ -10,6 +10,7 @@ A general purpose component based game engine.
 - Directional and point lighting.
 - Cascaded shadow mapping.
 - Advanced audio engine with 3D spatialization.
+- Object picking with raycasts.
 - Asset packing.
 - Asynchronous asset loading.
 
@@ -23,7 +24,7 @@ The idea is to have a game engine that is easy to use if you are familiar with U
 - Don't call `GetTransform` or `GetGameObject` in a constructor of a `Component` because it will return NULL. Any initialization that needs to use the transform or game object pointer needs to do this in the `OnInitialize` method.
 
 # Building
-To compile the library you need CMake. All required libraries (GLFW/imgui/miniaudioex/glm/glad) are already included. The engine is developed on Linux and can also be cross compiled for windows with mingw32-64. I've also tested to compile with MSVC in a Windows 10 virtual machine and it worked without problems. If you are on MacOS then I can unfortunately not help you, thank Apple for being hostile towards developers.
+To compile the library you need CMake. Most of the required libraries (GLFW/imgui/miniaudioex/glm/glad) are already included. If you are on Linux you'll need to have `assimp` as well. The engine is developed on Linux and can also be cross compiled for windows with mingw32-64. I've also tested to compile with MSVC in a Windows 10 virtual machine and it worked without problems. If you are on MacOS then I can unfortunately not help you, thank Apple for being hostile towards developers and also not supporting latest OpenGL versions.
 
 This command works for building on Linux with gcc/g++.
 ```bash

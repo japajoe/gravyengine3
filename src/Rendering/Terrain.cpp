@@ -415,9 +415,8 @@ namespace GravyEngine
             vertices[i].position *= scale;
         }
 
-        //mesh = MeshGenerator::CreateTerrain(width, depth, Vector3(scale, scale, scale));
-
         mesh.RecalculateNormals();
+        mesh.Generate();
     }
 
     float Terrain::GetScale() const

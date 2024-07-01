@@ -7,6 +7,9 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_C_FLAGS_RELEASE "-O3")
 set(CMAKE_CXX_FLAGS_RELEASE "-O3")
 
+#Currently only working for linux
+option(ENABLE_ASSIMP "Enable Assimp" ON)
+
 file(GLOB_RECURSE SOURCES src/*.cpp src/*.c)
 
 include_directories(
@@ -46,8 +49,13 @@ if(BUILD_PLATFORM STREQUAL "windows_mingw")
 elseif(BUILD_PLATFORM STREQUAL "windows_msvc")
     target_compile_definitions(${PROJECT_NAME} PRIVATE _GLFW_WIN32)
 elseif(BUILD_PLATFORM STREQUAL "linux")
-    find_package(assimp REQUIRED)
-    target_link_libraries(${PROJECT_NAME} assimp -pthread -ldl -lm -lstdc++fs)
+    if(ENABLE_ASSIMP)
+        add_compile_definitions(GRAVY_ENABLE_ASSIMP)
+        find_package(assimp REQUIRED)
+        target_link_libraries(${PROJECT_NAME} assimp -pthread -ldl -lm -lstdc++fs)
+    elseif()
+        target_link_libraries(${PROJECT_NAME} -pthread -ldl -lm -lstdc++fs)
+    endif()
     target_compile_definitions(${PROJECT_NAME} PRIVATE _GLFW_X11)
 elseif(BUILD_PLATFORM STREQUAL "mac")
     target_link_libraries(${PROJECT_NAME} -lstdc++fs -lopengl)

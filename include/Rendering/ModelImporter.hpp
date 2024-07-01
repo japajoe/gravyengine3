@@ -1,7 +1,7 @@
 #ifndef GRAVYENGINE_MODELIMPORTER_HPP
 #define GRAVYENGINE_MODELIMPORTER_HPP
 
-#ifdef __linux__
+#ifdef GRAVY_ENABLE_ASSIMP
 
 #include "Mesh.hpp"
 #include "../Core/GameObject.hpp"
@@ -66,6 +66,6 @@ namespace GravyEngine
     };
 };
 
-#endif //__linux__
+#endif //GRAVY_ENABLE_ASSIMP
 
 #endif

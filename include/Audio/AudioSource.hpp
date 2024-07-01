@@ -54,6 +54,7 @@ namespace GravyEngine
         float GetPitch() const;
         void SetCursor(ma_uint64 value);
         ma_uint64 GetCursor() const;
+        ma_uint64 GetClipLength() const;
         void SetSpatial(bool spatial);
         bool GetSpatial() const;
         void SetDopplerFactor(float factor);

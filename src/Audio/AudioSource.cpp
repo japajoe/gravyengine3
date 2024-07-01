@@ -138,6 +138,11 @@ namespace GravyEngine
         return ma_ex_audio_source_get_pcm_position(handle);
     }
 
+    ma_uint64 AudioSource::GetClipLength() const
+    {
+        return ma_ex_audio_source_get_pcm_length(handle);
+    }
+
     void AudioSource::SetSpatial(bool spatial)
     {
         ma_ex_audio_source_set_spatialization(handle, spatial ? MA_TRUE : MA_FALSE);

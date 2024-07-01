@@ -1,3 +1,4 @@
+#ifdef GRAVY_ENABLE_ASSIMP
 #include "ModelImporter.hpp"
 #include "Vertex.hpp"
 #include "Mesh.hpp"
@@ -273,3 +274,4 @@ namespace GravyEngine
         }
     }
 };
+#endif
