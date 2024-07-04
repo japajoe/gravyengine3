@@ -45,6 +45,21 @@ namespace GravyEngine
         {
             children[i]->GetGameObject()->SetIsActive(isActive);
         }
+
+        if(isActive)
+        {
+            for(size_t i = 0; i < components.size(); i++)
+            {
+                components[i]->OnActivate();
+            }
+        }
+        else
+        {
+            for(size_t i = 0; i < components.size(); i++)
+            {
+                components[i]->OnDeactivate();
+            }
+        }
     }
 
     bool GameObject::GetIsActive() const

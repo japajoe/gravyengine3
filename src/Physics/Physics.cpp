@@ -22,6 +22,16 @@ namespace GravyEngine
         Vector3 normal;
     };
 
+    void Physics::Initialize()
+    {
+
+    }
+
+    void Physics::Deinitialize()
+    {
+
+    }
+
     bool Physics::Raycast(const Ray &ray, RaycastHit &hit, uint32_t layerMask)
     {
         return Raycast(ray.origin, ray.direction, ray.length, hit, layerMask);

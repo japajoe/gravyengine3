@@ -1,14 +1,17 @@
 #include "Graphics.hpp"
+#include "GL.hpp"
 #include "LineRenderer.hpp"
 #include "CascadedShadowMap.hpp"
 #include "Renderer.hpp"
+#include "FullScreenQuad.hpp"
 #include "Materials/DepthMaterial.hpp"
 #include "../Audio/AudioListener.hpp"
-#include "../Core/Resources.hpp"
 #include "../Core/Camera.hpp"
-#include "../Core/Light.hpp"
-#include "../Core/GameObject.hpp"
 #include "../Core/Debug.hpp"
+#include "../Core/GameObject.hpp"
+#include "../Core/Light.hpp"
+#include "../Core/Resources.hpp"
+#include "../Core/Screen.hpp"
 #include "../Core/WorldSettings.hpp"
 #include "../System/Mathf.hpp"
 #include "../External/glad/glad.h"
@@ -19,11 +22,13 @@ namespace GravyEngine
 {
     static std::unique_ptr<GameObject> mainCamera;
     static std::unique_ptr<GameObject> mainLight;
+    static FullScreenQuad screenQuad;
     
     std::priority_queue<Renderer*, std::vector<Renderer*>, CompareRendererOrder> Graphics::renderQueue;
     std::vector<Renderer*> Graphics::renderers;
     std::unique_ptr<CascadedShadowMap> Graphics::cascadedShadowMap;
     std::unique_ptr<DepthMaterial> Graphics::depthMaterial;
+    std::vector<FrameBufferObject> Graphics::framebuffers;
 
     bool CompareRendererOrder::operator()(const Renderer *lhs, const Renderer *rhs) const 
     {
@@ -48,8 +53,17 @@ namespace GravyEngine
 
         LineRenderer::Initialize();
 
+        auto resolution = Screen::GetResolution();
+
+        framebuffers.push_back(FrameBufferObject(Screen::GetWidth(), Screen::GetHeight()));
+        framebuffers[0].Generate();
+
+        screenQuad.Generate();
+
         glEnable(GL_DEPTH_TEST);
         glEnable(GL_CULL_FACE);
+
+        Screen::resize += OnResize;
     }
 
     void Graphics::Deinitialize()
@@ -60,6 +74,16 @@ namespace GravyEngine
         LineRenderer::Deinitialize();
     }
 
+    void Graphics::OnResize(uint32_t width, uint32_t height)
+    {
+        auto framebuffer = GetFrameBuffer();
+
+        if(framebuffer == nullptr)
+            return;
+
+        framebuffer->Resize(width, height);
+    }
+
     void Graphics::OnRender()
     {
         Camera::UpdateUniformBuffer();
@@ -67,9 +91,20 @@ namespace GravyEngine
         WorldSettings::UpdateUniformBuffer();
         
         RenderShadowMap();
+        
+        framebuffers[0].Bind();
+
         RenderScene();
         
         LineRenderer::OnRender();
+
+        framebuffers[0].Unbind();
+
+        glClearColor(1.0f, 1.0f, 1.0f, 1.0f); 
+        glClear(GL_COLOR_BUFFER_BIT);
+        GL::DisableDepthTest();
+
+        screenQuad.Render();
     }
 
     void Graphics::RenderShadowMap()
@@ -216,5 +251,12 @@ namespace GravyEngine
         {
             renderQueue.pop();
         }
+    }
+
+    FrameBufferObject *Graphics::GetFrameBuffer()
+    {
+        if(framebuffers.size() == 0)
+            return nullptr;
+        return &framebuffers[0];
     }
 };

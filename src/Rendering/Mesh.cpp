@@ -116,6 +116,10 @@ namespace GravyEngine
         {
             bounds.Grow(vertices[i].position);
         }
+
+        //To do: fix seg fault
+        // if(vertices.size() > 0 && indices.size() > 0)
+        //     bvh.Initialize(vertices, indices);
     }
 
     void Mesh::Delete()
@@ -138,6 +142,11 @@ namespace GravyEngine
     BoundingBox Mesh::GetBounds() const
     {
         return bounds;
+    }
+
+    BVH &Mesh::GetBVH()
+    {
+        return bvh;
     }
 
     void Mesh::RecalculateNormals()

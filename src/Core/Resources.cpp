@@ -6,6 +6,7 @@
 #include "../System/Drawing/Image.hpp"
 #include "../Rendering/CascadedShadowMap.hpp"
 #include "../Rendering/Shaders/ShaderCore.hpp"
+#include "../Rendering/Shaders/BasicShader.hpp"
 #include "../Rendering/Shaders/DiffuseShader.hpp"
 #include "../Rendering/Shaders/ProceduralSkyboxShader.hpp"
 #include "../Rendering/Shaders/DepthShader.hpp"
@@ -85,6 +86,7 @@ namespace GravyEngine
     {
         Shader::AddIncludeFile("ShaderCore", ShaderCore::GetSource());
 
+        AddShader("Basic", BasicShader::Create());
         AddShader("Diffuse", DiffuseShader::Create());
         AddShader("ProceduralSkybox", ProceduralSkyboxShader::Create());
         AddShader("Depth", DepthShader::Create());

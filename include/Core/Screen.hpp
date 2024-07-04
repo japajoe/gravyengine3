@@ -16,9 +16,12 @@ namespace GravyEngine
     friend class Application;
     public:
         static EventHandler<ScreenResizeEvent> resize;
+        static uint32_t GetWidth();
+        static uint32_t GetHeight();
         static Vector2 GetSize();
         static Vector2 GetPosition();
         static Vector4 GetViewportRect();
+        static Vector2 GetResolution();
     private:
         static Vector2 size;
         static Vector2 position;

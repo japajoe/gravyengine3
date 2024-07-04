@@ -2,6 +2,7 @@
 #include "../External/glad/glad.h"
 #include "../External/GLFW/glfw3.h"
 #include "../Audio/AudioContext.hpp"
+#include "../Physics/Physics.hpp"
 #include "../Rendering/Graphics.hpp"
 #include "../Embedded/EmbeddedLogo.hpp"
 #include "../System/Drawing/Image.hpp"
@@ -182,6 +183,7 @@ namespace GravyEngine
     {
         AudioContext::Initialize(48000, 2);
         Screen::SetSize(config.width, config.height);
+        Physics::Initialize();
         Graphics::Initialize();
         Input::Initialize(pWindow);
         GameBehaviourManager::Initialize(pWindow);
@@ -192,12 +194,13 @@ namespace GravyEngine
         AudioContext::Deinitialize();
         GameBehaviourManager::OnApplicationQuit();
         GameBehaviourManager::Deinitialize();
+        Physics::Initialize();
         Graphics::Deinitialize();
     }
 
     void Application::OnStartFrame()
     {
-        Time::Update();
+        Time::OnStartFrame();
         Input::OnStartFrame();
     }
 
@@ -227,6 +230,7 @@ namespace GravyEngine
         GameBehaviourManager::OnEndFrame();
         AssetManager::OnEndFrame();
         Input::OnEndFrame();
+        Time::OnEndFrame();
     }
 
     void Application::OnError(int32_t error_code, const char *description)

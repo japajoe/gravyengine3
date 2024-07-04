@@ -28,6 +28,11 @@ namespace GravyEngine
         return glm::vec3(1.0f, 1.0f, 1.0f);
     }
 
+    glm::vec3 Vector3f::Clamp(const glm::vec3 &v, const glm::vec3 &min, const glm::vec3 &max)
+    {
+        return glm::clamp(v, min, max);
+    }
+
     glm::vec3 Vector3f::Cross(const glm::vec3 &v1, const glm::vec3 &v2)
     {
         return glm::cross(v1, v2);

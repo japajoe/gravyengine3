@@ -8,6 +8,67 @@
 
 namespace ImGuiEx
 {
+    ImViewport::ImViewport()
+    {
+        hasFocus = false;
+        size = ImVec2(512, 512);
+    }
+
+    void ImViewport::Draw(ImTextureID textureId)
+    {
+        ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0, 0));
+        ImGui::Begin("Viewport");
+        hasFocus = ImGui::IsWindowFocused();
+        ImVec4 viewport = CalculateViewport();
+        ImVec2 viewportPosition = ImVec2(viewport.x, viewport.y);
+        ImVec2 viewportSize = ImGui::GetContentRegionAvail();
+        ImGui::Image(textureId, viewportSize, ImVec2(0, 1), ImVec2(1, 0));
+        ImGui::End();
+        ImGui::PopStyleVar(1);
+
+        bool mustResize = false;
+        bool viewportChanged = false;
+
+        if(viewportSize.x != size.x || viewportSize.y != size.y)
+        {
+            mustResize = true;
+        }
+
+        if(viewportPosition.x != position.x || viewportPosition.y != position.y)
+        {
+            viewportChanged = true;
+        }
+
+        if(mustResize)
+        {
+            size = ImVec2(viewportSize.x, viewportSize.y);
+        }
+
+        if(viewportChanged && !mustResize)
+        {
+            position = ImVec2(viewport.x, viewport.y);
+        }
+    }
+
+    ImVec4 ImViewport::GetRect() const
+    {
+        return ImVec4(position.x, position.y, size.x, size.y);
+    }
+
+    ImVec4 ImViewport::CalculateViewport()
+    {
+        ImVec2 viewportSize = ImGui::GetContentRegionAvail();
+        ImVec2 viewportPosition = ImGui::GetWindowPos();
+        ImVec2 windowSize = ImGui::GetWindowSize(); // Get window size including decorations
+        float padding = ImGui::GetStyle().WindowPadding.y + ImGui::GetStyle().FramePadding.y;//FramePadding
+        float titleBarHeight = viewportPosition.y - (viewportPosition.y + padding);
+        float heightExcludingTitleBar = windowSize.y - titleBarHeight;
+        heightExcludingTitleBar -= viewportSize.y;
+        viewportPosition.y += heightExcludingTitleBar;
+        return ImVec4(viewportPosition.x, viewportPosition.y, viewportSize.x, viewportSize.y);
+    }
+
+
     void BeginHideWindow(const char *name, const ImVec4 &rect)
     {
         ImGuiWindowFlags flags = 0;

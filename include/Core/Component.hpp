@@ -19,6 +19,8 @@ namespace GravyEngine
     protected:
         virtual void OnInitialize();
         virtual void OnDestroy();
+        virtual void OnActivate();
+        virtual void OnDeactivate();
     private:
         GameObject *gameObject;
         Transform *transform;

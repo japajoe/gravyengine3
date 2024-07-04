@@ -1,5 +1,6 @@
 #include "BoundingBox.hpp"
 #include "../System/Mathf.hpp"
+#include "../System/Numerics/Vector4.hpp"
 
 namespace GravyEngine
 {
@@ -15,6 +16,7 @@ namespace GravyEngine
         this->max = max;
         center = (min + max) * 0.5f;
         extents = max - center;
+        hasPoint = true;
     }
 
     void BoundingBox::Grow(const Vector3 &point)
@@ -23,6 +25,26 @@ namespace GravyEngine
         max = Vector3f::Max(max, point);
         center = (min + max) * 0.5f;
         extents = max - center;
+        hasPoint = true;
+    }
+
+    void BoundingBox::Grow(const Vector3 &min, const Vector3 &max)
+    {
+        if (hasPoint)
+        {
+            this->min.x = min.x < this->min.x ? min.x : this->min.x;
+            this->min.y = min.y < this->min.y ? min.y : this->min.y;
+            this->min.z = min.z < this->min.z ? min.z : this->min.z;
+            this->max.x = max.x > this->max.x ? max.x : this->max.x;
+            this->max.y = max.y > this->max.y ? max.y : this->max.y;
+            this->max.z = max.z > this->max.z ? max.z : this->max.z;
+        }
+        else
+        {
+            hasPoint = true;
+            this->min = min;
+            this->max = max;
+        }
     }
 
     void BoundingBox::Clear()
@@ -31,6 +53,7 @@ namespace GravyEngine
         max = Vector3f::One() * -Mathf::Infinity;
         center = (min + max) * 0.5f;
         extents = max - center;
+        hasPoint = false;
     }
 
     Vector3 BoundingBox::GetMin() const
@@ -51,6 +74,16 @@ namespace GravyEngine
     Vector3 BoundingBox::GetExtents() const
     {
         return extents;
+    }
+
+    Vector3 BoundingBox::GetSize() const
+    {
+        return max - min;
+    }
+
+    bool BoundingBox::HasPoint() const
+    {
+        return hasPoint;
     }
 
     bool BoundingBox::Intersects(const Ray &ray, float &distance) const
@@ -152,5 +185,10 @@ namespace GravyEngine
         }
 
         return true;
+    }
+
+    bool BoundingBox::ContainSphere(const Vector3 &center, float radius, float &distance) const
+    {
+        return false;
     }
 };

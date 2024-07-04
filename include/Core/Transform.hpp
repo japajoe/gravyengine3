@@ -54,6 +54,8 @@ namespace GravyEngine
         Transform *FindChild(const std::string &name);
         Vector3 WorldToLocal(const Vector3 &v);
         Vector3 WorldToLocalVector(const Vector3 &v);
+        Vector3 LocalToWorld(const Vector3 &v);
+        Vector3 LocalToWorldVector(const Vector3 &v);
     private:
         Transform *parent;
         Transform *root;        

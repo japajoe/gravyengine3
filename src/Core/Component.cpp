@@ -25,6 +25,16 @@ namespace GravyEngine
 
     }
 
+    void Component::OnActivate()
+    {
+
+    }
+    
+    void Component::OnDeactivate()
+    {
+
+    }
+
     GameObject *Component::GetGameObject() const
     {
         return gameObject;

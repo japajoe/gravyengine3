@@ -30,6 +30,7 @@ include_directories(
     "${PROJECT_SOURCE_DIR}/include/Rendering/Shaders"
     "${PROJECT_SOURCE_DIR}/include/System"
     "${PROJECT_SOURCE_DIR}/include/System/Collections"
+    "${PROJECT_SOURCE_DIR}/include/System/Diagnostics"
     "${PROJECT_SOURCE_DIR}/include/System/Drawing"
     "${PROJECT_SOURCE_DIR}/include/System/IO"
     "${PROJECT_SOURCE_DIR}/include/System/Numerics"
@@ -41,6 +42,8 @@ else()
     add_definitions(-DNDEBUG)
 endif()
 
+#link_directories(${CMAKE_SOURCE_DIR}/external/Jolt/linux_x64)
+
 add_library(${PROJECT_NAME} SHARED ${SOURCES})
 
 if(BUILD_PLATFORM STREQUAL "windows_mingw")
@@ -49,12 +52,12 @@ if(BUILD_PLATFORM STREQUAL "windows_mingw")
 elseif(BUILD_PLATFORM STREQUAL "windows_msvc")
     target_compile_definitions(${PROJECT_NAME} PRIVATE _GLFW_WIN32)
 elseif(BUILD_PLATFORM STREQUAL "linux")
+    target_link_libraries(${PROJECT_NAME} -pthread -ldl -lm -lstdc++fs)
+    #target_link_libraries(${PROJECT_NAME} Jolt)
     if(ENABLE_ASSIMP)
-        add_compile_definitions(GRAVY_ENABLE_ASSIMP)
+        add_definitions(-DGRAVY_ENABLE_ASSIMP)
         find_package(assimp REQUIRED)
-        target_link_libraries(${PROJECT_NAME} assimp -pthread -ldl -lm -lstdc++fs)
-    elseif()
-        target_link_libraries(${PROJECT_NAME} -pthread -ldl -lm -lstdc++fs)
+        target_link_libraries(${PROJECT_NAME} ${ASSIMP_LIBRARIES})
     endif()
     target_compile_definitions(${PROJECT_NAME} PRIVATE _GLFW_X11)
 elseif(BUILD_PLATFORM STREQUAL "mac")

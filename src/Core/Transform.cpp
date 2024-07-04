@@ -398,4 +398,17 @@ namespace GravyEngine
         result *= invScale;
         return result;
     }
+
+    Vector3 Transform::LocalToWorld(const Vector3 &v)
+    {
+        Vector3 tmp = v * GetScale();
+        tmp = Vector3f::Transform(tmp, GetRotation());
+        return tmp + GetPosition();
+    }
+
+    Vector3 Transform::LocalToWorldVector(const Vector3 &v)
+    {
+        Vector3 tmp = v * GetScale();
+        return Vector3f::Transform(tmp, GetRotation());
+    }
 };

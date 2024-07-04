@@ -1,6 +1,7 @@
 #ifndef GRAVYENGINE_GRAPHICS_HPP
 #define GRAVYENGINE_GRAPHICS_HPP
 
+#include "Buffers/FrameBufferObject.hpp"
 #include <vector>
 #include <string>
 #include <cstdint>
@@ -28,13 +29,16 @@ namespace GravyEngine
         static void AddRenderer(Renderer *renderer);
         static void RemoveRenderer(Renderer *renderer);
         static Renderer *GetRendererByIndex(size_t index);
+        static FrameBufferObject *GetFrameBuffer();
     private:
         static std::priority_queue<Renderer*, std::vector<Renderer*>, CompareRendererOrder> renderQueue;
         static std::vector<Renderer*> renderers;
         static std::unique_ptr<CascadedShadowMap> cascadedShadowMap;
         static std::unique_ptr<DepthMaterial> depthMaterial;
+        static std::vector<FrameBufferObject> framebuffers;
         static void Initialize();
         static void Deinitialize();
+        static void OnResize(uint32_t width, uint32_t height);
         static void OnRender();
         static void RenderShadowMap();
         static void RenderScene();

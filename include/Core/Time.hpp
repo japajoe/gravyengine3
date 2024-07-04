@@ -2,6 +2,7 @@
 #define GRAVYENGINE_TIME_HPP
 
 #include <chrono>
+#include "../System/Diagnostics/Stopwatch.hpp"
 
 namespace GravyEngine
 {
@@ -12,17 +13,21 @@ namespace GravyEngine
     private:
         static Timer tp1;
         static Timer tp2;
+        static Stopwatch stopwatch;
         static float deltaTime;
         static double time;
         static int FPS;
         static float elapsedTime;
         static float averageFPS;
+        static float frameTime;
     public:
         static float GetDeltaTime();
         static float GetFPS();
         static float GetTime();
         static double GetTimeAsDouble();
-        static void Update();
+        static float GetFrameTime();
+        static void OnStartFrame();
+        static void OnEndFrame();
     };
 };
 

@@ -12,7 +12,7 @@ namespace GravyEngine
     {
         pDiffuseTexture = nullptr;
         diffuseColor = Color::White();
-        ambientStrength = 0.5f;
+        ambientStrength = 0.1f;
         shininess = 16.0f;
         uvOffset = Vector2(0, 0);
         uvScale = Vector2(1, 1);

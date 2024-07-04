@@ -10,6 +10,8 @@ namespace GravyEngine
     class Physics
     {
     public:
+        static void Initialize();
+        static void Deinitialize();
         static bool Raycast(const Ray &ray, RaycastHit &hit, uint32_t layerMask = 0);
         static bool Raycast(const Vector3 &origin, const Vector3 &direction, float maxDistance, RaycastHit &hit, uint32_t layerMask = 0);
         static bool BoxTest(const Vector3 &origin, const Vector3 &direction, float maxDistance, RaycastHit &hit, uint32_t layerMask = 0);

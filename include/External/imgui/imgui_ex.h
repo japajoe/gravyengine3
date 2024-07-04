@@ -3,6 +3,7 @@
 
 #include "imgui.h"
 #include <cstdint>
+#include <string>
 
 namespace ImGuiEx
 {
@@ -21,12 +22,24 @@ namespace ImGuiEx
         }
     };
 
+    class ImViewport
+    {
+    public:
+        ImViewport();
+        void Draw(ImTextureID textureId);
+        ImVec4 GetRect() const;
+    private:
+        ImVec4 CalculateViewport();
+        ImVec2 size;
+        ImVec2 position;
+        bool hasFocus;
+    };
+
     IMGUI_API void BeginHideWindow(const char *name, const ImVec4 &rect);
     IMGUI_API void EndHideWindow();
     IMGUI_API void Image(uint32_t user_texture_id, const ImVec2& image_size, const ImVec2& uv0 = ImVec2(0, 0), const ImVec2& uv1 = ImVec2(1, 1), const ImVec4& tint_col = ImVec4(1, 1, 1, 1), const ImVec4& border_col = ImVec4(0, 0, 0, 0));
     IMGUI_API bool Knob(const char *label, float *value, float min, float max, int snapSteps);
     IMGUI_API bool Knob(const char *label, const ImKnobInfo &spriteInfo, const ImVec2 &size, float *value, float min, float max, int snapSteps);
-
 };
 
 #endif
