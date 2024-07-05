@@ -105,6 +105,10 @@ namespace GravyEngine
         if(!camera || !transform)
             return;
 
+        Frustum *frustum = camera->GetFrustum();
+        uint32_t layer = static_cast<uint32_t>(transform->GetGameObject()->GetLayer());
+        bool ignoreCulling = (layer & static_cast<uint32_t>(Layer::IgnoreCulling));
+
         for(size_t i = 0; i < data.size(); i++)
         {
             Mesh *pMesh = data[i].pMesh;
@@ -122,6 +126,15 @@ namespace GravyEngine
 
             if(!pMaterial->GetShader())
                 continue;
+
+            auto bounds = pMesh->GetBounds();
+            bounds.Transform(transform->GetModelMatrix());
+
+            if(!ignoreCulling)
+            {
+                if(!frustum->Contains(bounds))
+                    continue;
+            }
 
             auto &settings = data[i].settings;
 

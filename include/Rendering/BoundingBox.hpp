@@ -23,6 +23,7 @@ namespace GravyEngine
         void Clear();
         bool Intersects(const Ray &ray, float &distance) const;
         bool ContainSphere(const Vector3 &center, float radius, float &distance) const;
+        void Transform(const Matrix4 &transformation);
     private:
         Vector3 min;
         Vector3 max;

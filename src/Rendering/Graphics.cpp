@@ -38,6 +38,10 @@ namespace GravyEngine
 
     void Graphics::Initialize()
     {
+        glEnable(GL_DEPTH_TEST);
+        glEnable(GL_CULL_FACE);
+        glEnable(GL_MULTISAMPLE);
+
         mainCamera = std::make_unique<GameObject>();
         mainCamera->AddComponent<Camera>();
         mainCamera->AddComponent<AudioListener>();
@@ -59,9 +63,6 @@ namespace GravyEngine
         framebuffers[0].Generate();
 
         screenQuad.Generate();
-
-        glEnable(GL_DEPTH_TEST);
-        glEnable(GL_CULL_FACE);
 
         Screen::resize += OnResize;
     }

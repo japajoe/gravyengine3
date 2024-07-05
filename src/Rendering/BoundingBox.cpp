@@ -191,4 +191,12 @@ namespace GravyEngine
     {
         return false;
     }
+
+    void BoundingBox::Transform(const Matrix4 &transformation)
+    {
+        min = transformation * Vector4(min, 1.0f);
+        max = transformation * Vector4(max, 1.0f);
+        center = (min + max) * 0.5f;
+        extents = max - center;
+    }
 };

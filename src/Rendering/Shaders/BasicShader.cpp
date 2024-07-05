@@ -26,7 +26,8 @@ out vec4 FragColor;
 
 void main()
 {
-    FragColor = texture(uDiffuseTexture, oUV);
+    vec4 col = texture(uDiffuseTexture, oUV);
+    FragColor = col;
 })";
 
     Shader BasicShader::Create()

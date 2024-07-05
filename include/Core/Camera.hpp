@@ -3,6 +3,7 @@
 
 #include "Component.hpp"
 #include "Transform.hpp"
+#include "../Rendering/Frustum.hpp"
 #include "../System/Numerics/Matrix4.hpp"
 #include "../System/Numerics/Vector2.hpp"
 #include "../System/Numerics/Vector3.hpp"
@@ -29,6 +30,7 @@ namespace GravyEngine
     {
     public:
         Camera();
+        Frustum *GetFrustum();
         Matrix4 GetProjectionMatrix() const;
         Matrix4 GetViewMatrix() const;
         void SetProjectionMode(ProjectionMode mode);
@@ -50,6 +52,7 @@ namespace GravyEngine
         void OnDestroy() override;
     private:
         static Camera *pMainCamera;
+        Frustum frustum;
         ProjectionMode mode;
         Matrix4 projection;
         Color clearColor;

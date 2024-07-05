@@ -79,6 +79,7 @@ namespace GravyEngine
 
         glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D, framebuffer->GetTextureId());
+        pShader->SetInt("uDiffuseTexture", 0);
 
         glBindVertexArray(VAO);
 

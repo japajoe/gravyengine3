@@ -55,6 +55,11 @@ namespace GravyEngine
         SetDirty(true);
     }
 
+    Frustum *Camera::GetFrustum()
+    {
+        return &frustum;
+    }
+
     Matrix4 Camera::GetProjectionMatrix() const
     {
         return projection;
@@ -190,6 +195,7 @@ namespace GravyEngine
             camera->transformData.rotation = transform->GetRotation();
             camera->transformData.scale = transform->GetScale();
             camera->SetDirty(false);
+            camera->frustum.Initialize(camera->GetProjectionMatrix() * camera->GetViewMatrix());
             isDirty = true;
         }
 

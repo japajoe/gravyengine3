@@ -167,7 +167,7 @@ namespace GravyEngine
                 castShadows = false;
                 name = "Skybox";
                 renderOrder = 999;
-                layer = Layer::IgnoreRaycast;
+                layer = static_cast<Layer>(static_cast<uint32_t>(Layer::IgnoreRaycast) | static_cast<uint32_t>(Layer::IgnoreCulling));
                 break;
             }
             case PrimitiveType::Sphere:

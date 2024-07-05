@@ -25,7 +25,8 @@ namespace GravyEngine
     enum class Layer : uint32_t
     {
         Default = 1 << 0,
-        IgnoreRaycast = 1 << 1
+        IgnoreRaycast = 1 << 1,
+        IgnoreCulling = 1 << 2
     };
 
     class GameObject : public Object
