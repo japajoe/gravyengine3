@@ -44,9 +44,6 @@ cmake -DBUILD_PLATFORM=windows_msvc ..
 cmake --build .
 ```
 
-# Questions and issues
-Feel free to open an issue or join the [Discord channel](https://discord.gg/2kaAWXAb6t).
-
 # Demo application
 ```cpp
 #include <GravyEngine3/GravyEngine.hpp>
