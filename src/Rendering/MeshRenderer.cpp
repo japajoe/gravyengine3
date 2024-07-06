@@ -114,10 +114,10 @@ namespace GravyEngine
             Mesh *pMesh = data[i].pMesh;
 
             if(!pMesh)
-                return;
+                continue;
 
             if(pMesh->GetVAO()->GetId() == 0)
-                return;
+                continue;
 
             Material *pMaterial = data[i].pMaterial.get();
 

@@ -12,7 +12,6 @@ namespace GravyEngine
     {
     public:
         Frustum();
-        void Initialize(const Camera *camera);
         void Initialize(const Matrix4 &viewProjection);
         bool Contains(const BoundingBox &bounds);
     private:
