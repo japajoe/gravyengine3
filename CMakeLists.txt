@@ -9,6 +9,19 @@ set(CMAKE_CXX_FLAGS_RELEASE "-O3")
 
 #Currently only working for linux
 option(ENABLE_ASSIMP "Enable Assimp" ON)
+option(ENABLE_BULLET "Enable Bullet" ON)
+
+if(ENABLE_ASSIMP)
+    add_definitions(-DGRAVY_ENABLE_ASSIMP)
+    find_package(assimp REQUIRED)
+    include_directories(${ASSIMP_INCLUDE_DIRS})
+endif()
+
+if(ENABLE_BULLET)
+    add_definitions(-DGRAVY_ENABLE_BULLET)
+    find_package(Bullet REQUIRED)
+    include_directories(${BULLET_INCLUDE_DIRS})
+endif()
 
 file(GLOB_RECURSE SOURCES src/*.cpp src/*.c)
 
@@ -24,6 +37,7 @@ include_directories(
     "${PROJECT_SOURCE_DIR}/include/External/imgui"
     "${PROJECT_SOURCE_DIR}/include/External/miniaudioex"
     "${PROJECT_SOURCE_DIR}/include/Physics"
+    "${PROJECT_SOURCE_DIR}/include/Physics/Collisions"
     "${PROJECT_SOURCE_DIR}/include/Rendering"
     "${PROJECT_SOURCE_DIR}/include/Rendering/Buffers"
     "${PROJECT_SOURCE_DIR}/include/Rendering/Materials"
@@ -42,27 +56,25 @@ else()
     add_definitions(-DNDEBUG)
 endif()
 
-#link_directories(${CMAKE_SOURCE_DIR}/external/Jolt/linux_x64)
-
 add_library(${PROJECT_NAME} SHARED ${SOURCES})
 
 if(BUILD_PLATFORM STREQUAL "windows_mingw")
-    target_link_libraries(${PROJECT_NAME} -lopengl32 -lgdi32 -lstdc++fs -static -static-libgcc -static-libstdc++)
     target_compile_definitions(${PROJECT_NAME} PRIVATE _GLFW_WIN32)
+    target_link_libraries(${PROJECT_NAME} -lopengl32 -lgdi32 -lstdc++fs -static -static-libgcc -static-libstdc++)
 elseif(BUILD_PLATFORM STREQUAL "windows_msvc")
     target_compile_definitions(${PROJECT_NAME} PRIVATE _GLFW_WIN32)
 elseif(BUILD_PLATFORM STREQUAL "linux")
-    target_link_libraries(${PROJECT_NAME} -pthread -ldl -lm -lstdc++fs)
-    #target_link_libraries(${PROJECT_NAME} Jolt)
-    if(ENABLE_ASSIMP)
-        add_definitions(-DGRAVY_ENABLE_ASSIMP)
-        find_package(assimp REQUIRED)
-        target_link_libraries(${PROJECT_NAME} ${ASSIMP_LIBRARIES})
-    endif()
     target_compile_definitions(${PROJECT_NAME} PRIVATE _GLFW_X11)
+    target_link_libraries(${PROJECT_NAME} -pthread -ldl -lm -lstdc++fs)
+    if(ENABLE_ASSIMP)
+        target_link_libraries(${PROJECT_NAME} assimp)
+    endif()
+    if(ENABLE_BULLET)
+        target_link_libraries(${PROJECT_NAME} BulletDynamics BulletCollision LinearMath)
+    endif()
 elseif(BUILD_PLATFORM STREQUAL "mac")
-    target_link_libraries(${PROJECT_NAME} -lstdc++fs -lopengl)
     target_compile_definitions(${PROJECT_NAME} PRIVATE _GLFW_COCOA)
+    target_link_libraries(${PROJECT_NAME} -lstdc++fs -lopengl)
 endif()
 
 if(BUILD_PLATFORM STREQUAL "linux")

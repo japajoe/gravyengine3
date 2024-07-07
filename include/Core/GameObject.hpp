@@ -71,6 +71,24 @@ namespace GravyEngine
             return nullptr;
         }
 
+        template <typename T>
+        std::vector<T*> GetComponents() const
+        {
+            static_assert(std::is_base_of<Component, T>::value, "GetComponents parameter must derive from Component");
+
+            std::vector<T*> targets;
+
+            for(size_t i = 0; i < components.size(); i++)
+            {
+                T* ptr = dynamic_cast<T*>(components[i].get());
+                if(ptr)
+                {
+                    targets.push_back(ptr);
+                }
+            }
+            return targets;
+        }
+
         template <typename T, typename... Param>
         T* AddComponent(Param... param)
         {

@@ -132,13 +132,13 @@ namespace GravyEngine
         corners[6] = Vector3(min.x, max.y, max.z);
         corners[7] = Vector3(max.x, max.y, max.z);
 
-        for (int i = 0; i < 6; ++i) 
+        for (int i = 0; i < 6; i++) 
         {
             Vector4 plane = planes[i];
             int out = 0;
 
             // Check all corners against the current frustum plane
-            for (int j = 0; j < 8; ++j)
+            for (int j = 0; j < 8; j++)
             {
                 if (Vector3f::Dot(Vector3(plane), corners[j]) + plane.w < 0.0f)
                 {

@@ -2,10 +2,9 @@
 
 namespace GravyEngine
 {
-    Timer Time::tp1 = std::chrono::system_clock::now();
-    Timer Time::tp2 = std::chrono::system_clock::now();
+    TimerInfo Time::timer;
+    TimerInfo Time::timerFixed;
     Stopwatch Time::stopwatch;
-    float Time::deltaTime = 0.0f;
     double Time::time = 0.0;
     int Time::FPS = 0;
     float Time::elapsedTime = 0.0f;
@@ -16,17 +15,11 @@ namespace GravyEngine
     {
         stopwatch.Start();
 
-        tp2 = std::chrono::system_clock::now();
-        std::chrono::duration<float> elapsed = tp2 - tp1;
-        tp1 = tp2;
-
-        float dt = elapsed.count();
+        timer.Update();
         
-        deltaTime = dt;
+        time += timer.deltaTime;
 
-        time += deltaTime;
-
-        elapsedTime += dt;
+        elapsedTime += timer.deltaTime;
         FPS++;
 
         if (elapsedTime > 0.5f)
@@ -43,9 +36,19 @@ namespace GravyEngine
         frameTime = stopwatch.GetElapsedMilliseconds();
     }
 
+    void Time::OnFixedUpdate()
+    {
+        timerFixed.Update();
+    }
+
     float Time::GetDeltaTime()
     {
-        return deltaTime;
+        return timer.deltaTime;
+    }
+
+    float Time::GetFixedDeltaTime()
+    {
+        return timerFixed.deltaTime;
     }
 
     float Time::GetFPS()

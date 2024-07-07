@@ -37,6 +37,7 @@ namespace GravyEngine
         void OnInitialize();
         void OnDeinitialize();
         void OnStartFrame();
+        void OnFixedUpdate();
         void OnUpdate();
         void OnLateUpdate();
         void OnRender();

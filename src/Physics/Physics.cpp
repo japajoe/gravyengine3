@@ -2,7 +2,10 @@
 #include "../Core/Debug.hpp"
 #include "../Core/GameObject.hpp"
 #include "../Core/Transform.hpp"
+#include "../Core/GameBehaviourManager.hpp"
+#include "../Core/Time.hpp"
 #include "../System/Numerics/Vector3.hpp"
+#include "../System/Numerics/Matrix4.hpp"
 #include "../System/Mathf.hpp"
 #include "../Rendering/Graphics.hpp"
 #include "../Rendering/Mesh.hpp"
@@ -21,16 +24,6 @@ namespace GravyEngine
         float lastPos = Mathf::FloatMaxValue;
         Vector3 normal;
     };
-
-    void Physics::Initialize()
-    {
-
-    }
-
-    void Physics::Deinitialize()
-    {
-
-    }
 
     bool Physics::Raycast(const Ray &ray, RaycastHit &hit, uint32_t layerMask)
     {

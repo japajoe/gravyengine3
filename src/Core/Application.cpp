@@ -2,7 +2,7 @@
 #include "../External/glad/glad.h"
 #include "../External/GLFW/glfw3.h"
 #include "../Audio/AudioContext.hpp"
-#include "../Physics/Physics.hpp"
+#include "../Physics/PhysicsManager.hpp"
 #include "../Rendering/Graphics.hpp"
 #include "../Embedded/EmbeddedLogo.hpp"
 #include "../System/Drawing/Image.hpp"
@@ -142,6 +142,7 @@ namespace GravyEngine
         while (!glfwWindowShouldClose(pWindow))
         {
             OnStartFrame();
+            OnFixedUpdate();
             OnUpdate();
             OnLateUpdate();
             OnRender();
@@ -183,7 +184,9 @@ namespace GravyEngine
     {
         AudioContext::Initialize(48000, 2);
         Screen::SetSize(config.width, config.height);
-        Physics::Initialize();
+#ifdef GRAVY_ENABLE_BULLET
+        PhysicsManager::Initialize();
+#endif
         Graphics::Initialize();
         Input::Initialize(pWindow);
         GameBehaviourManager::Initialize(pWindow);
@@ -194,7 +197,9 @@ namespace GravyEngine
         AudioContext::Deinitialize();
         GameBehaviourManager::OnApplicationQuit();
         GameBehaviourManager::Deinitialize();
-        Physics::Initialize();
+#ifdef GRAVY_ENABLE_BULLET
+        PhysicsManager::Deinitialize();
+#endif
         Graphics::Deinitialize();
     }
 
@@ -202,6 +207,13 @@ namespace GravyEngine
     {
         Time::OnStartFrame();
         Input::OnStartFrame();
+    }
+
+    void Application::OnFixedUpdate()
+    {
+#ifdef GRAVY_ENABLE_BULLET
+        PhysicsManager::OnFixedUpdate();
+#endif
     }
 
     void Application::OnUpdate()
