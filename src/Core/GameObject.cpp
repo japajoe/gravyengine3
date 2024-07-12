@@ -18,7 +18,7 @@ namespace GravyEngine
     {
         transform.gameObject = this;
         isActive = true;
-        layer = Layer::Default;
+        layer = Layer_Default;
     }
 
     GameObject::~GameObject()
@@ -105,7 +105,7 @@ namespace GravyEngine
         bool castShadows = true;
         uint32_t renderOrder = 1000;
         std::string name = "GameObject";
-        Layer layer = Layer::Default;
+        Layer layer = Layer_Default;
 
         switch(type)
         {
@@ -153,7 +153,7 @@ namespace GravyEngine
             {
                 GameObject *obj = GameObject::Create();
                 obj->SetName("ParticleSystem");
-                obj->SetLayer(Layer::IgnoreRaycast);
+                obj->SetLayer(Layer_IgnoreRaycast);
                 auto ps = obj->AddComponent<ParticleSystem>();
                 ps->SetRenderOrder(1001);
                 return obj;
@@ -167,7 +167,7 @@ namespace GravyEngine
                 castShadows = false;
                 name = "Skybox";
                 renderOrder = 999;
-                layer = static_cast<Layer>(static_cast<uint32_t>(Layer::IgnoreRaycast) | static_cast<uint32_t>(Layer::IgnoreCulling));
+                layer = static_cast<Layer>(Layer_IgnoreRaycast | Layer_IgnoreCulling);
                 break;
             }
             case PrimitiveType::Sphere:
@@ -182,7 +182,7 @@ namespace GravyEngine
             {
                 GameObject *obj = GameObject::Create();
                 obj->SetName("Terrain");
-                obj->SetLayer(Layer::Default);
+                obj->SetLayer(Layer_Default);
                 obj->AddComponent<Terrain>();
                 return obj;
             }

@@ -1,4 +1,5 @@
 #include "Physics.hpp"
+#include "PhysicsManager.hpp"
 #include "../Core/Debug.hpp"
 #include "../Core/GameObject.hpp"
 #include "../Core/Transform.hpp"
@@ -25,19 +26,19 @@ namespace GravyEngine
         Vector3 normal;
     };
 
-    bool Physics::Raycast(const Ray &ray, RaycastHit &hit, uint32_t layerMask)
+    bool Physics::Raycast(const Ray &ray, RaycastHit &hit, Layer layerMask)
     {
         return Raycast(ray.origin, ray.direction, ray.length, hit, layerMask);
     }
 
-    bool Physics::Raycast(const Vector3 &origin, const Vector3 &direction, float maxDistance, RaycastHit &hit, uint32_t layerMask)
+    bool Physics::Raycast(const Vector3 &origin, const Vector3 &direction, float maxDistance, RaycastHit &hit, Layer layerMask)
     {
         TriangleIntersection intersection;
         intersection.transform = nullptr;
 	    intersection.triangleIndex1 = -1;
 	    intersection.lastPos = std::numeric_limits<float>::max();
         float lastPos = std::numeric_limits<float>::max();
-        uint32_t ignoreRaycast = static_cast<uint32_t>(Layer::IgnoreRaycast);
+        uint32_t ignoreRaycast = static_cast<uint32_t>(Layer_IgnoreRaycast);
 
         Renderer *renderer = nullptr;
         size_t currentIndex = 0;
@@ -129,7 +130,16 @@ namespace GravyEngine
         return false;
     }
 
-    bool Physics::BoxTest(const Vector3 &origin, const Vector3 &direction, float maxDistance, RaycastHit &hit, uint32_t layerMask)
+    bool Physics::RayTest(const Vector3 &origin, const Vector3 &direction, RaycastHit &hit, Layer layerMask)
+    {
+#ifdef GRAVY_ENABLE_BULLET
+        return PhysicsManager::RayTest(origin, direction, hit);
+#else
+        return false;
+#endif
+    }
+
+    bool Physics::BoxTest(const Vector3 &origin, const Vector3 &direction, float maxDistance, RaycastHit &hit, Layer layerMask)
     {
         hit.userData = nullptr;
         TriangleIntersection intersection;
@@ -137,7 +147,7 @@ namespace GravyEngine
 	    intersection.triangleIndex1 = -1;
 	    intersection.lastPos = std::numeric_limits<float>::max();
         float lastPos = std::numeric_limits<float>::max();
-        uint32_t ignoreRaycast = static_cast<uint32_t>(Layer::IgnoreRaycast);
+        uint32_t ignoreRaycast = static_cast<uint32_t>(Layer_IgnoreRaycast);
 
         Renderer *renderer = nullptr;
         size_t currentIndex = 0;

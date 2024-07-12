@@ -4,7 +4,9 @@
 #ifdef GRAVY_ENABLE_BULLET
 
 #include "Rigidbody.hpp"
+#include "RaycastHit.hpp"
 #include "../System/Numerics/Matrix4.hpp"
+#include "../System/Numerics/Vector3.hpp"
 #include <memory>
 
 class btBroadphaseInterface;
@@ -25,6 +27,7 @@ namespace GravyEngine
         static void OnFixedUpdate();
         static void Add(Rigidbody *body);
         static void Remove(Rigidbody *body);
+        static bool RayTest(const Vector3 &startPoint, const Vector3 &endPoint, RaycastHit &hit);
     private:
         static int fixedTimeStep;
         static float elapsedTime;

@@ -209,4 +209,29 @@ namespace GravyEngine
             destroyQueue.clear();
         }
     }
+
+    bool PhysicsManager::RayTest(const Vector3 &startPoint, const Vector3 &endPoint, RaycastHit &hit)
+    {
+        if(!dynamicsWorld)
+            return false;
+
+        btVector3 from(startPoint.x, startPoint.y, startPoint.z);
+        btVector3 to(endPoint.x, endPoint.y, endPoint.z);
+
+
+        btCollisionWorld::ClosestRayResultCallback callback(from, to);
+        dynamicsWorld->rayTest(from, to, callback);
+
+        if(callback.hasHit())
+        {
+            hit.point = Vector3(callback.m_hitPointWorld.x(), callback.m_hitPointWorld.y(), callback.m_hitPointWorld.z());            
+            Rigidbody *rb = reinterpret_cast<Rigidbody*>(callback.m_collisionObject->getUserPointer());
+            hit.transform = rb->GetTransform();
+            hit.distance = Vector3f::Distance(startPoint, hit.point);
+            hit.normal = Vector3(callback.m_hitNormalWorld.x(), callback.m_hitNormalWorld.y(), callback.m_hitNormalWorld.z());
+            return true;
+        }
+
+        return false;
+    }
 };

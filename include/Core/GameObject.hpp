@@ -4,6 +4,7 @@
 #include "Object.hpp"
 #include "Component.hpp"
 #include "Transform.hpp"
+#include "Layer.hpp"
 #include <vector>
 #include <memory>
 
@@ -20,13 +21,6 @@ namespace GravyEngine
         Skybox,
         Sphere,
         Terrain
-    };
-
-    enum class Layer : uint32_t
-    {
-        Default = 1 << 0,
-        IgnoreRaycast = 1 << 1,
-        IgnoreCulling = 1 << 2
     };
 
     class GameObject : public Object

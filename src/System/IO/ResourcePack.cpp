@@ -2,17 +2,13 @@
 #include <cstring>
 #include <iostream>
 
-#define FORCE_EXPERIMENTAL_FS
-
-#if defined(USE_EXPERIMENTAL_FS) || defined(FORCE_EXPERIMENTAL_FS)
-	// C++14
-	#define _SILENCE_EXPERIMENTAL_FILESYSTEM_DEPRECATION_WARNING
-	#include <experimental/filesystem>
-	namespace _gfs = std::experimental::filesystem::v1;
+// Check if the C++17 filesystem is available
+#if __has_include(<filesystem>) && __cpp_lib_filesystem >= 201703
+#include <filesystem>
+namespace _gfs = std::filesystem;
 #else
-	// C++17
-	#include <filesystem>
-	namespace _gfs = std::filesystem;
+#include <experimental/filesystem>
+namespace _gfs = std::experimental::filesystem;
 #endif
 
 namespace GravyEngine

@@ -23,12 +23,12 @@ namespace GravyEngine
             return pointer[index];
         }
 
-        size_t GetLength() const
+        inline size_t GetLength() const
         {
             return length;
         }
 
-        bool IsEmpty() const
+        inline bool IsEmpty() const
         {
             return length == 0;
         }

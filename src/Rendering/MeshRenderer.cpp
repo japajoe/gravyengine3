@@ -107,7 +107,7 @@ namespace GravyEngine
 
         Frustum *frustum = camera->GetFrustum();
         uint32_t layer = static_cast<uint32_t>(transform->GetGameObject()->GetLayer());
-        bool ignoreCulling = (layer & static_cast<uint32_t>(Layer::IgnoreCulling));
+        bool ignoreCulling = (layer & Layer_IgnoreCulling);
 
         for(size_t i = 0; i < data.size(); i++)
         {
