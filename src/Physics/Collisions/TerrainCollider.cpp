@@ -9,6 +9,7 @@ namespace GravyEngine
         this->mesh = nullptr;
         this->width = 0;
         this->depth = 0;
+        this->scale = 1.0f;
         SetName("TerrainCollider");
     }
 
@@ -40,5 +41,15 @@ namespace GravyEngine
     uint32_t TerrainCollider::GetDepth() const
     {
         return depth;
+    }
+
+    void TerrainCollider::SetScale(float scale)
+    {
+        this->scale = scale;
+    }
+
+    float TerrainCollider::GetScale() const
+    {
+        return scale;
     }
 };

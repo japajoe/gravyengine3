@@ -11,14 +11,22 @@ namespace GravyEngine
 {
     typedef void (*LoadEventCallback)(void);
 
+    enum WindowFlags_
+    {
+        WindowFlags_None = 0,
+        WindowFlags_VSync = 1 << 0,
+        WindowFlags_Maximize = 1 << 1,
+        WindowFlags_Fullscreen = 1 << 2
+    };
+
+    typedef int WindowFlags;
+
     struct Configuration
     {
         std::string title;
         uint32_t width;
         uint32_t height;
-        bool vsync;
-        bool maximize;
-        bool fullScreen;
+        WindowFlags flags;
         std::vector<uint8_t> inconData;
     };
 
@@ -27,12 +35,14 @@ namespace GravyEngine
     public:
         LoadEventCallback loaded;
         Application(const Configuration &config);
-        Application(const char *title, int width, int height, bool vsync = true, bool maximize = false, bool fullScreen = false);
+        Application(const char *title, int width, int height, WindowFlags flags);
         void Run();
         void Close();
+        static void Quit();
     private:
         GLFWwindow *pWindow;
         Configuration config;
+        static Application *instance;
         void Dispose();
         void OnInitialize();
         void OnDeinitialize();
@@ -43,6 +53,7 @@ namespace GravyEngine
         void OnRender();
         void OnGUI();
         void OnEndFrame();
+        void OnPostSwapBuffers();
         static void OnError(int32_t error_code, const char *description);
         static void OnWindowClose(GLFWwindow *window);
         static void OnWindowResize(GLFWwindow *window, int32_t width, int32_t height);

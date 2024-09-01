@@ -16,10 +16,13 @@ namespace GravyEngine
         uint32_t GetWidth() const;
         void SetDepth(uint32_t depth);
         uint32_t GetDepth() const;
+        void SetScale(float scale);
+        float GetScale() const;
     protected:
         Mesh *mesh;
         uint32_t width;
         uint32_t depth;
+        float scale;
     };
 };
 

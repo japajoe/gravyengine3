@@ -10,6 +10,7 @@
 #include "../Core/GameObject.hpp"
 #include <bullet/btBulletCollisionCommon.h>
 #include <bullet/btBulletDynamicsCommon.h>
+#include <bullet/BulletCollision/CollisionShapes/btHeightfieldTerrainShape.h>
 
 namespace GravyEngine
 {
@@ -243,10 +244,6 @@ namespace GravyEngine
                 shape.collisionShape = new btSphereShape(collider->GetRadius());
                 break;
             }
-            default:
-            {
-                return false;
-            }
             // case ColliderType::Terrain:
             // {
             //     TerrainCollider *collider = static_cast<TerrainCollider*>(c);
@@ -259,8 +256,38 @@ namespace GravyEngine
             //     if(collider->GetWidth() == 0 || collider->GetDepth() == 0)
             //         return false;
 
-            //     //shape.collisionShape = new btHeightfieldTerrainShape()
+            //     auto &vertices = mesh->GetVertices();
+            //     const size_t length = vertices.size();
+
+            //     float *pHeightfieldData = new float[length];
+
+            //     for(size_t i = 0; i < length; i++)
+            //     {
+            //         pHeightfieldData[i] = vertices[i].position.y;
+            //     }
+
+            //     shape.collisionShape = new btHeightfieldTerrainShape(
+            //         collider->GetWidth(), 
+            //         collider->GetDepth(), 
+            //         pHeightfieldData, 
+            //         1.0f, 
+            //         0.0f, 
+            //         75.0f, 
+            //         1, 
+            //         PHY_FLOAT, 
+            //         false
+            //     );
+
+            //     float scale = collider->GetScale();
+
+            //     shape.collisionShape->setLocalScaling(btVector3(scale, 1.0, scale));
+
+            //     break;
             // }
+            default:
+            {
+                return false;
+            }
         }
         
         shape.position = c->GetCenter();

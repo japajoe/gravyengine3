@@ -6,6 +6,8 @@
 #include "../System/EventHandler.hpp"
 #include <cstdint>
 #include <functional>
+#include <string>
+#include <vector>
 
 namespace GravyEngine
 {
@@ -22,12 +24,18 @@ namespace GravyEngine
         static Vector2 GetPosition();
         static Vector4 GetViewportRect();
         static Vector2 GetResolution();
+        static void CaptureScreenShot(const std::string &filepath);
     private:
         static Vector2 size;
         static Vector2 position;
         static Vector4 viewportRect;
+        static bool captureFrame;
+        static std::string captureFilePath;
+        static std::vector<uint8_t> pixels;
+        static std::vector<uint8_t> rowBuffer;
         static void SetSize(int width, int height);
         static void SetPosition(int x, int y);
+        static void Capture();
     };
 };
 #endif

@@ -1,3 +1,6 @@
+#ifndef GRAVYENGINE_EMBEDDEDLOGO_HPP
+#define GRAVYENGINE_EMBEDDEDLOGO_HPP
+
 #include <cstdint>
 #include <cstdlib>
 
@@ -10,3 +13,5 @@ namespace GravyEngine
         size_t GetSize() const;
     };
 };
+
+#endif

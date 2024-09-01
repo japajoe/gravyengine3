@@ -89,27 +89,26 @@ float fbm(vec3 p)
 	return f;
 }
 
-void CreateGround()
+vec4 CreateGround(vec4 fragColor)
 {
-	vec4 color = vec4(0.0, 0.0, 0.0, 1.0);
+	vec4 color = fragColor;
 
     if(World.fogEnabled > 0)
     {
         float factor = (oUV.y - uFogStart) / (uFogEnd - uFogStart);
         factor = clamp(factor, 0.0, 1.0);
         factor = smoothstep(0.0, 1.0, factor);
-        color.rgb = mix(World.fogColor.rgb, color.xyz, factor);
+        color.rgb = mix(World.fogColor.rgb, color.rgb, factor);
+		color = GammaCorrection(color.rgb);
+		return color;
     }
 	else
 	{
-		color = vec4(1.0, 1.0, 1.0, 1.0);
+		return fragColor;
 	}
-
-	color = GammaCorrection(color.rgb);
-	FragColor = color;
 }
 
-void CreateSky()
+vec4 CreateSky()
 {
 	vec3 pos = oFragPosition;
 
@@ -149,24 +148,12 @@ void CreateSky()
 	color.rgb += noise(pos * 1000) * 0.01;
 
 	color = GammaCorrection(color.rgb);
-	FragColor = color;
+	return color;
 }
 
 void main()
 {
-	vec3 pos = oFragPosition;
-
-	if (pos.y < 0)
-	{
-		//vec3 color = GammaCorrection(uFogColor.rgb).rgb;
-		//FragColor = vec4(color, 1.0);
-		CreateSky();
-		//CreateGround();
-	}
-	else
-	{
-		CreateSky();
-	}
+	FragColor = CreateSky();
 })";
 
     Shader ProceduralSkyboxShader::Create()

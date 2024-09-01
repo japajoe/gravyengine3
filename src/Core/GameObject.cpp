@@ -160,7 +160,7 @@ namespace GravyEngine
             }
             case PrimitiveType::Skybox:
             {
-                mesh = Resources::FindMesh("Hemisphere");
+                mesh = Resources::FindMesh("Sphere");
                 createMaterial = [] () { return std::make_shared<ProceduralSkyboxMaterial>(); };
                 cullFace = false;
                 depthTest = false;

@@ -63,8 +63,6 @@ namespace GravyEngine
         framebuffers[0].Generate();
 
         screenQuad.Generate();
-
-        Screen::resize += OnResize;
     }
 
     void Graphics::Deinitialize()
@@ -77,6 +75,8 @@ namespace GravyEngine
 
     void Graphics::OnResize(uint32_t width, uint32_t height)
     {
+        glViewport(0, 0, width, height);
+
         auto framebuffer = GetFrameBuffer();
 
         if(framebuffer == nullptr)
@@ -121,13 +121,9 @@ namespace GravyEngine
 
             cascadedShadowMap->Bind();
 
-            std::priority_queue<Renderer*, std::vector<Renderer*>, CompareRendererOrder> queue = renderQueue;
-            while (!queue.empty()) 
+            for(size_t i = 0; i < renderers.size(); i++)
             {
-                Renderer* currentRenderer = queue.top();
-                if(currentRenderer->GetCastShadows())
-                    currentRenderer->OnRender(material, camera);
-                queue.pop();
+                renderers[i]->OnRender(material, camera);
             }
 
             cascadedShadowMap->Unbind();

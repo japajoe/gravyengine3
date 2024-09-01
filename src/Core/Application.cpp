@@ -15,23 +15,25 @@
 
 namespace GravyEngine
 {
+    Application *Application::instance = nullptr;
+
     Application::Application(const Configuration &config)
     {
         this->config = config;
         this->pWindow = nullptr;
         this->loaded = nullptr;
+        instance = this;
     }
 
-    Application::Application(const char *title, int width, int height, bool vsync, bool maximize, bool fullScreen)
+    Application::Application(const char *title, int width, int height, WindowFlags flags)
     {
         this->config.title = title;
         this->config.width = width;
         this->config.height = height;
-        this->config.vsync = vsync;
-        this->config.maximize = maximize;
-        this->config.fullScreen = fullScreen;
+        this->config.flags = flags;
         this->pWindow = nullptr;
         this->loaded = nullptr;
+        instance = this;
     }
 
     void Application::Run()
@@ -52,12 +54,12 @@ namespace GravyEngine
         glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 5);
         glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
         glfwWindowHint(GLFW_VISIBLE, GL_FALSE);
-        //glfwWindowHint(GLFW_SAMPLES, 4);
+        glfwWindowHint(GLFW_SAMPLES, 4);
 
-        if(config.maximize)
+        if(config.flags & WindowFlags_Maximize)
             glfwWindowHint(GLFW_MAXIMIZED, GL_TRUE);
 
-        if(config.fullScreen)
+        if(config.flags & WindowFlags_Fullscreen)
         {
             GLFWmonitor* monitor =  glfwGetPrimaryMonitor();
             const GLFWvidmode* mode = glfwGetVideoMode(monitor);
@@ -128,7 +130,10 @@ namespace GravyEngine
             }
         }
 
-        glfwSwapInterval(config.vsync ? 1 : 0);
+        if(config.flags & WindowFlags_VSync)
+            glfwSwapInterval(1);
+        else
+            glfwSwapInterval(0);
 
         OnInitialize();
 
@@ -150,6 +155,7 @@ namespace GravyEngine
             OnEndFrame();
             glfwSwapBuffers(pWindow);
             glfwPollEvents();
+            OnPostSwapBuffers();
         }
 
         OnDeinitialize();
@@ -162,6 +168,14 @@ namespace GravyEngine
         if(pWindow)
         {
             glfwSetWindowShouldClose(pWindow, GLFW_TRUE);
+        }
+    }
+
+    void Application::Quit()
+    {
+        if(instance)
+        {
+            instance->Close();
         }
     }
 
@@ -245,6 +259,11 @@ namespace GravyEngine
         Time::OnEndFrame();
     }
 
+    void Application::OnPostSwapBuffers()
+    {
+        Screen::Capture();
+    }
+
     void Application::OnError(int32_t error_code, const char *description)
     {
         std::cerr << "GLFW error code " << error_code << ":" << description << '\n';
@@ -257,7 +276,7 @@ namespace GravyEngine
 
     void Application::OnWindowResize(GLFWwindow *window, int32_t width, int32_t height)
     {
-        glViewport(0, 0, width, height);
+        Graphics::OnResize(width, height);
         Screen::SetSize(width, height);
     }
 

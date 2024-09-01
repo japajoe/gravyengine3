@@ -30,6 +30,7 @@ namespace GravyEngine
         uint32_t GetChannels() const;
         size_t GetDataSize() const;
         bool IsLoaded() const;
+        static bool SaveAsPNG(const std::string &filepath, const void *data, size_t size, size_t width, size_t height, size_t channels);
     private:
         bool LoadFromFile(const std::string &filepath);
         bool LoadFromMemory(const uint8_t *data, size_t size);
