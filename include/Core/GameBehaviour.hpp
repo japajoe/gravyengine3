@@ -9,6 +9,8 @@
 
 namespace GravyEngine
 {
+    class Rigidbody;
+    
     class GameBehaviour : public Component
     {
     friend class GameBehaviourManager;
@@ -22,6 +24,8 @@ namespace GravyEngine
         virtual void OnFixedUpdate();
         virtual void OnGUI();
         virtual void OnAssetLoadedAsync(const AssetInfo &assetInfo);
+        virtual void OnCollisionStay(Rigidbody *a, Rigidbody *b);
+        virtual void OnCollisionExit(Rigidbody *rigidBody);
         void LoadAssetsFromResourceAsync(const std::vector<AssetLoadInfo> &assets);
         void LoadAssetsFromFileAsync(const std::vector<AssetLoadInfo> &assets);
         void LoadAssetFromResourceAsync(AssetType type, const std::string &resourcePackName, const std::string &filepath);

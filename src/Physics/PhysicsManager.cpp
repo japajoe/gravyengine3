@@ -8,6 +8,8 @@
 #include "../System/Mathf.hpp"
 #include <bullet/btBulletDynamicsCommon.h>
 #include <bullet/btBulletCollisionCommon.h>
+#include <bullet/BulletCollision/CollisionDispatch/btCollisionObjectWrapper.h>
+#include <bullet/BulletCollision/NarrowPhaseCollision/btManifoldPoint.h>
 #include <cstdint>
 
 namespace GravyEngine
@@ -91,6 +93,42 @@ namespace GravyEngine
                 transform->SetPosition(Vector3(origin.x(), origin.y(), origin.z()));
                 transform->SetRotation(Quaternion(rotation.w(), rotation.x(), rotation.y(), rotation.z()));
             }
+
+            auto dispatcher = dynamicsWorld->getDispatcher();
+            const int numManifolds = dispatcher->getNumManifolds();
+
+            for(size_t i = 0; i < numManifolds; i++)
+            {
+                btPersistentManifold* man = dispatcher->getManifoldByIndexInternal(i);
+                Rigidbody *rb1 = reinterpret_cast<Rigidbody*>(man->getBody0()->getUserPointer());
+                Rigidbody *rb2 = reinterpret_cast<Rigidbody*>(man->getBody1()->getUserPointer());
+                GameBehaviourManager::OnCollisionStay(rb1, rb2);
+            }
+
+            for(size_t i = 0; i < bodies.size(); i++)
+            {
+                bool hasContact = false;
+
+                for(size_t j = 0; j < numManifolds; j++)
+                {
+                    btPersistentManifold* man = dispatcher->getManifoldByIndexInternal(j);
+
+                    if (man->getBody0() == bodies[i] || man->getBody1() == bodies[i]) 
+                    {
+                        hasContact = true;
+                        break;
+                    }
+
+                }
+
+                if(!hasContact)
+                {
+                    Rigidbody *rb = reinterpret_cast<Rigidbody*>(bodies[i]->getUserPointer());
+                    GameBehaviourManager::OnCollisionExit(rb);
+                }
+            }
+
+
         }
     }
 

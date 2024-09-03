@@ -2,6 +2,13 @@
 
 namespace GravyEngine
 {
+    AudioClip::AudioClip()
+    {
+        this->handle = nullptr;
+        this->dataSize = 0;
+        this->streamFromDisk = false;
+    }
+
     AudioClip::AudioClip(const std::string &filepath, bool streamFromDisk)
     {
         this->filePath = filepath;

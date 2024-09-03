@@ -8,6 +8,7 @@
 #include "Collisions/TerrainCollider.hpp"
 #include "../Core/Transform.hpp"
 #include "../Core/GameObject.hpp"
+#include "../System/Mathf.hpp"
 #include <bullet/btBulletCollisionCommon.h>
 #include <bullet/btBulletDynamicsCommon.h>
 #include <bullet/BulletCollision/CollisionShapes/btHeightfieldTerrainShape.h>
@@ -533,6 +534,18 @@ namespace GravyEngine
         Activate();
         auto &worldTransform = body->getWorldTransform();
         worldTransform.setRotation(btQuaternion(rotation.x, rotation.y, rotation.z, rotation.w));
+    }
+
+    void Rigidbody::FreezeRotation(const Vector3 &axes)
+    {
+        if(!body)
+            return;
+
+        float lockX = Mathf::Abs(axes.x) > 0.0f ? 0.0f : 1.0f;
+        float lockY = Mathf::Abs(axes.y) > 0.0f ? 0.0f : 1.0f;
+        float lockZ = Mathf::Abs(axes.z) > 0.0f ? 0.0f : 1.0f;
+
+        body->setAngularFactor(btVector3(lockX, lockY, lockZ));
     }
 
     void Rigidbody::Activate()

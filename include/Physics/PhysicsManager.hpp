@@ -1,6 +1,8 @@
 #ifndef GRAVYENGINE_PHYSICSMANAGER_HPP
 #define GRAVYENGINE_PHYSICSMANAGER_HPP
 
+//#define GRAVY_ENABLE_BULLET
+
 #ifdef GRAVY_ENABLE_BULLET
 
 #include "Rigidbody.hpp"
@@ -26,7 +28,7 @@ namespace GravyEngine
         static void Deinitialize();
         static void OnFixedUpdate();
         static void Add(Rigidbody *body);
-        static void Remove(Rigidbody *body);
+        static void Remove(Rigidbody *body);        
         static bool RayTest(const Vector3 &startPoint, const Vector3 &endPoint, RaycastHit &hit);
     private:
         static int fixedTimeStep;
@@ -37,7 +39,7 @@ namespace GravyEngine
 	    static std::unique_ptr<btSequentialImpulseConstraintSolver> solver;	
 	    static std::unique_ptr<btDiscreteDynamicsWorld> dynamicsWorld;
         static std::vector<btRigidBody*> bodies;
-        static std::vector<Rigidbody*> destroyQueue;
+        static std::vector<Rigidbody*> destroyQueue;        
     };
 };
 

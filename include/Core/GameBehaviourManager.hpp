@@ -13,6 +13,7 @@ struct GLFWwindow;
 namespace GravyEngine
 {
     class GameBehaviour;
+    class Rigidbody;
 
     class GameBehaviourManager
     {
@@ -31,6 +32,8 @@ namespace GravyEngine
         static void OnGUI();
         static void OnEndFrame();
         static void OnAssetLoadedAsync(const AssetInfo &assetInfo);
+        static void OnCollisionStay(Rigidbody *a, Rigidbody *b);
+        static void OnCollisionExit(Rigidbody *rigidBody);
     };
 };
 #endif

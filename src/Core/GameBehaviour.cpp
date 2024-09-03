@@ -44,6 +44,16 @@ namespace GravyEngine
 
     }
 
+    void GameBehaviour::OnCollisionStay(Rigidbody *a, Rigidbody *b)
+    {
+
+    }
+
+    void GameBehaviour::OnCollisionExit(Rigidbody *rigidBody)
+    {
+
+    }
+
     void GameBehaviour::LoadAssetsFromResourceAsync(const std::vector<AssetLoadInfo> &assets)
     {
         AssetManager::LoadFromPackAsync(assets);

@@ -491,6 +491,7 @@ namespace GravyEngine
         Texture();
         virtual ~Texture();
         uint32_t GetId() const;
+        void *GetHandle() const;
         uint32_t GetWidth() const;
         uint32_t GetHeight() const;
         TextureType GetType() const;

@@ -1,6 +1,7 @@
 #include "GameBehaviourManager.hpp"
 #include "GameBehaviour.hpp"
 #include "GameObject.hpp"
+#include "../Physics/Rigidbody.hpp"
 #include "../External/GLFW/glfw3.h"
 
 namespace GravyEngine
@@ -110,5 +111,35 @@ namespace GravyEngine
         {
             behaviours[i]->OnAssetLoadedAsync(assetInfo);
         }
+    }
+
+    void GameBehaviourManager::OnCollisionStay(Rigidbody *a, Rigidbody *b)
+    {
+        #ifdef GRAVY_ENABLE_BULLET
+
+        for(size_t i = 0; i < behaviours.size(); i++)
+        {
+            if(a->GetTransform()->GetRoot() == behaviours[i]->GetTransform()->GetRoot())
+            {
+                behaviours[i]->OnCollisionStay(a, b);
+            }
+        }
+
+        #endif
+    }
+
+    void GameBehaviourManager::OnCollisionExit(Rigidbody *rigidBody)
+    {
+        #ifdef GRAVY_ENABLE_BULLET
+
+        for(size_t i = 0; i < behaviours.size(); i++)
+        {
+            if(rigidBody->GetTransform()->GetRoot() == behaviours[i]->GetTransform()->GetRoot())
+            {
+                behaviours[i]->OnCollisionExit(rigidBody);
+            }
+        }
+
+        #endif
     }
 };

@@ -84,6 +84,7 @@ namespace GravyEngine
         void AddImpulse(const Vector3 &impulse, const Vector3 &relativePosition);
         void MovePosition(const Vector3 &position);
         void MoveRotation(const Quaternion &rotation);
+        void FreezeRotation(const Vector3 &axes);
         void Activate();
     protected:
         void OnDestroy() override;

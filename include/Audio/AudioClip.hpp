@@ -10,6 +10,7 @@ namespace GravyEngine
     class AudioClip
     {
     public:
+        AudioClip();
         AudioClip(const std::string &filepath, bool streamFromDisk = true);
         AudioClip(const std::vector<uint8_t> &data);
         AudioClip(void *data, size_t size);

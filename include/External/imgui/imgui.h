@@ -300,6 +300,9 @@ namespace ImGui
     typedef void (*ImDragBehaviourCallback)(bool isDragging);    
     IMGUI_API void          SetDragBehaviourCallback(ImDragBehaviourCallback callback);
 
+    typedef void (*ImHoverBehaviourCallback)(ImGuiID hoveredId);
+    IMGUI_API void          SetHoverBehaviourCallback(ImHoverBehaviourCallback callback);
+
     // Context creation and access
     // - Each context create its own ImFontAtlas by default. You may instance one yourself and pass it to CreateContext() to share a font atlas between contexts.
     // - DLL users: heaps and globals are not shared across DLL boundaries! You will need to call SetCurrentContext() + SetAllocatorFunctions()

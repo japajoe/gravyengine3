@@ -4004,13 +4004,26 @@ void ImGui::ClearActiveID()
     SetActiveID(0, NULL); // g.ActiveId = 0;
 }
 
+static ImGui::ImHoverBehaviourCallback hoverBehaviourCallback = NULL;
+
+void ImGui::SetHoverBehaviourCallback(ImHoverBehaviourCallback callback)
+{
+    hoverBehaviourCallback = callback;
+}
+
 void ImGui::SetHoveredID(ImGuiID id)
 {
     ImGuiContext& g = *GImGui;
     g.HoveredId = id;
     g.HoveredIdAllowOverlap = false;
     if (id != 0 && g.HoveredIdPreviousFrame != id)
+    {
         g.HoveredIdTimer = g.HoveredIdNotActiveTimer = 0.0f;
+        if(hoverBehaviourCallback != NULL)
+        {
+            hoverBehaviourCallback(id);
+        }
+    }
 }
 
 ImGuiID ImGui::GetHoveredID()

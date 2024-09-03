@@ -19,6 +19,11 @@ namespace GravyEngine
         return id;
     }
 
+    void *Texture::GetHandle() const
+    {
+        return (void*)(uint64_t)id;
+    }
+
     uint32_t Texture::GetWidth() const
     {
         return width;
