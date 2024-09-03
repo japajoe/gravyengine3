@@ -113,6 +113,21 @@ namespace GravyEngine
         }
     }
 
+    void GameBehaviourManager::OnCollisionEnter(Rigidbody *a, Rigidbody *b)
+    {
+        #ifdef GRAVY_ENABLE_BULLET
+
+        for(size_t i = 0; i < behaviours.size(); i++)
+        {
+            if(a->GetTransform()->GetRoot() == behaviours[i]->GetTransform()->GetRoot())
+            {
+                behaviours[i]->OnCollisionEnter(a, b);
+            }
+        }
+
+        #endif
+    }
+
     void GameBehaviourManager::OnCollisionStay(Rigidbody *a, Rigidbody *b)
     {
         #ifdef GRAVY_ENABLE_BULLET

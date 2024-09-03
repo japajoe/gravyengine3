@@ -24,6 +24,7 @@ namespace GravyEngine
         body = nullptr;
         collisionShape = nullptr;
         motionState = nullptr;
+        hasContact = false;
         SetName("Rigidbody");
     }
 

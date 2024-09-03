@@ -100,6 +100,7 @@ namespace GravyEngine
         float drag;
         float angularDrag;
         Vector3 centerOfMass;
+        bool hasContact;
         bool Initialize();
         bool InitializeCollisionShape();
         bool CreateShape(Collider *c, ShapeInfo &shape);

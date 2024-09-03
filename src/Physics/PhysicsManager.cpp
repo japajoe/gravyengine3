@@ -102,7 +102,16 @@ namespace GravyEngine
                 btPersistentManifold* man = dispatcher->getManifoldByIndexInternal(i);
                 Rigidbody *rb1 = reinterpret_cast<Rigidbody*>(man->getBody0()->getUserPointer());
                 Rigidbody *rb2 = reinterpret_cast<Rigidbody*>(man->getBody1()->getUserPointer());
-                GameBehaviourManager::OnCollisionStay(rb1, rb2);
+
+                if(!rb1->hasContact)
+                {
+                    rb1->hasContact = true;
+                    GameBehaviourManager::OnCollisionEnter(rb1, rb2);
+                }
+                else
+                {
+                    GameBehaviourManager::OnCollisionStay(rb1, rb2);
+                }
             }
 
             for(size_t i = 0; i < bodies.size(); i++)
@@ -121,10 +130,15 @@ namespace GravyEngine
 
                 }
 
+                Rigidbody *rb = reinterpret_cast<Rigidbody*>(bodies[i]->getUserPointer());
+
                 if(!hasContact)
                 {
-                    Rigidbody *rb = reinterpret_cast<Rigidbody*>(bodies[i]->getUserPointer());
-                    GameBehaviourManager::OnCollisionExit(rb);
+                    if(rb->hasContact)
+                    {
+                        rb->hasContact = false;
+                        GameBehaviourManager::OnCollisionExit(rb);
+                    }
                 }
             }
 

@@ -44,6 +44,11 @@ namespace GravyEngine
 
     }
 
+    void GameBehaviour::OnCollisionEnter(Rigidbody *a, Rigidbody *b)
+    {
+
+    }
+
     void GameBehaviour::OnCollisionStay(Rigidbody *a, Rigidbody *b)
     {
 

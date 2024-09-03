@@ -24,6 +24,7 @@ namespace GravyEngine
         virtual void OnFixedUpdate();
         virtual void OnGUI();
         virtual void OnAssetLoadedAsync(const AssetInfo &assetInfo);
+        virtual void OnCollisionEnter(Rigidbody *a, Rigidbody *b);
         virtual void OnCollisionStay(Rigidbody *a, Rigidbody *b);
         virtual void OnCollisionExit(Rigidbody *rigidBody);
         void LoadAssetsFromResourceAsync(const std::vector<AssetLoadInfo> &assets);

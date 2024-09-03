@@ -32,6 +32,7 @@ namespace GravyEngine
         static void OnGUI();
         static void OnEndFrame();
         static void OnAssetLoadedAsync(const AssetInfo &assetInfo);
+        static void OnCollisionEnter(Rigidbody *a, Rigidbody *b);
         static void OnCollisionStay(Rigidbody *a, Rigidbody *b);
         static void OnCollisionExit(Rigidbody *rigidBody);
     };
