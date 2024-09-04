@@ -103,14 +103,32 @@ namespace GravyEngine
                 Rigidbody *rb1 = reinterpret_cast<Rigidbody*>(man->getBody0()->getUserPointer());
                 Rigidbody *rb2 = reinterpret_cast<Rigidbody*>(man->getBody1()->getUserPointer());
 
+                float totalImpulse = 0.0f;
+
+                for(size_t j = 0; j < man->getNumContacts(); j++)
+                {
+                    auto &cp = man->getContactPoint(j);
+                    totalImpulse += cp.getAppliedImpulse();
+                }
+
+                Collision collision;
+                collision.body1 = rb1;
+                collision.body2 = rb2;
+                collision.collider = nullptr;
+                collision.contactCount = man->getNumContacts();
+                collision.gameObject = rb2->GetGameObject();
+                collision.relativeVelocity = rb1->GetVelocity() - rb2->GetVelocity();
+                collision.impulse = totalImpulse;
+                collision.transform = rb2->GetTransform();
+
                 if(!rb1->hasContact)
                 {
                     rb1->hasContact = true;
-                    GameBehaviourManager::OnCollisionEnter(rb1, rb2);
+                    GameBehaviourManager::OnCollisionEnter(&collision);
                 }
                 else
                 {
-                    GameBehaviourManager::OnCollisionStay(rb1, rb2);
+                    GameBehaviourManager::OnCollisionStay(&collision);
                 }
             }
 
@@ -136,8 +154,18 @@ namespace GravyEngine
                 {
                     if(rb->hasContact)
                     {
+                        Collision collision;
+                        collision.body1 = rb;
+                        collision.body2 = nullptr;
+                        collision.collider = nullptr;
+                        collision.contactCount = 0;
+                        collision.gameObject = nullptr;
+                        collision.relativeVelocity = Vector3(0, 0, 0);
+                        collision.impulse = 0.0f;
+                        collision.transform = nullptr;
+
                         rb->hasContact = false;
-                        GameBehaviourManager::OnCollisionExit(rb);
+                        GameBehaviourManager::OnCollisionExit(&collision);
                     }
                 }
             }

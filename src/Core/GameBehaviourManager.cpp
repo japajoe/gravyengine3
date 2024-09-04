@@ -113,45 +113,45 @@ namespace GravyEngine
         }
     }
 
-    void GameBehaviourManager::OnCollisionEnter(Rigidbody *a, Rigidbody *b)
+    void GameBehaviourManager::OnCollisionEnter(const Collision *collision)
     {
         #ifdef GRAVY_ENABLE_BULLET
 
         for(size_t i = 0; i < behaviours.size(); i++)
         {
-            if(a->GetTransform()->GetRoot() == behaviours[i]->GetTransform()->GetRoot())
+            if(collision->body1->GetTransform()->GetRoot() == behaviours[i]->GetTransform()->GetRoot())
             {
-                behaviours[i]->OnCollisionEnter(a, b);
+                behaviours[i]->OnCollisionEnter(collision);
             }
         }
 
         #endif
     }
 
-    void GameBehaviourManager::OnCollisionStay(Rigidbody *a, Rigidbody *b)
+    void GameBehaviourManager::OnCollisionStay(const Collision *collision)
     {
         #ifdef GRAVY_ENABLE_BULLET
 
         for(size_t i = 0; i < behaviours.size(); i++)
         {
-            if(a->GetTransform()->GetRoot() == behaviours[i]->GetTransform()->GetRoot())
+            if(collision->body1->GetTransform()->GetRoot() == behaviours[i]->GetTransform()->GetRoot())
             {
-                behaviours[i]->OnCollisionStay(a, b);
+                behaviours[i]->OnCollisionStay(collision);
             }
         }
 
         #endif
     }
 
-    void GameBehaviourManager::OnCollisionExit(Rigidbody *rigidBody)
+    void GameBehaviourManager::OnCollisionExit(const Collision *collision)
     {
         #ifdef GRAVY_ENABLE_BULLET
 
         for(size_t i = 0; i < behaviours.size(); i++)
         {
-            if(rigidBody->GetTransform()->GetRoot() == behaviours[i]->GetTransform()->GetRoot())
+            if(collision->body1->GetTransform()->GetRoot() == behaviours[i]->GetTransform()->GetRoot())
             {
-                behaviours[i]->OnCollisionExit(rigidBody);
+                behaviours[i]->OnCollisionExit(collision);
             }
         }
 

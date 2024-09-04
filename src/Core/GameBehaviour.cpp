@@ -44,17 +44,17 @@ namespace GravyEngine
 
     }
 
-    void GameBehaviour::OnCollisionEnter(Rigidbody *a, Rigidbody *b)
+    void GameBehaviour::OnCollisionEnter(const Collision *collision)
     {
 
     }
 
-    void GameBehaviour::OnCollisionStay(Rigidbody *a, Rigidbody *b)
+    void GameBehaviour::OnCollisionStay(const Collision *collision)
     {
 
     }
 
-    void GameBehaviour::OnCollisionExit(Rigidbody *rigidBody)
+    void GameBehaviour::OnCollisionExit(const Collision *collision)
     {
 
     }

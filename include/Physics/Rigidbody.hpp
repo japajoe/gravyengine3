@@ -51,6 +51,20 @@ namespace GravyEngine
         }
     };
 
+    class Rigidbody;
+
+    struct Collision
+    {
+        Rigidbody *body1; //The Rigidbody or ArticulationBody of the collider that your Component collides with (Read Only).
+        Rigidbody *body2; //The Rigidbody we hit (Read Only). This is null if the object we hit is a collider with no rigidbody attached.
+        GameObject *gameObject; //The GameObject whose collider you are colliding with. (Read Only).
+        Transform *transform; //The Transform of the object we hit (Read Only).
+        Collider *collider; //The Collider we hit (Read Only).
+        Vector3 relativeVelocity; //The relative linear velocity of the two colliding objects (Read Only).
+        float impulse; //The total impulse applied to this contact pair to resolve the collision.
+        size_t contactCount; //Gets the number of contacts for this collision.
+    };
+
     class Rigidbody : public Component
     {
     friend class PhysicsManager;
