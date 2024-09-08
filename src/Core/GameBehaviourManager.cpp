@@ -54,9 +54,10 @@ namespace GravyEngine
 
     void GameBehaviourManager::OnApplicationQuit()
     {
-        for(size_t i = 0; i < behaviours.size(); i++)
+        for(auto behaviour : behaviours)
         {
-            behaviours[i]->OnApplicationQuit();
+            if(behaviour->GetGameObject()->GetIsActive())
+                behaviour->OnApplicationQuit();
         }
 
         behaviours.clear();
@@ -66,25 +67,28 @@ namespace GravyEngine
 
     void GameBehaviourManager::OnUpdate()
     {
-        for(size_t i = 0; i < behaviours.size(); i++)
+        for(auto behaviour : behaviours)
         {
-            behaviours[i]->OnUpdate();
+            if(behaviour->GetGameObject()->GetIsActive())
+                behaviour->OnUpdate();
         }
     }
 
     void GameBehaviourManager::OnLateUpdate()
     {
-        for(size_t i = 0; i < behaviours.size(); i++)
+        for(auto behaviour : behaviours)
         {
-            behaviours[i]->OnLateUpdate();
+            if(behaviour->GetGameObject()->GetIsActive())
+                behaviour->OnLateUpdate();
         }
     }
 
     void GameBehaviourManager::OnFixedUpdate()
     {
-        for(size_t i = 0; i < behaviours.size(); i++)
+        for(auto behaviour : behaviours)
         {
-            behaviours[i]->OnFixedUpdate();
+            if(behaviour->GetGameObject()->GetIsActive())
+                behaviour->OnFixedUpdate();
         }
     }
 
@@ -92,9 +96,10 @@ namespace GravyEngine
     {
         imgui->BeginFrame();
 
-        for(size_t i = 0; i < behaviours.size(); i++)
+        for(auto behaviour : behaviours)
         {
-            behaviours[i]->OnGUI();
+            if(behaviour->GetGameObject()->GetIsActive())
+                behaviour->OnGUI();
         }
 
         imgui->EndFrame();
@@ -102,14 +107,21 @@ namespace GravyEngine
 
     void GameBehaviourManager::OnEndFrame()
     {
+        for(auto behaviour : behaviours)
+        {
+            if(behaviour->GetGameObject()->GetIsActive())
+                behaviour->OnEndFrame();
+        }
+
         GameObject::OnEndFrame();
     }
 
     void GameBehaviourManager::OnAssetLoadedAsync(const AssetInfo &assetInfo)
     {
-        for(size_t i = 0; i < behaviours.size(); i++)
+        for(auto behaviour : behaviours)
         {
-            behaviours[i]->OnAssetLoadedAsync(assetInfo);
+            if(behaviour->GetGameObject()->GetIsActive())
+                behaviour->OnAssetLoadedAsync(assetInfo);
         }
     }
 

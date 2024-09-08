@@ -130,6 +130,8 @@ namespace GravyEngine
                 {
                     GameBehaviourManager::OnCollisionStay(&collision);
                 }
+
+                //printf("Test manifolds %d\n", i);
             }
 
             for(size_t i = 0; i < bodies.size(); i++)

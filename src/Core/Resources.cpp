@@ -104,6 +104,7 @@ namespace GravyEngine
         AddMesh("Quad", MeshGenerator::CreateQuad(Vector3f::One()));
         AddMesh("Sphere", MeshGenerator::CreateSphere(Vector3f::One()));
         AddMesh("Hemisphere", MeshGenerator::CreateHemisphere(Vector3f::One()));
+        AddMesh("Icosphere", MeshGenerator::CreateIcosahedron(Vector3f::One()));
     }
 
     void Resources::CreateUniformBuffers()

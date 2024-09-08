@@ -23,6 +23,7 @@ namespace GravyEngine
         virtual void OnLateUpdate();
         virtual void OnFixedUpdate();
         virtual void OnGUI();
+        virtual void OnEndFrame();
         virtual void OnAssetLoadedAsync(const AssetInfo &assetInfo);
         virtual void OnCollisionEnter(const Collision *collision);
         virtual void OnCollisionStay(const Collision *collision);

@@ -39,6 +39,11 @@ namespace GravyEngine
 
     }
 
+    void GameBehaviour::OnEndFrame()
+    {
+
+    }
+
     void GameBehaviour::OnAssetLoadedAsync(const AssetInfo &assetInfo)
     {
 

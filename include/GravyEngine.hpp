@@ -57,6 +57,7 @@
 #include "Rendering/BoundingVolume.hpp"
 #include "Rendering/Texture.hpp"
 #include "Rendering/Renderer.hpp"
+#include "Rendering/Sprite.hpp"
 #include "Rendering/Buffers/UniformBufferObject.hpp"
 #include "Rendering/Buffers/FrameBufferObject.hpp"
 #include "Rendering/Buffers/VertexBufferObject.hpp"

@@ -13,6 +13,7 @@
 #include <vector>
 #include <cstdint>
 #include <string>
+#include <unordered_map>
 
 namespace GravyEngine
 {
@@ -58,8 +59,32 @@ namespace GravyEngine
         static Mesh CreateSphere(const Vector3 &scale);
         static Mesh CreateHemisphere(const Vector3 &scale);
         static Mesh CreateTerrain(uint32_t width, uint32_t height, const Vector3 &scale);
+        static Mesh CreateIcosahedron(const Vector3 &scale);
     private:
         static void SetScale(std::vector<Vertex> &vertices, const Vector3 &scale);
+    };
+
+    struct Polygon
+    {
+        std::vector<uint32_t> vertices;
+
+        Polygon (uint32_t a, uint32_t b, uint32_t c)
+        {
+            vertices = { a, b, c };
+        }
+    };
+
+    class IcosahedronGenerator
+    {
+    public:
+        std::vector<Polygon> &GetPolygons();
+        std::vector<Vector3> &GetVertices();
+        void Initialize();
+        void Subdivide(uint32_t recursions);
+        uint32_t GetMidPointIndex(std::unordered_map<uint32_t, uint32_t> &cache, uint32_t indexA, uint32_t indexB);
+    private:
+        std::vector<Polygon> polygons;
+        std::vector<Vector3> vertices;
     };
 };
 

@@ -74,6 +74,10 @@ namespace GravyEngine
         body = new btRigidBody(rigidBodyCI);
         body->setUserPointer(this);
         body->setDamping(drag, angularDrag);
+
+        if(mass == 0.0f)
+            body->setCollisionFlags(body->getCollisionFlags() | btCollisionObject::CF_KINEMATIC_OBJECT);
+
         return true;
     }
 
@@ -236,7 +240,7 @@ namespace GravyEngine
 
                 shape.indexVertexArrays = new btTriangleIndexVertexArray();
                 shape.indexVertexArrays->addIndexedMesh(indexedMesh);
-                shape.collisionShape = new btBvhTriangleMeshShape(shape.indexVertexArrays, false);
+                shape.collisionShape = new btBvhTriangleMeshShape(shape.indexVertexArrays, true);
                 
                 break;
             }
@@ -246,46 +250,47 @@ namespace GravyEngine
                 shape.collisionShape = new btSphereShape(collider->GetRadius());
                 break;
             }
-            // case ColliderType::Terrain:
-            // {
-            //     TerrainCollider *collider = static_cast<TerrainCollider*>(c);
+            case ColliderType::Terrain:
+            {
+                TerrainCollider *collider = static_cast<TerrainCollider*>(c);
 
-            //     Mesh *mesh = collider->GetMesh();
+                Mesh *mesh = collider->GetMesh();
 
-            //     if(!mesh)
-            //         return false;
+                if(!mesh)
+                    return false;
 
-            //     if(collider->GetWidth() == 0 || collider->GetDepth() == 0)
-            //         return false;
+                if(collider->GetWidth() == 0 || collider->GetDepth() == 0)
+                    return false;
 
-            //     auto &vertices = mesh->GetVertices();
-            //     const size_t length = vertices.size();
+                auto &vertices = mesh->GetVertices();
+                const size_t length = vertices.size();
 
-            //     float *pHeightfieldData = new float[length];
+                float *pHeightfieldData = new float[length];
 
-            //     for(size_t i = 0; i < length; i++)
-            //     {
-            //         pHeightfieldData[i] = vertices[i].position.y;
-            //     }
+                for(size_t i = 0; i < length; i++)
+                {
+                    pHeightfieldData[i] = vertices[i].position.y;
+                }
 
-            //     shape.collisionShape = new btHeightfieldTerrainShape(
-            //         collider->GetWidth(), 
-            //         collider->GetDepth(), 
-            //         pHeightfieldData, 
-            //         1.0f, 
-            //         0.0f, 
-            //         75.0f, 
-            //         1, 
-            //         PHY_FLOAT, 
-            //         false
-            //     );
+                shape.collisionShape = new btHeightfieldTerrainShape(
+                    collider->GetWidth(), 
+                    collider->GetDepth(), 
+                    pHeightfieldData, 
+                    1.0f, 
+                    0.0f, 
+                    75.0f, 
+                    1, 
+                    PHY_FLOAT, 
+                    false
+                );
 
-            //     float scale = collider->GetScale();
+                float scale = collider->GetScale();
 
-            //     shape.collisionShape->setLocalScaling(btVector3(scale, 1.0, scale));
+                //shape.collisionShape->setLocalScaling(btVector3(scale, 1.0, scale));
+                shape.collisionShape->setLocalScaling(btVector3(scale, 1.0f, scale));
 
-            //     break;
-            // }
+                break;
+            }
             default:
             {
                 return false;

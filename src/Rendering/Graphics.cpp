@@ -3,6 +3,7 @@
 #include "LineRenderer.hpp"
 #include "CascadedShadowMap.hpp"
 #include "Renderer.hpp"
+#include "Sprite.hpp"
 #include "FullScreenQuad.hpp"
 #include "Materials/DepthMaterial.hpp"
 #include "../Audio/AudioListener.hpp"
@@ -56,6 +57,7 @@ namespace GravyEngine
         CreateShadowMap();
 
         LineRenderer::Initialize();
+        Sprite::Initialize();
 
         auto resolution = Screen::GetResolution();
 
@@ -71,6 +73,7 @@ namespace GravyEngine
         DestroyShadowMap();
         DestroyRenderers();
         LineRenderer::Deinitialize();
+        Sprite::Deinitialize();
     }
 
     void Graphics::OnResize(uint32_t width, uint32_t height)
@@ -96,6 +99,8 @@ namespace GravyEngine
         framebuffers[0].Bind();
 
         RenderScene();
+
+        Sprite::OnRender();
         
         LineRenderer::OnRender();
 

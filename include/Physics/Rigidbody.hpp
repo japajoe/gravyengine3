@@ -1,6 +1,8 @@
 #ifndef GRAVYENGINE_RIGIDBODY_HPP
 #define GRAVYENGINE_RIGIDBODY_HPP
 
+//#define GRAVY_ENABLE_BULLET
+
 #ifdef GRAVY_ENABLE_BULLET
 
 #include <memory>
