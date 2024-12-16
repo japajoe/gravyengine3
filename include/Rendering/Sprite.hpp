@@ -27,6 +27,7 @@ namespace GravyEngine
         Vector2 uvScale;
         Color color;
         Texture2D *texture;
+        Shader *shader;
         SpriteInfo();
         SpriteInfo(const Vector2 &position, const Vector2 &size, const Vector2 &uvOffset, 
                     const Vector2 &uvScale, const Color &color, Texture2D *texture);

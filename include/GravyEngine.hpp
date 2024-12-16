@@ -16,6 +16,7 @@
 #include "System/DateTime.hpp"
 #include "System/Collections/ConcurrentList.hpp"
 #include "System/Collections/ConcurrentQueue.hpp"
+#include "System/Collections/RingBuffer.hpp"
 #include "System/EventHandler.hpp"
 #include "System/Diagnostics/Stopwatch.hpp"
 #include "System/Drawing/Color.hpp"

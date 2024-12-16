@@ -1,5 +1,6 @@
 #include "Sprite.hpp"
 #include "../Core/Screen.hpp"
+#include "../Core/Time.hpp"
 
 namespace GravyEngine
 {
@@ -16,7 +17,7 @@ namespace GravyEngine
 
     SpriteInfo::SpriteInfo() 
     {
-
+        this->shader = nullptr;
     }
 
     SpriteInfo::SpriteInfo(const Vector2 &position, const Vector2 &size, 
@@ -29,6 +30,7 @@ namespace GravyEngine
         this->uvScale = uvScale;
         this->color = color;
         this->texture = texture;
+        this->shader = nullptr;
     }
 
     SpriteInfo::SpriteInfo(const Vector2 &position, const Vector2 &size, const Color &color, 
@@ -40,6 +42,7 @@ namespace GravyEngine
         this->uvScale = Vector2(1, 1);
         this->color = color;
         this->texture = texture;
+        this->shader = nullptr;
     }
 
     SpriteInfo::SpriteInfo(const Vector2 &position, const Vector2 &size, Texture2D *texture) 
@@ -50,6 +53,7 @@ namespace GravyEngine
         this->uvScale = Vector2(1, 1);
         this->color = Color(1, 1, 1, 1);
         this->texture = texture;
+        this->shader = nullptr;
     }
 
     uint32_t Sprite::VAO = 0;
@@ -121,10 +125,15 @@ namespace GravyEngine
 
         glBindVertexArray(VAO);
 
-        shader.Use();
-
         for(size_t i = 0; i < numberOfSprites; i++) {
             auto &sprite = activeSprites[i];
+
+            Shader *pShader = &shader;
+
+            if(sprite.shader)
+                pShader = sprite.shader;
+
+            pShader->Use();
 
             sprite.texture->Bind(0);
 
@@ -132,13 +141,17 @@ namespace GravyEngine
             glm::vec2 position = sprite.position + (sprite.size * 0.5f);
             model = glm::translate(model, glm::vec3(position, 0.0f));
             model = glm::scale(model, glm::vec3(sprite.size, 1.0f));
+
+            glm::vec2 screenSize = Screen::GetSize();
             
-            shader.SetMat4("uProjection", glm::value_ptr(projectionMatrix), false);
-            shader.SetMat4("uModel", glm::value_ptr(model), false);
-            shader.SetFloat2("uTexCoordScale", glm::value_ptr(sprite.uvScale));
-            shader.SetFloat2("uTexCoordOffset", glm::value_ptr(sprite.uvOffset));
-            shader.SetFloat4("uColor", &sprite.color.r);
-            shader.SetInt("uTexture", 0);
+            pShader->SetMat4("uProjection", glm::value_ptr(projectionMatrix), false);
+            pShader->SetMat4("uModel", glm::value_ptr(model), false);
+            pShader->SetFloat2("uTexCoordScale", glm::value_ptr(sprite.uvScale));
+            pShader->SetFloat2("uTexCoordOffset", glm::value_ptr(sprite.uvOffset));
+            pShader->SetFloat4("uColor", &sprite.color.r);
+            pShader->SetFloat2("uResolution", &screenSize.x);
+            pShader->SetFloat("uTime", Time::GetTime());
+            pShader->SetInt("uTexture", 0);
 
             glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
         }
@@ -186,6 +199,8 @@ uniform sampler2D uTexture;
 uniform vec2 uTexCoordScale;
 uniform vec2 uTexCoordOffset;
 uniform vec4 uColor;
+uniform vec2 uResolution;
+uniform float uTime;
 
 in vec2 oTexCoord;
 

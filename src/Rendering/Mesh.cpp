@@ -793,7 +793,7 @@ namespace GravyEngine
         int32_t LOD = 0;
 
         int32_t meshSimplificationIncrement = (LOD == 0) ? 1 : LOD * 2;
-        uint32_t verticesPerLine = (uint)((width - 1) / meshSimplificationIncrement + 1);
+        uint32_t verticesPerLine = (uint32_t)((width - 1) / meshSimplificationIncrement + 1);
 
         float topLeftX = 0;
         float topLeftZ = 0;

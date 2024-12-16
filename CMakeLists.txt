@@ -23,6 +23,8 @@ if(ENABLE_BULLET)
     include_directories(${BULLET_INCLUDE_DIRS})
 endif()
 
+add_subdirectory(libs/freetype)
+
 file(GLOB_RECURSE SOURCES src/*.cpp src/*.c)
 
 include_directories(
@@ -36,6 +38,7 @@ include_directories(
     "${PROJECT_SOURCE_DIR}/include/External/GLFW"
     "${PROJECT_SOURCE_DIR}/include/External/imgui"
     "${PROJECT_SOURCE_DIR}/include/External/miniaudioex"
+    "${PROJECT_SOURCE_DIR}/include/External/stb"
     "${PROJECT_SOURCE_DIR}/include/Physics"
     "${PROJECT_SOURCE_DIR}/include/Physics/Collisions"
     "${PROJECT_SOURCE_DIR}/include/Rendering"
@@ -61,6 +64,7 @@ add_library(${PROJECT_NAME} SHARED ${SOURCES})
 if(BUILD_PLATFORM STREQUAL "windows_mingw")
     target_compile_definitions(${PROJECT_NAME} PRIVATE _GLFW_WIN32)
     target_link_libraries(${PROJECT_NAME} -lopengl32 -lgdi32 -lstdc++fs -static -static-libgcc -static-libstdc++)
+    target_link_libraries(${PROJECT_NAME} freetype)
 elseif(BUILD_PLATFORM STREQUAL "windows_msvc")
     target_compile_definitions(${PROJECT_NAME} PRIVATE _GLFW_WIN32)
 elseif(BUILD_PLATFORM STREQUAL "linux")
@@ -72,9 +76,11 @@ elseif(BUILD_PLATFORM STREQUAL "linux")
     if(ENABLE_BULLET)
         target_link_libraries(${PROJECT_NAME} BulletDynamics BulletCollision LinearMath)
     endif()
+    target_link_libraries(${PROJECT_NAME} freetype)
 elseif(BUILD_PLATFORM STREQUAL "mac")
     target_compile_definitions(${PROJECT_NAME} PRIVATE _GLFW_COCOA)
     target_link_libraries(${PROJECT_NAME} -lstdc++fs -lopengl)
+    target_link_libraries(${PROJECT_NAME} freetype)
 endif()
 
 if(BUILD_PLATFORM STREQUAL "linux")
