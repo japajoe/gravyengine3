@@ -1,7 +1,6 @@
 #ifndef GRAVYENGINE_GRAPHICS2D_HPP
 #define GRAVYENGINE_GRAPHICS2D_HPP
 
-#include "Font.hpp"
 #include "../System/Numerics/Vector2.hpp"
 #include "../System/Drawing/Color.hpp"
 #include <cstdint>
@@ -132,7 +131,6 @@ namespace GravyEngine {
         void AddLines(const Vector2 *segments, size_t count, float thickness, const Color &color, const Rectangle &clippingRect = Rectangle(0, 0, 0, 0), uint32_t shaderId = 0, void *userData = nullptr);
         void AddPlotLines(const Vector2 &position, const Vector2 &size, const float *data, int valuesCount, float thickness, const Color &color, float scaleMin = 3.402823466e+38F, float scaleMax = 3.402823466e+38F, const Rectangle &clippingRect = Rectangle(0, 0, 0, 0), uint32_t shaderId = 0, void *userData = nullptr);
         void AddTriangle(const Vector2 &position, const Vector2 &size, float rotationDegrees, const Color &color, const Rectangle &clippingRect = Rectangle(0, 0, 0, 0), uint32_t shaderId = 0, void *userData = nullptr);
-        //void addText(const Vector2 &position, Font *font, bool richText, const char *text, size_t textSize, float fontSize, const Color &color, const Rectangle &clippingRect = Rectangle(0, 0, 0, 0));
         void AddImage(const Vector2 &position, const Vector2 &size, float rotationDegrees, uint32_t textureId, const Color &color = Color(1, 1, 1, 1), const Vector2 &uv0 = Vector2(0, 0), const Vector2 &uv1 = Vector2(1, 1), const Rectangle &clippingRect = Rectangle(0, 0, 0, 0), uint32_t shaderId = 0, void *userData = nullptr);
         inline Viewport GetViewport() const { return viewport; }
         void SetViewport(uint32_t x, uint32_t y, uint32_t width, uint32_t height);
