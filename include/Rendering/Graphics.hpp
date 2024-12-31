@@ -16,6 +16,7 @@ namespace GravyEngine
     class Renderer;
     class Shader;
     class DepthMaterial;
+    class Graphics2D;
 
     struct CompareRendererOrder 
     {
@@ -30,9 +31,11 @@ namespace GravyEngine
         static void RemoveRenderer(Renderer *renderer);
         static Renderer *GetRendererByIndex(size_t index);
         static FrameBufferObject *GetFrameBuffer();
+        static Graphics2D *GetGraphics2D();
     private:
         static std::priority_queue<Renderer*, std::vector<Renderer*>, CompareRendererOrder> renderQueue;
         static std::vector<Renderer*> renderers;
+        static std::unique_ptr<Graphics2D> graphics2D;
         static std::unique_ptr<CascadedShadowMap> cascadedShadowMap;
         static std::unique_ptr<DepthMaterial> depthMaterial;
         static std::vector<FrameBufferObject> framebuffers;

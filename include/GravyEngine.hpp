@@ -27,6 +27,7 @@
 #include "Rendering/Shader.hpp"
 #include "Rendering/BVH.hpp"
 #include "Rendering/GL.hpp"
+#include "Rendering/Graphics2D.hpp"
 #include "Rendering/FullScreenQuad.hpp"
 #include "Rendering/Mesh.hpp"
 #include "Rendering/CascadedShadowMap.hpp"

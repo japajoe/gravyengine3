@@ -5,6 +5,8 @@
 #include "Renderer.hpp"
 #include "Sprite.hpp"
 #include "FullScreenQuad.hpp"
+#include "Graphics2D.hpp"
+#include "Time.hpp"
 #include "Materials/DepthMaterial.hpp"
 #include "../Audio/AudioListener.hpp"
 #include "../Core/Camera.hpp"
@@ -27,6 +29,7 @@ namespace GravyEngine
     
     std::priority_queue<Renderer*, std::vector<Renderer*>, CompareRendererOrder> Graphics::renderQueue;
     std::vector<Renderer*> Graphics::renderers;
+    std::unique_ptr<Graphics2D> Graphics::graphics2D;
     std::unique_ptr<CascadedShadowMap> Graphics::cascadedShadowMap;
     std::unique_ptr<DepthMaterial> Graphics::depthMaterial;
     std::vector<FrameBufferObject> Graphics::framebuffers;
@@ -65,6 +68,9 @@ namespace GravyEngine
         framebuffers[0].Generate();
 
         screenQuad.Generate();
+
+        graphics2D = std::make_unique<Graphics2D>();
+        graphics2D->Initialize();
     }
 
     void Graphics::Deinitialize()
@@ -74,6 +80,7 @@ namespace GravyEngine
         DestroyRenderers();
         LineRenderer::Deinitialize();
         Sprite::Deinitialize();
+        graphics2D->Initialize();
     }
 
     void Graphics::OnResize(uint32_t width, uint32_t height)
@@ -86,6 +93,8 @@ namespace GravyEngine
             return;
 
         framebuffer->Resize(width, height);
+
+        graphics2D->SetViewport(0, 0, width, height);
     }
 
     void Graphics::OnRender()
@@ -101,6 +110,8 @@ namespace GravyEngine
         RenderScene();
 
         Sprite::OnRender();
+
+        graphics2D->NewFrame(Time::GetDeltaTime());
         
         LineRenderer::OnRender();
 
@@ -260,5 +271,10 @@ namespace GravyEngine
         if(framebuffers.size() == 0)
             return nullptr;
         return &framebuffers[0];
+    }
+
+    Graphics2D *Graphics::GetGraphics2D() 
+    {
+        return graphics2D.get();
     }
 };

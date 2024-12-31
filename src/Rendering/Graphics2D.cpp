@@ -819,9 +819,9 @@ namespace GravyEngine {
     out vec4 oColor;
 
     void main() {
-    gl_Position = uProjection * vec4(aPosition.x, aPosition.y, 0.0, 1.0);
-    oTexCoord = aTexCoord;
-    oColor = aColor;
+        gl_Position = uProjection * vec4(aPosition.x, aPosition.y, 0.0, 1.0);
+        oTexCoord = aTexCoord;
+        oColor = aColor;
     })";
 
         std::string fragmentSource = R"(#version 330 core

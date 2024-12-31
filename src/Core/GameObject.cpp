@@ -239,9 +239,9 @@ namespace GravyEngine
         for(size_t i = 0; i < children.size(); i++)
         {
             GameObject *currentObject = children[i]->GetGameObject();
-            for(size_t i = 0; i < currentObject->components.size(); i++)
+            for(size_t j = 0; j < currentObject->components.size(); j++)
             {
-                currentObject->components[i]->OnDestroy();
+                currentObject->components[j]->OnDestroy();
             }
         }
 
